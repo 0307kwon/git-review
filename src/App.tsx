@@ -1,10 +1,16 @@
+import { Header, Main } from "./App.styles";
+import Home from "./page";
+
 function App() {
   return (
-    <>
-      <header>
-        <h1>gitBook</h1>
-      </header>
-    </>
+    <div>
+      <Header>
+        <h1>📖 gitBook</h1>
+      </Header>
+      <Main>
+        <Home />
+      </Main>
+    </div>
   );
 }
 
