@@ -7,7 +7,7 @@ const Home: VFC = () => {
   return (
     <div>
       <Search />
-      <HomeContents>될까용~</HomeContents>
+      <HomeContents>이런 리뷰는 어떠세요?</HomeContents>
     </div>
   );
 };

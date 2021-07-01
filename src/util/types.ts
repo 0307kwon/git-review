@@ -5,6 +5,7 @@ export interface PullRequest {
 }
 
 export interface PullRequestResponse {
+  id: number;
   author_association: string;
   body: string;
   user: {
@@ -20,6 +21,7 @@ export interface IssueResponse extends PullRequestResponse {
 }
 
 export interface CodeReview {
+  id: number;
   author: {
     avatarURL: string;
     userName: string;

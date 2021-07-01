@@ -15,6 +15,7 @@ const filterResponse = (
     .filter((item) => item.body && item.user.login !== pullRequestAuthor)
     .map(
       (item): CodeReview => ({
+        id: item.id,
         author: {
           avatarURL: item.user.avatar_url,
           userName: item.user.login,
@@ -25,6 +26,9 @@ const filterResponse = (
 };
 
 export const getCodeReview = async (url: string): Promise<CodeReview[]> => {
+  //TODO: 1. indexedDB에 저장되어 있으면 그걸 꺼내서 바로 리턴
+  //2. 저장되어 있지 않으면 서버에서 가져와서 indexedDB에 저장하고 해당 데이터를 리턴
+
   const reg = url.split("/");
 
   const requestParameter = {
@@ -51,8 +55,6 @@ export const getCodeReview = async (url: string): Promise<CodeReview[]> => {
     await requestComment(requestParameter),
     pullRequestAuthor
   );
-
-  console.log([...reviews, ...discussions, ...comments]);
 
   return [...reviews, ...discussions, ...comments];
 };
