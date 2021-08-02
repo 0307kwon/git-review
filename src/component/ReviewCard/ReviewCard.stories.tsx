@@ -10,10 +10,11 @@ export default {
 
 const dummyCodeReview: CodeReview = {
   id: 1,
+  url: "naver.com",
   author: {
-    avatarURL:
+    avatarUrl:
       "https://images.chosun.com/resizer/u9nJRxs0BbtjygJ4HzKukecXnOk=/464x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/UVBJZL3RXAB36BDSHVM3MW2WNY.jpg",
-    userName: "발리스타",
+    userName: "미키",
   },
   content: "이 코드는 별로네요;",
 };

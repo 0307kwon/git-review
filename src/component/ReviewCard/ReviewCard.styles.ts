@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { PALETTE } from "../../constant/palette";
 
 interface ProfileImgProps {
-  imgURL: string;
+  imgUrl: string;
 }
 
 export const ReviewCardContainer = styled.div`
@@ -24,11 +24,12 @@ export const ProfileImg = styled.div<ProfileImgProps>`
   height: 3rem;
   border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 50%;
-  background-image: url(${({ imgURL }) => imgURL});
+  background-image: url(${({ imgUrl }) => imgUrl});
   background-size: cover;
   margin-right: 1rem;
 `;
 
 export const ReviewContent = styled.div`
   padding: 0.5rem 2rem;
+  white-space: pre-line;
 `;

@@ -5,6 +5,7 @@ import {
   requestPullRequestInfo,
   requestReview,
 } from "../database/githubAPI";
+import { storeIdbCodeReview } from "../database/indexedDB";
 import { CodeReview, PullRequestResponse } from "../util/types";
 
 const filterResponse = (
@@ -16,8 +17,9 @@ const filterResponse = (
     .map(
       (item): CodeReview => ({
         id: item.id,
+        url: item.html_url,
         author: {
-          avatarURL: item.user.avatar_url,
+          avatarUrl: item.user.avatar_url,
           userName: item.user.login,
         },
         content: item.body,
@@ -25,7 +27,7 @@ const filterResponse = (
     );
 };
 
-export const getCodeReview = async (url: string): Promise<CodeReview[]> => {
+export const requestCodeReview = async (url: string): Promise<CodeReview[]> => {
   //TODO: 1. indexedDB에 저장되어 있으면 그걸 꺼내서 바로 리턴
   //2. 저장되어 있지 않으면 서버에서 가져와서 indexedDB에 저장하고 해당 데이터를 리턴
 
@@ -56,5 +58,9 @@ export const getCodeReview = async (url: string): Promise<CodeReview[]> => {
     pullRequestAuthor
   );
 
-  return [...reviews, ...discussions, ...comments];
+  const codeReviews = [...reviews, ...discussions, ...comments];
+
+  storeIdbCodeReview(codeReviews);
+
+  return codeReviews;
 };

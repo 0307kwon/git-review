@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { PALETTE } from "../../constant/palette";
-import FlexContainer from "../@common/FlexContainer";
+import FlexContainer from "../@common/FlexContainer/FlexContainer";
 
 export const SearchContainer = styled(FlexContainer)`
   align-items: center;

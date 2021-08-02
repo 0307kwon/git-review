@@ -3,4 +3,12 @@ export enum PALETTE {
   GRAY_200 = "#DDDDDD",
   GRAY_300 = "#BBBBBB",
   GRAY_400 = "#999999",
+
+  SKY_BLUE_200 = "#BFDEFF",
+  SKY_BLUE_300 = "#9DBCEE",
+  SKY_BLUE_400 = "#7b9acc",
+  SKY_BLUE_500 = "#5978aa",
+  SKY_BLUE_600 = "#375688",
+
+  BLUE_400 = "#0652DD",
 }
