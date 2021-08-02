@@ -16,7 +16,7 @@ export const SearchLabel = styled.label`
 export const SearchInput = styled.input`
   width: 100%;
   padding: 10px;
-  border: 1px solid ${PALETTE.GRAY_400};
+  border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 7px;
 
   &:focus {

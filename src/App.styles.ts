@@ -1,7 +1,15 @@
 import styled from "styled-components";
+import { APP } from "./constant/common";
+import { PALETTE } from "./constant/palette";
 
 export const Header = styled.header`
-  padding: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  background: ${PALETTE.PRIMARY_400};
+  & > div {
+    width: ${APP.MAX_WIDTH};
+  }
 `;
 
 export const Main = styled.main`

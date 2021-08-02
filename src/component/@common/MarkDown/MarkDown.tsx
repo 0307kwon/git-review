@@ -4,13 +4,16 @@ import styled, { css } from "styled-components";
 import { PALETTE } from "../../../constant/palette";
 
 const code = css`
-  background-color: ${PALETTE.SKY_BLUE_200}; // TODO: 색깔 고민
-  border-radius: 5px;
+  //TODO: 색깔 고민
+  background-color: ${PALETTE.PRIMARY_200};
+  border-radius: 8px;
   font-size: 0.8rem;
+  vertical-align: middle;
 `;
 
 const MarkDown: FC<ReactMarkdown.ReactMarkdownOptions> = styled(ReactMarkdown)`
   white-space: normal;
+  line-height: 1.8rem;
 
   pre {
     overflow-x: auto;
@@ -19,6 +22,7 @@ const MarkDown: FC<ReactMarkdown.ReactMarkdownOptions> = styled(ReactMarkdown)`
 
     & code {
       //TODO: js 코드 위아래 간격 좀 수정하고 싶음
+      line-height: 1.5rem;
       background-color: rgba(0, 0, 0, 0);
     }
   }
@@ -33,19 +37,20 @@ const MarkDown: FC<ReactMarkdown.ReactMarkdownOptions> = styled(ReactMarkdown)`
 
   code {
     ${code}
-    color: ${PALETTE.BLUE_400};
-    padding: 0.2rem;
+    color: ${PALETTE.PRIMARY_500};
+    font-weight: 600;
+    padding: 0.4rem;
   }
 
   h1 {
     font-size: 2rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid ${PALETTE.GRAY_200};
   }
 
   h2 {
     font-size: 1.7rem;
-    padding: 0.5rem 0;
+    padding: 1rem 0;
   }
 
   h3 {

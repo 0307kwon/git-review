@@ -1,16 +1,23 @@
 import { Header, Main } from "./App.styles";
+import { RootContainer } from "./index.styles";
 import Home from "./page";
 
 function App() {
   return (
-    <div>
+    <>
       <Header>
-        <h1>📖 gitBook</h1>
+        <div>
+          <h1>📖 gitBook</h1>
+        </div>
       </Header>
-      <Main>
-        <Home />
-      </Main>
-    </div>
+      <RootContainer>
+        <div>
+          <Main>
+            <Home />
+          </Main>
+        </div>
+      </RootContainer>
+    </>
   );
 }
 

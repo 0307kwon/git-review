@@ -9,7 +9,8 @@ export const ReviewCardContainer = styled.div`
   width: 100%;
   border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 7px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
 `;
 
 export const ProfileContainer = styled.div`
@@ -20,8 +21,8 @@ export const ProfileContainer = styled.div`
 `;
 
 export const ProfileImg = styled.div<ProfileImgProps>`
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 50%;
   background-image: url(${({ imgUrl }) => imgUrl});
