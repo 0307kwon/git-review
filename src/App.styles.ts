@@ -5,8 +5,10 @@ import { PALETTE } from "./constant/palette";
 export const Header = styled.header`
   display: flex;
   justify-content: center;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100vw;
   background: ${PALETTE.PRIMARY_400};
+
   & > div {
     width: ${APP.MAX_WIDTH};
   }

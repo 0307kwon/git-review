@@ -1,6 +1,6 @@
 import { Header, Main } from "./App.styles";
 import { RootContainer } from "./index.styles";
-import Home from "./page";
+import Home from "./page/Home/Home";
 
 function App() {
   return (

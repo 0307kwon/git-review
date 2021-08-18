@@ -5,7 +5,7 @@ import { CodeReview } from "../util/types";
 //TODO: url에 따라 검색하는 openCursor(url)을 써봐야함
 
 const openCodeReviewIdb = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 6);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 7);
 
   return new Promise((resolve, rejects) => {
     request.onupgradeneeded = (event) => {
@@ -33,7 +33,6 @@ const openCodeReviewIdb = (): Promise<IDBDatabase> => {
   });
 };
 
-//get
 export const loadIdbAllCodeReview = async (): Promise<CodeReview[]> => {
   const db = await openCodeReviewIdb();
 
@@ -41,9 +40,8 @@ export const loadIdbAllCodeReview = async (): Promise<CodeReview[]> => {
     .transaction(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS)
     .objectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
   const codeReviews: CodeReview[] = [];
-  const idbRequest = codeReviewObjectStore.openCursor();
 
-  idbRequest.onsuccess = (event) => {
+  codeReviewObjectStore.openCursor().onsuccess = (event) => {
     const cursor = (event.target as IDBRequest<IDBCursor>).result;
 
     if (!cursor) {

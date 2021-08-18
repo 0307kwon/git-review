@@ -17,6 +17,7 @@ const dummyCodeReview: CodeReview = {
     userName: "미키",
   },
   content: "이 코드는 별로네요;",
+  plainText: "이 코드는 별로네요;",
 };
 
 export const Primary = () => <ReviewCard codeReview={dummyCodeReview} />;

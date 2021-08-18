@@ -29,4 +29,5 @@ export interface CodeReview {
     userName: string;
   };
   content: string;
+  plainText: string;
 }

@@ -6,9 +6,6 @@ export const RootContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
-  height: 100%;
-  background-color: ${PALETTE.GRAY_100};
 
   & > * {
     width: ${APP.MAX_WIDTH};
@@ -17,6 +14,12 @@ export const RootContainer = styled.div`
 
 export const GlobalStyle = createGlobalStyle`
   font-family: "Noto Sans KR", sans-serif;
+
+  #root {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: ${PALETTE.GRAY_100};
+  }
 
   * {
     margin: 0;
