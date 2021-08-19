@@ -2,6 +2,11 @@ import styled from "styled-components";
 import { PALETTE } from "../../constant/palette";
 import Button from "../@common/Button/Button";
 import { ReactComponent as DownArrow } from "../../icon/downArrow.svg";
+import Dropdown from "../@common/Dropdown/Dropdown";
+
+export const AvatarContainer = styled.div`
+  position: relative;
+`;
 
 export const AvatarButton = styled(Button)`
   display: flex;
@@ -9,6 +14,17 @@ export const AvatarButton = styled(Button)`
   align-items: center;
   border-radius: 25px;
   padding: 0.5rem;
+`;
+
+export const AvatarDropdown = styled(Dropdown)`
+  & .welcome {
+    background-color: ${PALETTE.PRIMARY_400};
+    color: white;
+  }
+
+  & .red {
+    color: ${PALETTE.RED_400};
+  }
 `;
 
 export const Arrow = styled(DownArrow)`
