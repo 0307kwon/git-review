@@ -31,3 +31,13 @@ export interface CodeReview {
   content: string;
   plainText: string;
 }
+
+export interface Profile {
+  nickname: string;
+  avatarURL: string;
+}
+
+export interface UserInfo {
+  profile: Profile;
+  pullRequestURLs: string[];
+}
