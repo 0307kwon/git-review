@@ -1,9 +1,6 @@
 import { CODE_REVIEW_IDB } from "../constant/indexedDB";
 import { CodeReview } from "../util/types";
 
-//TODO: 6버전으로 버전업해야함(url이라는 프로퍼티를 storage에 추가했기 때문에)
-//TODO: url에 따라 검색하는 openCursor(url)을 써봐야함
-
 const openCodeReviewIdb = (): Promise<IDBDatabase> => {
   const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 7);
 
