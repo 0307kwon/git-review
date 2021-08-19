@@ -10,6 +10,9 @@ export const Header = styled.header`
   background: ${PALETTE.PRIMARY_400};
 
   & > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: ${APP.MAX_WIDTH};
   }
 `;

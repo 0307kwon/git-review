@@ -37,7 +37,7 @@ const MarkDown: FC<ReactMarkdown.ReactMarkdownOptions> = styled(ReactMarkdown)`
 
   code {
     ${code}
-    color: ${PALETTE.PRIMARY_500};
+    color: ${PALETTE.PRIMARY_600};
     font-weight: 600;
     padding: 0.4rem;
   }

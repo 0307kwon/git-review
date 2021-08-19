@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { requestCodeReview } from "../database/githubAPI";
-import { loadIdbAllCodeReview } from "../database/indexedDB";
+import { requestCodeReview } from "../API/githubAPI";
+import { loadIdbAllCodeReview } from "../API/indexedDB";
 import myGitBookSetting from "../myGitBookSetting.json";
 import { CodeReview } from "../util/types";
 

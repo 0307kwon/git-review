@@ -20,16 +20,6 @@ export const ProfileContainer = styled.div`
   border-bottom: 1px solid ${PALETTE.GRAY_200};
 `;
 
-export const ProfileImg = styled.div<ProfileImgProps>`
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid ${PALETTE.GRAY_200};
-  border-radius: 50%;
-  background-image: url(${({ imgUrl }) => imgUrl});
-  background-size: cover;
-  margin-right: 1rem;
-`;
-
 export const ReviewContent = styled.div`
   padding: 0.5rem 2rem;
   white-space: pre-line;
