@@ -3,7 +3,7 @@ import { requestUserInfo, signInWithGithub } from "../../API/firebaseAPI";
 import useUser from "../../context/user/useUser";
 import { UserInfo } from "../../util/types";
 import Avatar from "../@common/Avatar/Avatar";
-import { LoginButton } from "./Navigation.styles";
+import { Arrow, AvatarButton, LoginButton } from "./Navigation.styles";
 
 const Navigation = () => {
   const user = useUser();
@@ -18,10 +18,10 @@ const Navigation = () => {
   return (
     <div>
       {user.userInfo ? (
-        <Avatar
-          imgURL={user.userInfo.profile.avatarURL}
-          nickname={user.userInfo.profile.nickname}
-        />
+        <AvatarButton>
+          <Avatar imgURL={user.userInfo.profile.avatarURL} />
+          <Arrow />
+        </AvatarButton>
       ) : (
         <LoginButton onClick={handleSignIn}>로그인</LoginButton>
       )}

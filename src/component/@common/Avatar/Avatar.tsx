@@ -3,14 +3,14 @@ import { AvatarContainer, AvatarImg } from "./Avatar.styles";
 
 interface Props {
   imgURL: string;
-  nickname: string;
+  nickname?: string;
 }
 
 const Avatar = ({ imgURL, nickname }: Props) => {
   return (
     <AvatarContainer>
       <AvatarImg imgURL={imgURL} />
-      <span>{nickname}</span>
+      {nickname && <span>{nickname}</span>}
     </AvatarContainer>
   );
 };

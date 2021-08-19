@@ -8,7 +8,7 @@ interface AvatarImgProps {
 export const AvatarContainer = styled.div`
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.7rem;
+  gap: 1rem;
 `;
 
 export const AvatarImg = styled.div<AvatarImgProps>`
@@ -18,5 +18,4 @@ export const AvatarImg = styled.div<AvatarImgProps>`
   border-radius: 50%;
   background-image: url(${({ imgURL }) => imgURL});
   background-size: cover;
-  margin-right: 1rem;
 `;
