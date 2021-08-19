@@ -7,5 +7,6 @@ export enum PALETTE {
 
   PRIMARY_200 = "#CDC9FE",
   PRIMARY_400 = "#a29bfe",
-  PRIMARY_500 = "#493CFF",
+  PRIMARY_500 = "#8B83F2",
+  PRIMARY_600 = "#493CFF",
 }
