@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE_KEY } from "../constant/common";
 import { firestoreDB, myFirebase } from "../util/firebase";
 import { PullRequestURL } from "../util/types";
 
@@ -33,7 +34,7 @@ export const signInWithGithub = async () => {
 
   if (!uid) return;
 
-  localStorage.setItem("uid", uid);
+  localStorage.setItem(LOCAL_STORAGE_KEY.UID, uid);
 
   if (additionalUserInfo?.isNewUser) {
     await signUpWithGithub(additionalUserInfo, uid);
@@ -41,7 +42,7 @@ export const signInWithGithub = async () => {
 };
 
 export const requestUserProfile = async () => {
-  const uid = localStorage.getItem("uid");
+  const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
   if (!uid) {
     alert("로그인 정보가 만료되었습니다.");
@@ -57,7 +58,7 @@ export const requestUserProfile = async () => {
 };
 
 export const requestUserPullRequestURLs = async () => {
-  const uid = localStorage.getItem("uid");
+  const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
   if (!uid) {
     alert("로그인 정보가 만료되었습니다.");
@@ -76,7 +77,7 @@ export const requestUpdateUserProfile = async (
   nickname: string,
   avatarURL: string
 ) => {
-  const uid = localStorage.getItem("uid");
+  const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
   if (!uid) {
     alert("로그인 정보가 만료되었습니다.");
@@ -93,7 +94,7 @@ export const requestUpdateUserProfile = async (
 export const requestUpdatePullRequestURLs = (pullRequestURLs: {
   [url: string]: PullRequestURL;
 }) => {
-  const uid = localStorage.getItem("uid");
+  const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
   if (!uid) {
     alert("로그인 정보가 만료되었습니다.");

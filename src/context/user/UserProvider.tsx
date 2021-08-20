@@ -3,6 +3,7 @@ import {
   requestUserProfile,
   requestUserPullRequestURLs,
 } from "../../API/firebaseAPI";
+import { LOCAL_STORAGE_KEY } from "../../constant/common";
 import { Profile, PullRequestURL } from "../../util/types";
 
 interface Props {
@@ -28,10 +29,10 @@ const UserProvider = ({ children }: Props) => {
   const login = async (userProfile: Profile) => {
     setUserProfile(userProfile);
 
-    const result = await requestUserPullRequestURLs();
+    const pullRequestURLs = await requestUserPullRequestURLs();
 
-    if (result) {
-      const urls = Object.values(result).sort(
+    if (pullRequestURLs) {
+      const urls = Object.values(pullRequestURLs).sort(
         (a, b) => b.modificationTime.seconds - a.modificationTime.seconds
       );
 
@@ -45,7 +46,7 @@ const UserProvider = ({ children }: Props) => {
   };
 
   const refetch = async () => {
-    const uid = localStorage.getItem("uid");
+    const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
     if (!uid) {
       return;

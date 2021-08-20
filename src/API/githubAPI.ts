@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import removeMd from "remove-markdown";
 import { githubAxios } from "../util/axiosInstance";
 import {
   CodeReview,
@@ -6,8 +7,6 @@ import {
   PullRequest,
   PullRequestResponse,
 } from "../util/types";
-import { storeIdbCodeReview } from "./indexedDB";
-import removeMd from "remove-markdown";
 
 type PullRequestInfo = (
   pullRequest: PullRequest
@@ -102,8 +101,6 @@ export const requestCodeReview = async (url: string): Promise<CodeReview[]> => {
   );
 
   const codeReviews = [...reviews, ...discussions, ...comments];
-
-  storeIdbCodeReview(codeReviews);
 
   return codeReviews;
 };
