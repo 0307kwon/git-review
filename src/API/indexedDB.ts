@@ -22,7 +22,9 @@ const openCodeReviewIDB = (): Promise<IDBDatabase> => {
       objectStore.createIndex("content", "content", { unique: false });
       objectStore.createIndex("url", "url", { unique: false });
 
-      resolve(db);
+      objectStore.transaction.oncomplete = () => {
+        resolve(db);
+      };
     };
 
     request.onsuccess = (event) => resolve((event.target as IDBRequest).result);
@@ -151,21 +153,4 @@ export const deleteCodeReviewIDB = async (urlPath: string) => {
     codeReviewObjectStore.transaction.onerror = () =>
       reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
   });
-
-  // const endRange = `${urlPath.replace(/(.)$/, "")}${String.fromCharCode(
-  //   urlPath.slice(-1).charCodeAt(0) + 1
-  // )}`;
-  // const keyRange = IDBKeyRange.bound(urlPath, endRange, false, true);
-
-  // codeReviewObjectStore.delete(keyRange);
-
-  // return new Promise((resolve, reject) => {
-  //   transaction.oncomplete = () => {
-  //     resolve(true);
-  //   };
-
-  //   transaction.onerror = () => {
-  //     reject("에러");
-  //   };
-  // });
 };

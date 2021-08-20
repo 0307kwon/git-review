@@ -3,6 +3,7 @@ import removeMd from "remove-markdown";
 import { githubAxios } from "../util/axiosInstance";
 import {
   CodeReview,
+  HttpResponse,
   IssueResponse,
   PullRequest,
   PullRequestResponse,
@@ -72,7 +73,13 @@ const filterResponse = (
     );
 };
 
-export const requestCodeReview = async (url: string): Promise<CodeReview[]> => {
+export const requestCodeReview = async (
+  url: string
+): Promise<HttpResponse<CodeReview[]>> => {
+  const httpResponse: HttpResponse<CodeReview[]> = {
+    endPointURL: url,
+    resolvedValue: [],
+  };
   const reg = url.split("/");
 
   const requestParameter = {
@@ -81,26 +88,36 @@ export const requestCodeReview = async (url: string): Promise<CodeReview[]> => {
     pullNumber: reg[6],
   };
 
-  const {
-    data: {
-      user: { login: pullRequestAuthor },
-    },
-  } = await requestPullRequestInfo(requestParameter);
+  try {
+    const {
+      data: {
+        user: { login: pullRequestAuthor },
+      },
+    } = await requestPullRequestInfo(requestParameter);
 
-  const reviews = filterResponse(
-    await requestReview(requestParameter),
-    pullRequestAuthor
-  );
-  const discussions = filterResponse(
-    await requestDiscussion(requestParameter),
-    pullRequestAuthor
-  );
-  const comments = filterResponse(
-    await requestComment(requestParameter),
-    pullRequestAuthor
-  );
+    const reviews = filterResponse(
+      await requestReview(requestParameter),
+      pullRequestAuthor
+    );
+    const discussions = filterResponse(
+      await requestDiscussion(requestParameter),
+      pullRequestAuthor
+    );
+    const comments = filterResponse(
+      await requestComment(requestParameter),
+      pullRequestAuthor
+    );
 
-  const codeReviews = [...reviews, ...discussions, ...comments];
+    const codeReviews = [...reviews, ...discussions, ...comments];
 
-  return codeReviews;
+    httpResponse.resolvedValue = codeReviews;
+
+    return httpResponse;
+  } catch (error) {
+    httpResponse.error = {
+      errorMessage: error.message,
+    };
+
+    return httpResponse;
+  }
 };

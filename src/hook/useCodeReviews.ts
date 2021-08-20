@@ -9,14 +9,23 @@ import {
 import useUser from "../context/user/useUser";
 import { CodeReview } from "../util/types";
 
-const useCodeReviews = () => {
+interface Props {
+  onError: (failedURL: string[]) => void;
+}
+
+const useCodeReviews = ({ onError }: Props) => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
   const user = useUser();
 
   const loadOneCodeReview = async (url: string) => {
     const codeReview = await requestCodeReview(url);
 
-    storeCodeReviewIDB(codeReview);
+    if (codeReview.error) {
+      onError([url]);
+      return;
+    }
+
+    storeCodeReviewIDB(codeReview.resolvedValue);
   };
 
   const loadCodeReviews = async () => {
@@ -67,12 +76,23 @@ const useCodeReviews = () => {
     const codeReviewPromises = Array.from(upToDateURLSet).map((url) =>
       requestCodeReview(url)
     );
-    let codeReviews: CodeReview[] = [];
+    const codeReviews: CodeReview[] = [];
+    const failedURL: string[] = [];
 
-    //TODO: 하나라도 실패하면 로드에 실패함 => 수정해야함
-    (await Promise.all(codeReviewPromises)).forEach((reviews) => {
-      codeReviews.push(...reviews);
+    (await Promise.allSettled(codeReviewPromises)).forEach((result) => {
+      if (result.status === "rejected") return;
+
+      if (result.value.error) {
+        failedURL.push(result.value.endPointURL);
+        return;
+      }
+
+      codeReviews.push(...result.value.resolvedValue);
     });
+
+    if (failedURL.length > 0) {
+      onError(failedURL);
+    }
 
     await storeCodeReviewIDB(codeReviews);
 

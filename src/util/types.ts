@@ -44,3 +44,11 @@ export interface PullRequestURL {
   nickname: string;
   modificationTime: myFirebase.firestore.Timestamp;
 }
+
+export interface HttpResponse<T> {
+  endPointURL: string;
+  error?: {
+    errorMessage: string;
+  };
+  resolvedValue: T;
+}
