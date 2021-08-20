@@ -1,5 +1,4 @@
 import React from "react";
-import { requestDeletePullRequestURL } from "../../API/firebaseAPI";
 import usePullRequestURL from "../../hook/usePullRequestURL";
 import { ReactComponent as DeleteIcon } from "../../icon/cancel.svg";
 import { ReactComponent as ModifyIcon } from "../../icon/modify.svg";

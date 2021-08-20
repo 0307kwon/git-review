@@ -102,8 +102,8 @@ const Setting = () => {
             <PlusIcon />
           </IconButton>
         </Form>
-        {Object.keys(pullRequestURLs).map((url) => {
-          return <URLCard nickname={pullRequestURLs[url]} url={url} />;
+        {pullRequestURLs.map(({ nickname, url }) => {
+          return <URLCard nickname={nickname} url={url} />;
         })}
       </FlexContainer>
     </SettingContainer>

@@ -3,7 +3,7 @@ import {
   requestUserProfile,
   requestUserPullRequestURLs,
 } from "../../API/firebaseAPI";
-import { Profile, PullRequestURLs } from "../../util/types";
+import { Profile, PullRequestURL } from "../../util/types";
 
 interface Props {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface Props {
 
 interface ContextValue {
   userProfile: Profile | null;
-  pullRequestURLs: PullRequestURLs;
+  pullRequestURLs: PullRequestURL[];
   isLogin: boolean;
   login: (userProfile: Profile) => void;
   logout: () => void;
@@ -22,23 +22,26 @@ export const Context = createContext<ContextValue | null>(null);
 
 const UserProvider = ({ children }: Props) => {
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
-  const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURLs>({});
+  const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURL[]>([]);
   const isLogin = useMemo(() => (userProfile ? true : false), [userProfile]);
 
   const login = async (userProfile: Profile) => {
     setUserProfile(userProfile);
 
-    const urls = await requestUserPullRequestURLs();
+    const result = await requestUserPullRequestURLs();
 
-    if (urls) {
+    if (result) {
+      const urls = Object.values(result).sort(
+        (a, b) => b.modificationTime.seconds - a.modificationTime.seconds
+      );
+
       setPullRequestURLs(urls);
-      console.log(urls, "이거임");
     }
   };
 
   const logout = () => {
     setUserProfile(null);
-    setPullRequestURLs({});
+    setPullRequestURLs([]);
   };
 
   const refetch = async () => {

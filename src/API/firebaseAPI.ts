@@ -1,5 +1,5 @@
 import { firestoreDB, myFirebase } from "../util/firebase";
-import { PullRequestURLs, UserInfo } from "../util/types";
+import { PullRequestURL } from "../util/types";
 
 interface GithubProfile {
   name: string;
@@ -19,8 +19,8 @@ const signUpWithGithub = (
   const { name, avatar_url } = profile as GithubProfile;
 
   return firestoreDB(uid)["user/profile"].set({
-    nickname: "",
-    avatarURL: "",
+    nickname: name,
+    avatarURL: avatar_url,
   });
 };
 
@@ -50,7 +50,6 @@ export const requestUserProfile = async () => {
   }
 
   const result = await firestoreDB(uid)["user/profile"].get();
-  console.log(result, "이건가");
 
   const userProfile = result.data();
 
@@ -85,22 +84,15 @@ export const requestUpdateUserProfile = async (
     return;
   }
 
-  const updates: Pick<UserInfo, "profile"> = {
-    profile: {
-      nickname,
-      avatarURL,
-    },
-  };
-
   return firestoreDB(uid)["user/profile"].update({
     nickname,
     avatarURL,
   });
 };
 
-export const requestUpdatePullRequestURLs = (
-  pullRequestURLs: PullRequestURLs
-) => {
+export const requestUpdatePullRequestURLs = (pullRequestURLs: {
+  [url: string]: PullRequestURL;
+}) => {
   const uid = localStorage.getItem("uid");
 
   if (!uid) {
@@ -109,21 +101,5 @@ export const requestUpdatePullRequestURLs = (
     return;
   }
 
-  return firestoreDB(uid)["user/pullRequestURLs"].set(pullRequestURLs, {
-    merge: true,
-  });
-};
-
-export const requestDeletePullRequestURL = (url: string) => {
-  const uid = localStorage.getItem("uid");
-
-  if (!uid) {
-    alert("로그인 정보가 만료되었습니다.");
-
-    return;
-  }
-
-  return firestoreDB(uid)["user/pullRequestURLs"].update({
-    [url]: myFirebase.firestore.FieldValue.delete(),
-  });
+  return firestoreDB(uid)["user/pullRequestURLs"].set(pullRequestURLs);
 };

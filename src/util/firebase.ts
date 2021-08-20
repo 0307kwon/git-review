@@ -2,7 +2,7 @@ import "firebase/analytics";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { Profile, PullRequestURLs } from "./types";
+import { Profile, PullRequestURL } from "./types";
 
 //firebase initialize
 const firebaseConfig = {
@@ -38,9 +38,9 @@ const dataPoint = <T>(collectionKey: string) => {
 
 export const firestoreDB = (uid: string) => ({
   "user/profile": dataPoint<Profile>(`users/${uid}/user`).doc("profile"),
-  "user/pullRequestURLs": dataPoint<PullRequestURLs>(`users/${uid}/user`).doc(
-    "pull-request-urls"
-  ),
+  "user/pullRequestURLs": dataPoint<{ [url: string]: PullRequestURL }>(
+    `users/${uid}/user`
+  ).doc("pull-request-urls"),
 });
 
 export { default as myFirebase } from "firebase/app";

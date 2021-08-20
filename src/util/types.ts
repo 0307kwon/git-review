@@ -1,3 +1,5 @@
+import { myFirebase } from "./firebase";
+
 export interface PullRequest {
   owner: string;
   repo: string;
@@ -37,11 +39,8 @@ export interface Profile {
   avatarURL: string;
 }
 
-export interface PullRequestURLs {
-  [key: string]: string;
-}
-
-export interface UserInfo {
-  profile: Profile;
-  pullRequestURLs: PullRequestURLs;
+export interface PullRequestURL {
+  url: string;
+  nickname: string;
+  modificationTime: myFirebase.firestore.Timestamp;
 }
