@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { requestCodeReview } from "../API/githubAPI";
 import {
-  getAllURLsInIDB,
+  deleteCodeReviewIDB,
+  getAllURLsIDB,
   loadAllCodeReviewIDB,
   storeCodeReviewIDB,
 } from "../API/indexedDB";
-import { LOCAL_STORAGE_KEY } from "../constant/common";
 import useUser from "../context/user/useUser";
-import { CodeReview, PullRequestURL } from "../util/types";
+import { CodeReview } from "../util/types";
 
 const useCodeReviews = () => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
@@ -26,7 +26,9 @@ const useCodeReviews = () => {
       user.pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
     );
 
-    const localURLs: string[] = await getAllURLsInIDB();
+    const localURLs: string[] = await getAllURLsIDB();
+
+    console.log("최신 데이터", upToDateURLSet);
 
     const staleURLs = localURLs.filter((url) => {
       if (upToDateURLSet.has(url)) {
@@ -38,13 +40,22 @@ const useCodeReviews = () => {
     });
 
     console.log("저장되어있는거", localURLs);
+    console.log("업데이트해야되는 데이터", upToDateURLSet);
 
     //staleURLs은 무조건 db에서 삭제
+    if (staleURLs.length > 0) {
+      console.log("삭제해야하는 데이터", staleURLs);
+      await Promise.all(
+        staleURLs.map((staleURL) => deleteCodeReviewIDB(staleURL))
+      );
+    }
 
     //새로운 거 없으면 무조건 idb에서 땡겨서 로드
     if (upToDateURLSet.size === 0) {
       console.log("새로운거 없음");
       const codeReviewsInIdb = await loadAllCodeReviewIDB();
+
+      console.log(codeReviewsInIdb);
 
       setCodeReview(codeReviewsInIdb);
       return;
@@ -81,12 +92,13 @@ const useCodeReviews = () => {
         content: codeReview.content.replaceAll(keyword, `(요)${keyword}(고)`),
       }));
 
+    console.log(result);
+
     return result;
   };
 
   useEffect(() => {
-    console.log("뭐지 왜 모르지", user.pullRequestURLs);
-    if (user.pullRequestURLs) {
+    if (user.pullRequestURLs.length > 0) {
       loadCodeReviews();
     }
   }, [user.pullRequestURLs]);

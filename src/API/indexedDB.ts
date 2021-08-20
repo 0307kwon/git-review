@@ -68,8 +68,8 @@ export const storeCodeReviewIDB = async (codeReviews: CodeReview[]) => {
   }
 
   const codeReviewObjectStore = db
-    .transaction("codeReviews", "readwrite")
-    .objectStore("codeReviews");
+    .transaction(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS, "readwrite")
+    .objectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
 
   await Promise.all(
     codeReviews.map(
@@ -89,7 +89,7 @@ export const storeCodeReviewIDB = async (codeReviews: CodeReview[]) => {
   );
 };
 
-export const getAllURLsInIDB = async () => {
+export const getAllURLsIDB = async () => {
   const db = await openCodeReviewIDB();
 
   const codeReviewObjectStore = db
@@ -116,4 +116,56 @@ export const getAllURLsInIDB = async () => {
     codeReviewObjectStore.transaction.onerror = () =>
       reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
   });
+};
+
+export const deleteCodeReviewIDB = async (urlPath: string) => {
+  const db = await openCodeReviewIDB();
+
+  const transaction = db.transaction(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
+    "readwrite"
+  );
+  const codeReviewObjectStore = transaction.objectStore(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+  );
+
+  codeReviewObjectStore.openCursor().onsuccess = (event) => {
+    const cursor = (event.target as IDBRequest<IDBCursor>).result;
+
+    if (!cursor) {
+      return;
+    }
+    const targetURL: string = (cursor as IDBCursorWithValue).value.url;
+
+    if (targetURL.includes(urlPath)) {
+      cursor.delete();
+    }
+
+    cursor.continue();
+  };
+
+  return new Promise((resolve, reject) => {
+    codeReviewObjectStore.transaction.oncomplete = () => {
+      resolve(true);
+    };
+    codeReviewObjectStore.transaction.onerror = () =>
+      reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
+  });
+
+  // const endRange = `${urlPath.replace(/(.)$/, "")}${String.fromCharCode(
+  //   urlPath.slice(-1).charCodeAt(0) + 1
+  // )}`;
+  // const keyRange = IDBKeyRange.bound(urlPath, endRange, false, true);
+
+  // codeReviewObjectStore.delete(keyRange);
+
+  // return new Promise((resolve, reject) => {
+  //   transaction.oncomplete = () => {
+  //     resolve(true);
+  //   };
+
+  //   transaction.onerror = () => {
+  //     reject("에러");
+  //   };
+  // });
 };
