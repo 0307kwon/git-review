@@ -1,11 +1,12 @@
-import React, { HTMLAttributes } from "react";
+import React from "react";
+import { ButtonHTMLAttributes } from "react";
 import { RootButton } from "./Button.styles";
 
 const Button = ({
   children,
   className,
   ...option
-}: HTMLAttributes<HTMLButtonElement>) => {
+}: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <RootButton className={className} {...option}>
       {children}

@@ -1,0 +1,3 @@
+export const PULL_REQUEST_URL = {
+  MAX_NICKNAME_LENGTH: 30,
+};

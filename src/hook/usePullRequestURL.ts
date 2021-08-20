@@ -17,7 +17,7 @@ const usePullRequestURL = () => {
 
     await requestUpdatePullRequestURLs(updatingURLs);
 
-    user.refetch();
+    await user.refetch();
   };
 
   const addURL = async (nickname: string, url: string) => {
@@ -26,9 +26,7 @@ const usePullRequestURL = () => {
     );
 
     if (isAlreadyExist) {
-      alert("이미 존재하는 url입니다");
-
-      return;
+      throw new Error("이미 존재하는 url입니다.");
     }
 
     const updatingURLs: { [url: string]: PullRequestURL } = {};
@@ -45,12 +43,31 @@ const usePullRequestURL = () => {
         modificationTime: myFirebase.firestore.Timestamp.now(),
       },
     });
-    user.refetch();
+    await user.refetch();
+  };
+
+  const modifyURLNickname = async (nickname: string, url: string) => {
+    const updatingURLs: { [url: string]: PullRequestURL } = {};
+
+    user.pullRequestURLs.forEach((pullRequestURL) => {
+      updatingURLs[pullRequestURL.url] = pullRequestURL;
+    });
+
+    await requestUpdatePullRequestURLs({
+      ...updatingURLs,
+      [url]: {
+        url,
+        nickname,
+        modificationTime: myFirebase.firestore.Timestamp.now(),
+      },
+    });
+    await user.refetch();
   };
 
   return {
     deleteURL,
     addURL,
+    modifyURLNickname,
   };
 };
 

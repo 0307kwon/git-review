@@ -1,5 +1,14 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import FlexContainer from "../../component/@common/FlexContainer/FlexContainer";
+import IconButton from "../../component/@common/IconButton/IconButton";
+import Input from "../../component/Input/Input";
+import URLCard from "../../component/URLCard/URLCard";
+import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
+import { PULL_REQUEST_URL } from "../../constant/validation";
 import useUser from "../../context/user/useUser";
+import usePullRequestURL from "../../hook/usePullRequestURL";
+import { ReactComponent as PlusIcon } from "../../icon/plus.svg";
+import { ReactComponent as PullRequestIcon } from "../../icon/pullRequest.svg";
 import {
   AvatarContainer,
   Form,
@@ -7,16 +16,6 @@ import {
   SettingContainer,
   SubTitleContainer,
 } from "./Setting.styles";
-import { ReactComponent as PullRequestIcon } from "../../icon/pullRequest.svg";
-import { ReactComponent as PlusIcon } from "../../icon/plus.svg";
-import URLCard from "../../component/URLCard/URLCard";
-import FlexContainer from "../../component/@common/FlexContainer/FlexContainer";
-import IconButton from "../../component/@common/IconButton/IconButton";
-import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
-import Input from "../../component/Input/Input";
-import { useState } from "react";
-import { requestUpdatePullRequestURLs } from "../../API/firebaseAPI";
-import usePullRequestURL from "../../hook/usePullRequestURL";
 
 interface PullRequestURL {
   nickname: string;
@@ -26,10 +25,9 @@ interface PullRequestURL {
 const Setting = () => {
   const { addURL } = usePullRequestURL();
   const user = useUser();
-  const [
-    pullRequestFormData,
-    setPullRequestFormData,
-  ] = useState<PullRequestURL>({
+  const [pullRequestFormData, setPullRequestFormData] = useState<
+    Omit<PullRequestURL, "modificationTime">
+  >({
     nickname: "",
     url: "",
   });
@@ -43,8 +41,6 @@ const Setting = () => {
   const handleChangeInput = (key: keyof PullRequestURL) => (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    //TODO: 중복 url 검사를 해야함
-
     setPullRequestFormData({
       ...pullRequestFormData,
       [key]: event.target.value,
@@ -82,7 +78,7 @@ const Setting = () => {
                 <Input
                   value={pullRequestFormData.nickname}
                   onChange={handleChangeInput("nickname")}
-                  maxLength={10}
+                  maxLength={PULL_REQUEST_URL.MAX_NICKNAME_LENGTH}
                   required
                   placeholder="PR 별칭"
                 />
@@ -103,7 +99,7 @@ const Setting = () => {
           </IconButton>
         </Form>
         {pullRequestURLs.map(({ nickname, url }) => {
-          return <URLCard nickname={nickname} url={url} />;
+          return <URLCard nickname={nickname} url={url} key={url} />;
         })}
       </FlexContainer>
     </SettingContainer>
