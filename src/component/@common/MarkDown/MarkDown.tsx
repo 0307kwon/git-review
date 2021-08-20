@@ -63,6 +63,11 @@ const MarkDown: FC<ReactMarkdown.ReactMarkdownOptions> = styled(ReactMarkdown)`
     padding: 0.5rem 0;
   }
 
+  em {
+    font-style: normal;
+    background-color: yellow;
+  }
+
   li {
     list-style: inside;
     margin-left: 1rem;

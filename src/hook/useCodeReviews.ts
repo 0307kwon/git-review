@@ -104,12 +104,20 @@ const useCodeReviews = () => {
   const findByKeyword = (keyword: string) => {
     if (!keyword) return [];
 
-    //TODO: 어떻게 화면에 형광펜으로 표시해주지...?
+    if (!keyword.replaceAll(" ", "")) {
+      return [];
+    }
+
+    const filteredKeyword = keyword.trim();
+
     const result = codeReviews
-      .filter((codeReview) => codeReview.plainText.includes(keyword))
+      .filter((codeReview) => codeReview.plainText.includes(filteredKeyword))
       .map((codeReview) => ({
         ...codeReview,
-        content: codeReview.content.replaceAll(keyword, `(요)${keyword}(고)`),
+        content: codeReview.content.replaceAll(
+          filteredKeyword,
+          ` _🔍${filteredKeyword}_ `
+        ),
       }));
 
     return result;
