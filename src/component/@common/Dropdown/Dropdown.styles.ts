@@ -44,7 +44,7 @@ export const Menu = styled.div`
     cursor: pointer;
   }
 
-  & > button:hover {
+  & > *:hover {
     background-color: ${PALETTE.GRAY_300};
   }
 `;
