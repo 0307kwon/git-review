@@ -43,6 +43,7 @@ export interface PullRequestURL {
   url: string;
   nickname: string;
   modificationTime: myFirebase.firestore.Timestamp;
+  isFailedURL: boolean;
 }
 
 export interface HttpResponse<T> {
@@ -52,3 +53,6 @@ export interface HttpResponse<T> {
   };
   resolvedValue: T;
 }
+
+export type RequiredOnly<T, K extends keyof T> = Partial<Exclude<T, K>> &
+  Required<Pick<T, K>>;

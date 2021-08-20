@@ -18,12 +18,13 @@ interface Children {
 
 interface Props {
   children: Children;
+  isFailedURL?: boolean;
 }
 
-const URLCardTemplate = ({ children }: Props) => {
+const URLCardTemplate = ({ children, isFailedURL }: Props) => {
   return (
     <CardContainer>
-      <NameContainer>
+      <NameContainer isFailedURL={isFailedURL}>
         <FlexContainer alignItems="center" gap="0.5rem">
           <LinkIcon />
           {children.title}

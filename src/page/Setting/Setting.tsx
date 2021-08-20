@@ -1,14 +1,16 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import { useEffect } from "react";
 import FlexContainer from "../../component/@common/FlexContainer/FlexContainer";
 import IconButton from "../../component/@common/IconButton/IconButton";
 import Input from "../../component/Input/Input";
 import URLCard from "../../component/URLCard/URLCard";
 import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
 import { PULL_REQUEST_URL } from "../../constant/validation";
-import useUser from "../../context/user/useUser";
-import usePullRequestURL from "../../hook/usePullRequestURL";
+import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
+import useUser from "../../context/UserProvider/useUser";
 import { ReactComponent as PlusIcon } from "../../icon/plus.svg";
 import { ReactComponent as PullRequestIcon } from "../../icon/pullRequest.svg";
+import { PullRequestURL } from "../../util/types";
 import {
   AvatarContainer,
   Form,
@@ -17,22 +19,21 @@ import {
   SubTitleContainer,
 } from "./Setting.styles";
 
-interface PullRequestURL {
-  nickname: string;
-  url: string;
-}
-
 const Setting = () => {
-  const { addURL } = usePullRequestURL();
+  const { pullRequestURLs, addURL, refetchURLs } = usePullRequestURL();
   const user = useUser();
   const [pullRequestFormData, setPullRequestFormData] = useState<
-    Omit<PullRequestURL, "modificationTime">
+    Pick<PullRequestURL, "nickname" | "url">
   >({
     nickname: "",
     url: "",
   });
 
-  const { userProfile, pullRequestURLs } = user;
+  const { userProfile } = user;
+
+  useEffect(() => {
+    refetchURLs();
+  }, []);
 
   if (!userProfile || !pullRequestURLs) {
     return null;
@@ -53,6 +54,7 @@ const Setting = () => {
     const { nickname, url } = pullRequestFormData;
 
     await addURL(nickname, url);
+    await refetchURLs();
 
     setPullRequestFormData({
       nickname: "",
@@ -98,8 +100,10 @@ const Setting = () => {
             <PlusIcon />
           </IconButton>
         </Form>
-        {pullRequestURLs.map(({ nickname, url }) => {
-          return <URLCard nickname={nickname} url={url} key={url} />;
+        {pullRequestURLs.map((pullRequestURL) => {
+          return (
+            <URLCard key={pullRequestURL.url} pullRequestURL={pullRequestURL} />
+          );
         })}
       </FlexContainer>
     </SettingContainer>

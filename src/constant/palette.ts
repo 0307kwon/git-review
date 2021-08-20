@@ -11,5 +11,6 @@ export enum PALETTE {
   PRIMARY_500 = "#8B83F2",
   PRIMARY_600 = "#493CFF",
 
+  RED_200 = "#FF9D9D",
   RED_400 = "#FF3C3C",
 }

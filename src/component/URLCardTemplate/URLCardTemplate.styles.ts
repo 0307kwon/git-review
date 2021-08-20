@@ -18,11 +18,12 @@ export const CardContainer = styled.div`
   }
 `;
 
-export const NameContainer = styled.div`
+export const NameContainer = styled.div<{ isFailedURL?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${PALETTE.GRAY_100};
+  background-color: ${({ isFailedURL }) =>
+    isFailedURL ? PALETTE.RED_200 : PALETTE.GRAY_100};
 `;
 
 export const URLContainer = styled.div`

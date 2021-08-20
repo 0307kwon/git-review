@@ -1,10 +1,7 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import {
-  requestUserProfile,
-  requestUserPullRequestURLs,
-} from "../../API/firebaseAPI";
+import { requestUserProfile } from "../../API/firebaseAPI";
 import { LOCAL_STORAGE_KEY } from "../../constant/common";
-import { Profile, PullRequestURL } from "../../util/types";
+import { Profile } from "../../util/types";
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +9,6 @@ interface Props {
 
 interface ContextValue {
   userProfile: Profile | null;
-  pullRequestURLs: PullRequestURL[];
   isLogin: boolean;
   login: (userProfile: Profile) => void;
   logout: () => void;
@@ -23,26 +19,14 @@ export const Context = createContext<ContextValue | null>(null);
 
 const UserProvider = ({ children }: Props) => {
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
-  const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURL[]>([]);
   const isLogin = useMemo(() => (userProfile ? true : false), [userProfile]);
 
   const login = async (userProfile: Profile) => {
     setUserProfile(userProfile);
-
-    const pullRequestURLs = await requestUserPullRequestURLs();
-
-    if (pullRequestURLs) {
-      const urls = Object.values(pullRequestURLs).sort(
-        (a, b) => b.modificationTime.seconds - a.modificationTime.seconds
-      );
-
-      setPullRequestURLs(urls);
-    }
   };
 
   const logout = () => {
     setUserProfile(null);
-    setPullRequestURLs([]);
   };
 
   const refetch = async () => {
@@ -60,8 +44,8 @@ const UserProvider = ({ children }: Props) => {
   };
 
   const contextValue = useMemo<ContextValue>(
-    () => ({ userProfile, pullRequestURLs, isLogin, login, logout, refetch }),
-    [userProfile, pullRequestURLs, isLogin]
+    () => ({ userProfile, isLogin, login, logout, refetch }),
+    [userProfile, isLogin]
   );
 
   useEffect(() => {

@@ -1,4 +1,6 @@
 import React from "react";
+import { myFirebase } from "../../util/firebase";
+import { PullRequestURL } from "../../util/types";
 import URLCard from "./URLCard";
 
 export default {
@@ -6,4 +8,11 @@ export default {
   title: "Components/URLCard",
 };
 
-export const Primary = () => <URLCard nickname="별칭" url="naver.com" />;
+const pullRequestURL: PullRequestURL = {
+  isFailedURL: false,
+  nickname: "하하",
+  url: "naver.com",
+  modificationTime: myFirebase.firestore.Timestamp.now(),
+};
+
+export const Primary = () => <URLCard pullRequestURL={pullRequestURL} />;

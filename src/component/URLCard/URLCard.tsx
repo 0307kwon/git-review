@@ -1,9 +1,8 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { PULL_REQUEST_URL } from "../../constant/validation";
-import usePullRequestURL from "../../hook/usePullRequestURL";
+import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
 import { ReactComponent as DeleteIcon } from "../../icon/cancel.svg";
 import { ReactComponent as ModifyIcon } from "../../icon/modify.svg";
-import { Form } from "../../page/Setting/Setting.styles";
 import { PullRequestURL } from "../../util/types";
 import Button from "../@common/Button/Button";
 import IconButton from "../@common/IconButton/IconButton";
@@ -12,33 +11,35 @@ import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLCardForm, URLParagraph } from "./URLCard.styles";
 
 interface Props {
-  url: string;
-  nickname: string;
+  pullRequestURL: PullRequestURL;
 }
 
-const URLCard = ({ url, nickname }: Props) => {
-  const { modifyURLNickname, deleteURL } = usePullRequestURL();
+const URLCard = ({ pullRequestURL }: Props) => {
+  const { modifyURL, deleteURL, refetchURLs } = usePullRequestURL();
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [pullRequestFormData, setPullRequestFormData] = useState<
-    Omit<PullRequestURL, "modificationTime">
+    Pick<PullRequestURL, "nickname" | "url">
   >({
-    nickname,
-    url,
+    nickname: pullRequestURL.nickname,
+    url: pullRequestURL.url,
   });
 
-  const handleDeleteURL = () => {
+  const handleDeleteURL = async () => {
     if (window.confirm("해당 url을 삭제하시겠습니까?")) {
-      deleteURL(url);
+      await deleteURL(pullRequestURL.url);
+      await refetchURLs();
     }
   };
 
   const handleModifyURL = async (event: FormEvent) => {
     event.preventDefault();
 
-    await modifyURLNickname(
-      pullRequestFormData.nickname,
-      pullRequestFormData.url
-    );
+    await modifyURL({
+      nickname: pullRequestFormData.nickname,
+      url: pullRequestFormData.url,
+      isFailedURL: false,
+    });
+    await refetchURLs();
     setIsModifyMode(false);
   };
 
@@ -53,7 +54,7 @@ const URLCard = ({ url, nickname }: Props) => {
 
   return (
     <URLCardForm onSubmit={handleModifyURL}>
-      <URLCardTemplate>
+      <URLCardTemplate isFailedURL={pullRequestURL.isFailedURL}>
         {{
           title: (
             <>
@@ -66,7 +67,12 @@ const URLCard = ({ url, nickname }: Props) => {
                   placeholder="PR 별칭"
                 />
               ) : (
-                nickname
+                <>
+                  <span>{pullRequestURL.nickname}</span>
+                  {pullRequestURL.isFailedURL && (
+                    <span>(PR을 가져오는데 실패했습니다.)</span>
+                  )}
+                </>
               )}
             </>
           ),
@@ -101,7 +107,7 @@ const URLCard = ({ url, nickname }: Props) => {
               )}
             </>
           ),
-          content: <URLParagraph>{url}</URLParagraph>,
+          content: <URLParagraph>{pullRequestURL.url}</URLParagraph>,
         }}
       </URLCardTemplate>
     </URLCardForm>
