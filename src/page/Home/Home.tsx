@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import SearchForm from "../../component/SearchForm/SearchForm";
 import useCodeReviews from "../../hook/useCodeReviews";
@@ -17,6 +18,7 @@ const Home = () => {
     <div>
       <SearchForm onSubmit={handleSearchByKeyword} />
       <HomeContents>
+        {searchResults.length === 0 && <HelpCard />}
         {searchResults.map((searchResult) => (
           <ReviewCard
             key={searchResult.id}
