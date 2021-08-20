@@ -26,4 +26,10 @@ export const RootButton = styled.button`
       background-color: rgba(0, 0, 0, 0.1);
     }
   }
+
+  &:active {
+    &::after {
+      background-color: rgba(0, 0, 0, 0);
+    }
+  }
 `;
