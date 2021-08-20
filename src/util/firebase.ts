@@ -2,7 +2,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/analytics";
 import "firebase/auth";
+import { UserInfo } from "./types";
 
+//firebase initialize
 const firebaseConfig = {
   apiKey: "AIzaSyDA0jCpEE19Rf0YcGyOff6g6TNLGYu5W5g",
   authDomain: "git-book-6aad6.firebaseapp.com",
@@ -15,5 +17,27 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
+
+//firestore
+const db = firebase.firestore();
+
+const firestoreConverter = <
+  T
+>(): firebase.firestore.FirestoreDataConverter<T> => ({
+  toFirestore: (data: T) => data,
+  fromFirestore: (snapshot: firebase.firestore.QueryDocumentSnapshot): T => {
+    const data = snapshot.data();
+
+    return data as T;
+  },
+});
+
+const dataPoint = <T>(collectionKey: string) => {
+  return db.collection(collectionKey).withConverter(firestoreConverter<T>());
+};
+
+export const firestoreDB = {
+  users: dataPoint<UserInfo>("users"),
+};
 
 export { default as myFirebase } from "firebase/app";

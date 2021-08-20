@@ -1,6 +1,5 @@
-import { myFirebase } from "../util/firebase";
-import { firestoreDB } from "../util/firestore";
-import { UserInfo } from "../util/types";
+import { firestoreDB, myFirebase } from "../util/firebase";
+import { PullRequestURL, UserInfo } from "../util/types";
 
 interface GithubProfile {
   name: string;
@@ -8,57 +7,6 @@ interface GithubProfile {
 }
 
 const provider = new myFirebase.auth.GithubAuthProvider();
-
-export const requestUpdatePullRequestURL = (pullRequestURLs: string[]) => {
-  const uid = localStorage.getItem("uid");
-
-  if (!uid) {
-    alert("로그인 정보가 만료되었습니다.");
-
-    return;
-  }
-
-  return firestoreDB.users.doc(uid).update({
-    pullRequestURLs,
-  });
-};
-
-export const requestUpdateUserProfile = async (
-  nickname: string,
-  avatarURL: string
-) => {
-  const uid = localStorage.getItem("uid");
-
-  if (!uid) {
-    alert("로그인 정보가 만료되었습니다.");
-
-    return;
-  }
-
-  const updates: Pick<UserInfo, "profile"> = {
-    profile: {
-      nickname,
-      avatarURL,
-    },
-  };
-
-  return firestoreDB.users.doc(uid).update(updates);
-};
-
-export const requestUserInfo = async () => {
-  const uid = localStorage.getItem("uid");
-
-  if (!uid) {
-    alert("로그인 정보가 만료되었습니다.");
-
-    return;
-  }
-
-  const result = await firestoreDB.users.doc(uid).get();
-  const userInfo = result.data();
-
-  return userInfo;
-};
 
 const signUpWithGithub = async (
   additionalUserInfo: myFirebase.auth.AdditionalUserInfo,
@@ -95,4 +43,57 @@ export const signInWithGithub = async () => {
   if (additionalUserInfo?.isNewUser) {
     await signUpWithGithub(additionalUserInfo, uid);
   }
+};
+
+export const requestUserInfo = async () => {
+  const uid = localStorage.getItem("uid");
+
+  if (!uid) {
+    alert("로그인 정보가 만료되었습니다.");
+
+    return;
+  }
+
+  const result = await firestoreDB.users.doc(uid).get();
+  const userInfo = result.data();
+
+  return userInfo;
+};
+
+export const requestUpdateUserProfile = async (
+  nickname: string,
+  avatarURL: string
+) => {
+  const uid = localStorage.getItem("uid");
+
+  if (!uid) {
+    alert("로그인 정보가 만료되었습니다.");
+
+    return;
+  }
+
+  const updates: Pick<UserInfo, "profile"> = {
+    profile: {
+      nickname,
+      avatarURL,
+    },
+  };
+
+  return firestoreDB.users.doc(uid).update(updates);
+};
+
+export const requestUpdatePullRequestURLs = (
+  pullRequestURLs: PullRequestURL[]
+) => {
+  const uid = localStorage.getItem("uid");
+
+  if (!uid) {
+    alert("로그인 정보가 만료되었습니다.");
+
+    return;
+  }
+
+  return firestoreDB.users.doc(uid).update({
+    pullRequestURLs,
+  });
 };

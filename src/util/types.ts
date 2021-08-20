@@ -37,7 +37,12 @@ export interface Profile {
   avatarURL: string;
 }
 
+export interface PullRequestURL {
+  nickname: string;
+  url: string;
+}
+
 export interface UserInfo {
   profile: Profile;
-  pullRequestURLs: string[];
+  pullRequestURLs: PullRequestURL[];
 }
