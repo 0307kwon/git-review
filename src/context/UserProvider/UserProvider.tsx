@@ -27,6 +27,7 @@ const UserProvider = ({ children }: Props) => {
 
   const logout = () => {
     setUserProfile(null);
+    localStorage.removeItem(LOCAL_STORAGE_KEY.UID);
   };
 
   const refetch = async () => {

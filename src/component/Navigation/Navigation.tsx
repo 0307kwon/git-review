@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { requestUserProfile, signInWithGithub } from "../../API/firebaseAPI";
 import useUser from "../../context/UserProvider/useUser";
 import { ReactComponent as LogoutIcon } from "../../icon/logout.svg";
@@ -15,6 +15,7 @@ import {
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const history = useHistory();
   const user = useUser();
 
   const handleSignIn = async () => {
@@ -28,6 +29,13 @@ const Navigation = () => {
 
   const handleToggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      user.logout();
+      history.push("/");
+    }
   };
 
   const { userProfile } = user;
@@ -47,7 +55,7 @@ const Navigation = () => {
                 <SettingIcon />
                 설정
               </Link>
-              <button className="red">
+              <button onClick={handleLogout} className="red">
                 <LogoutIcon />
                 로그아웃
               </button>
