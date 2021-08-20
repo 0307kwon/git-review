@@ -1,17 +1,19 @@
-import React, { useEffect, useMemo } from "react";
-import { useState } from "react";
-import { createContext } from "react";
-import { requestUserInfo } from "../../API/firebaseAPI";
-import { UserInfo } from "../../util/types";
+import React, { createContext, useEffect, useMemo, useState } from "react";
+import {
+  requestUserProfile,
+  requestUserPullRequestURLs,
+} from "../../API/firebaseAPI";
+import { Profile, PullRequestURLs } from "../../util/types";
 
 interface Props {
   children: React.ReactNode;
 }
 
 interface ContextValue {
-  userInfo: UserInfo | null;
+  userProfile: Profile | null;
+  pullRequestURLs: PullRequestURLs;
   isLogin: boolean;
-  login: (userInfo: UserInfo) => void;
+  login: (userProfile: Profile) => void;
   logout: () => void;
   refetch: () => void;
 }
@@ -19,30 +21,43 @@ interface ContextValue {
 export const Context = createContext<ContextValue | null>(null);
 
 const UserProvider = ({ children }: Props) => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const isLogin = useMemo(() => (userInfo ? true : false), [userInfo]);
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
+  const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURLs>({});
+  const isLogin = useMemo(() => (userProfile ? true : false), [userProfile]);
 
-  const login = (userInfo: UserInfo) => {
-    setUserInfo(userInfo);
+  const login = async (userProfile: Profile) => {
+    setUserProfile(userProfile);
+
+    const urls = await requestUserPullRequestURLs();
+
+    if (urls) {
+      setPullRequestURLs(urls);
+      console.log(urls, "이거임");
+    }
   };
 
   const logout = () => {
-    setUserInfo(null);
+    setUserProfile(null);
+    setPullRequestURLs({});
   };
 
-  const refetch = () => {
+  const refetch = async () => {
     const uid = localStorage.getItem("uid");
 
-    if (uid) {
-      requestUserInfo().then((userInfo) => {
-        login(userInfo as UserInfo);
-      });
+    if (!uid) {
+      return;
+    }
+
+    const profile = await requestUserProfile();
+
+    if (profile) {
+      login(profile);
     }
   };
 
   const contextValue = useMemo<ContextValue>(
-    () => ({ userInfo, isLogin, login, logout, refetch }),
-    [userInfo, isLogin]
+    () => ({ userProfile, pullRequestURLs, isLogin, login, logout, refetch }),
+    [userProfile, pullRequestURLs, isLogin]
   );
 
   useEffect(() => {

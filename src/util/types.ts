@@ -37,12 +37,11 @@ export interface Profile {
   avatarURL: string;
 }
 
-export interface PullRequestURL {
-  nickname: string;
-  url: string;
+export interface PullRequestURLs {
+  [key: string]: string;
 }
 
 export interface UserInfo {
   profile: Profile;
-  pullRequestURLs: PullRequestURL[];
+  pullRequestURLs: PullRequestURLs;
 }

@@ -1,5 +1,5 @@
 import { firestoreDB, myFirebase } from "../util/firebase";
-import { PullRequestURL, UserInfo } from "../util/types";
+import { PullRequestURLs, UserInfo } from "../util/types";
 
 interface GithubProfile {
   name: string;
@@ -8,7 +8,7 @@ interface GithubProfile {
 
 const provider = new myFirebase.auth.GithubAuthProvider();
 
-const signUpWithGithub = async (
+const signUpWithGithub = (
   additionalUserInfo: myFirebase.auth.AdditionalUserInfo,
   uid: string
 ) => {
@@ -18,15 +18,10 @@ const signUpWithGithub = async (
 
   const { name, avatar_url } = profile as GithubProfile;
 
-  await firestoreDB.users.doc(uid).set({
-    profile: {
-      nickname: "",
-      avatarURL: "",
-    },
-    pullRequestURLs: [],
+  return firestoreDB(uid)["user/profile"].set({
+    nickname: "",
+    avatarURL: "",
   });
-
-  return requestUpdateUserProfile(name, avatar_url);
 };
 
 export const signInWithGithub = async () => {
@@ -45,7 +40,7 @@ export const signInWithGithub = async () => {
   }
 };
 
-export const requestUserInfo = async () => {
+export const requestUserProfile = async () => {
   const uid = localStorage.getItem("uid");
 
   if (!uid) {
@@ -54,10 +49,28 @@ export const requestUserInfo = async () => {
     return;
   }
 
-  const result = await firestoreDB.users.doc(uid).get();
-  const userInfo = result.data();
+  const result = await firestoreDB(uid)["user/profile"].get();
+  console.log(result, "이건가");
 
-  return userInfo;
+  const userProfile = result.data();
+
+  return userProfile;
+};
+
+export const requestUserPullRequestURLs = async () => {
+  const uid = localStorage.getItem("uid");
+
+  if (!uid) {
+    alert("로그인 정보가 만료되었습니다.");
+
+    return;
+  }
+
+  const result = await firestoreDB(uid)["user/pullRequestURLs"].get();
+
+  const pullRequestURLs = result.data();
+
+  return pullRequestURLs;
 };
 
 export const requestUpdateUserProfile = async (
@@ -79,11 +92,14 @@ export const requestUpdateUserProfile = async (
     },
   };
 
-  return firestoreDB.users.doc(uid).update(updates);
+  return firestoreDB(uid)["user/profile"].update({
+    nickname,
+    avatarURL,
+  });
 };
 
 export const requestUpdatePullRequestURLs = (
-  pullRequestURLs: PullRequestURL[]
+  pullRequestURLs: PullRequestURLs
 ) => {
   const uid = localStorage.getItem("uid");
 
@@ -93,7 +109,21 @@ export const requestUpdatePullRequestURLs = (
     return;
   }
 
-  return firestoreDB.users.doc(uid).update({
-    pullRequestURLs,
+  return firestoreDB(uid)["user/pullRequestURLs"].set(pullRequestURLs, {
+    merge: true,
+  });
+};
+
+export const requestDeletePullRequestURL = (url: string) => {
+  const uid = localStorage.getItem("uid");
+
+  if (!uid) {
+    alert("로그인 정보가 만료되었습니다.");
+
+    return;
+  }
+
+  return firestoreDB(uid)["user/pullRequestURLs"].update({
+    [url]: myFirebase.firestore.FieldValue.delete(),
   });
 };

@@ -1,31 +1,41 @@
 import React from "react";
+import { requestDeletePullRequestURL } from "../../API/firebaseAPI";
+import usePullRequestURL from "../../hook/usePullRequestURL";
 import { ReactComponent as DeleteIcon } from "../../icon/cancel.svg";
 import { ReactComponent as ModifyIcon } from "../../icon/modify.svg";
-import { PullRequestURL } from "../../util/types";
 import IconButton from "../@common/IconButton/IconButton";
 import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLParagraph } from "./URLCard.styles";
 
 interface Props {
-  pullRequestURL: PullRequestURL;
+  url: string;
+  nickname: string;
 }
 
-const URLCard = ({ pullRequestURL }: Props) => {
+const URLCard = ({ url, nickname }: Props) => {
+  const { deleteURL } = usePullRequestURL();
+
+  const handleDeleteURL = () => {
+    if (window.confirm("해당 url을 삭제하시겠습니까?")) {
+      deleteURL(url);
+    }
+  };
+
   return (
     <URLCardTemplate>
       {{
-        title: pullRequestURL.nickname,
+        title: nickname,
         control: (
           <>
             <IconButton size="2rem" onClick={() => {}}>
               <ModifyIcon />
             </IconButton>
-            <IconButton size="2.25rem" onClick={() => {}}>
+            <IconButton onClick={handleDeleteURL} size="2.25rem">
               <DeleteIcon />
             </IconButton>
           </>
         ),
-        content: <URLParagraph>{pullRequestURL.url}</URLParagraph>,
+        content: <URLParagraph>{url}</URLParagraph>,
       }}
     </URLCardTemplate>
   );

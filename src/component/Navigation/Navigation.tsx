@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { requestUserInfo, signInWithGithub } from "../../API/firebaseAPI";
+import { Link } from "react-router-dom";
+import { requestUserProfile, signInWithGithub } from "../../API/firebaseAPI";
 import useUser from "../../context/user/useUser";
-import { UserInfo } from "../../util/types";
-import Avatar from "../@common/Avatar/Avatar";
-import { ReactComponent as SettingIcon } from "../../icon/setting.svg";
 import { ReactComponent as LogoutIcon } from "../../icon/logout.svg";
+import { ReactComponent as SettingIcon } from "../../icon/setting.svg";
+import Avatar from "../@common/Avatar/Avatar";
 import {
   Arrow,
   AvatarButton,
@@ -12,7 +12,6 @@ import {
   AvatarDropdown,
   LoginButton,
 } from "./Navigation.styles";
-import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -20,26 +19,30 @@ const Navigation = () => {
 
   const handleSignIn = async () => {
     await signInWithGithub();
-    const userInfo: unknown = await requestUserInfo();
+    const profile = await requestUserProfile();
 
-    user.login(userInfo as UserInfo);
+    if (profile) {
+      user.login(profile);
+    }
   };
 
   const handleToggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
+  const { userProfile } = user;
+
   return (
     <div>
-      {user.userInfo ? (
+      {userProfile ? (
         <AvatarContainer>
           <AvatarButton onClick={handleToggleDropdown}>
-            <Avatar imgURL={user.userInfo.profile.avatarURL} />
+            <Avatar imgURL={userProfile.avatarURL} />
             <Arrow />
           </AvatarButton>
           {isDropdownVisible && (
             <AvatarDropdown>
-              <div className="welcome">{`👋 ${user.userInfo.profile.nickname}님 환영합니다.`}</div>
+              <div className="welcome">{`👋 ${userProfile.nickname}님 환영합니다.`}</div>
               <Link onClick={handleToggleDropdown} to="/setting">
                 <SettingIcon />
                 설정

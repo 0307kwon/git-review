@@ -15,10 +15,16 @@ import IconButton from "../../component/@common/IconButton/IconButton";
 import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
 import Input from "../../component/Input/Input";
 import { useState } from "react";
-import { PullRequestURL } from "../../util/types";
 import { requestUpdatePullRequestURLs } from "../../API/firebaseAPI";
+import usePullRequestURL from "../../hook/usePullRequestURL";
+
+interface PullRequestURL {
+  nickname: string;
+  url: string;
+}
 
 const Setting = () => {
+  const { addURL } = usePullRequestURL();
   const user = useUser();
   const [
     pullRequestFormData,
@@ -28,15 +34,17 @@ const Setting = () => {
     url: "",
   });
 
-  if (!user.userInfo) {
+  const { userProfile, pullRequestURLs } = user;
+
+  if (!userProfile || !pullRequestURLs) {
     return null;
   }
-
-  const { profile, pullRequestURLs } = user.userInfo;
 
   const handleChangeInput = (key: keyof PullRequestURL) => (
     event: ChangeEvent<HTMLInputElement>
   ) => {
+    //TODO: 중복 url 검사를 해야함
+
     setPullRequestFormData({
       ...pullRequestFormData,
       [key]: event.target.value,
@@ -46,11 +54,10 @@ const Setting = () => {
   const handleAddPullRequestURL = async (event: FormEvent) => {
     event.preventDefault();
 
-    await requestUpdatePullRequestURLs([
-      pullRequestFormData,
-      ...pullRequestURLs,
-    ]);
-    user.refetch();
+    const { nickname, url } = pullRequestFormData;
+
+    await addURL(nickname, url);
+
     setPullRequestFormData({
       nickname: "",
       url: "",
@@ -60,8 +67,8 @@ const Setting = () => {
   return (
     <SettingContainer>
       <AvatarContainer>
-        <SettingAvatar imgURL={profile.avatarURL} />
-        <p>{profile.nickname}</p>
+        <SettingAvatar imgURL={userProfile.avatarURL} />
+        <p>{userProfile.nickname}</p>
       </AvatarContainer>
       <SubTitleContainer>
         <PullRequestIcon />
@@ -95,9 +102,9 @@ const Setting = () => {
             <PlusIcon />
           </IconButton>
         </Form>
-        {pullRequestURLs.map((pullRequestURL) => (
-          <URLCard pullRequestURL={pullRequestURL} />
-        ))}
+        {Object.keys(pullRequestURLs).map((url) => {
+          return <URLCard nickname={pullRequestURLs[url]} url={url} />;
+        })}
       </FlexContainer>
     </SettingContainer>
   );
