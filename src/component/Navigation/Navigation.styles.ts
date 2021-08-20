@@ -17,6 +17,10 @@ export const AvatarButton = styled(Button)`
 `;
 
 export const AvatarDropdown = styled(Dropdown)`
+  &:first-child:hover {
+    background-color: ${PALETTE.PRIMARY_400};
+  }
+
   & .welcome {
     background-color: ${PALETTE.PRIMARY_400};
     color: white;

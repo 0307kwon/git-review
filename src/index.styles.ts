@@ -21,6 +21,10 @@ export const GlobalStyle = createGlobalStyle`
     background-color: ${PALETTE.GRAY_100};
   }
 
+  a {
+    text-decoration: none;
+  }
+
   * {
     margin: 0;
     padding: 0;

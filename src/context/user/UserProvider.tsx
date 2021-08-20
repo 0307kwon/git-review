@@ -13,6 +13,7 @@ interface ContextValue {
   isLogin: boolean;
   login: (userInfo: UserInfo) => void;
   logout: () => void;
+  refetch: () => void;
 }
 
 export const Context = createContext<ContextValue | null>(null);
@@ -29,12 +30,7 @@ const UserProvider = ({ children }: Props) => {
     setUserInfo(null);
   };
 
-  const contextValue = useMemo<ContextValue>(
-    () => ({ userInfo, isLogin, login, logout }),
-    [userInfo, isLogin]
-  );
-
-  useEffect(() => {
+  const refetch = () => {
     const uid = localStorage.getItem("uid");
 
     if (uid) {
@@ -42,6 +38,15 @@ const UserProvider = ({ children }: Props) => {
         login(userInfo as UserInfo);
       });
     }
+  };
+
+  const contextValue = useMemo<ContextValue>(
+    () => ({ userInfo, isLogin, login, logout, refetch }),
+    [userInfo, isLogin]
+  );
+
+  useEffect(() => {
+    refetch();
   }, []);
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;

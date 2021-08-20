@@ -12,6 +12,7 @@ import {
   AvatarDropdown,
   LoginButton,
 } from "./Navigation.styles";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -39,10 +40,10 @@ const Navigation = () => {
           {isDropdownVisible && (
             <AvatarDropdown>
               <div className="welcome">{`👋 ${user.userInfo.profile.nickname}님 환영합니다.`}</div>
-              <button>
+              <Link onClick={handleToggleDropdown} to="/setting">
                 <SettingIcon />
                 설정
-              </button>
+              </Link>
               <button className="red">
                 <LogoutIcon />
                 로그아웃
