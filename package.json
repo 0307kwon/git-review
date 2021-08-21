@@ -29,7 +29,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "fb-hosting": "yarn build --mode production && yarn firebase deploy --only hosting"
+    "fb-hosting": "firebase deploy --only hosting"
   },
   "eslintConfig": {
     "extends": [
