@@ -1,5 +1,5 @@
 import React from "react";
-import FlexContainer from "../../@common/FlexContainer/FlexContainer";
+import FlexContainer from "../../../@common/FlexContainer/FlexContainer";
 import { SubTitleParagraph, TitleParagraph } from "./HelpCardTemplate.styles";
 
 interface Props {

@@ -1,5 +1,5 @@
 import React from "react";
-import HelpCardTemplate from "../HelpCardTemplate/HelpCardTemplate";
+import HelpCardTemplate from "../@common/HelpCardTemplate/HelpCardTemplate";
 
 const OfflineMode = () => {
   return (
