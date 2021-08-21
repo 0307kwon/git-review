@@ -2,6 +2,18 @@ import styled from "styled-components";
 import { APP } from "./constant/common";
 import { PALETTE } from "./constant/palette";
 
+export const RootContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & > * {
+    max-width: ${APP.MAX_WIDTH};
+    width: 100%;
+    padding: 0 0.75rem;
+  }
+`;
+
 export const Header = styled.header`
   display: flex;
   justify-content: center;
@@ -13,7 +25,9 @@ export const Header = styled.header`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: ${APP.MAX_WIDTH};
+    max-width: ${APP.MAX_WIDTH};
+    width: 100%;
+    padding: 0 0.75rem;
   }
 `;
 

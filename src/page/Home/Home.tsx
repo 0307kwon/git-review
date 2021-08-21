@@ -18,7 +18,7 @@ const Home = () => {
     <div>
       <SearchForm onSubmit={handleSearchByKeyword} />
       <HomeContents>
-        {searchResults.length === 0 && <HelpCard />}
+        {searchResults.length === 0 && <HelpCard codeReviews={codeReviews} />}
         {searchResults.map((searchResult) => (
           <ReviewCard
             key={searchResult.id}

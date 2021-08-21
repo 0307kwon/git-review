@@ -1,7 +1,6 @@
-import { Header, Main } from "./App.styles";
+import { Header, Main, RootContainer } from "./App.styles";
 import Navigation from "./component/Navigation/Navigation";
 import UserProvider from "./context/UserProvider/UserProvider";
-import { RootContainer } from "./index.styles";
 import Home from "./page/Home/Home";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Setting from "./page/Setting/Setting";
