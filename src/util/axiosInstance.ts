@@ -9,7 +9,7 @@ githubAxios.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN);
     if (accessToken) {
-      config.headers["Authorization"] = accessToken;
+      config.headers["Authorization"] = `token ${accessToken}`;
     }
     return config;
   },
