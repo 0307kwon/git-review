@@ -1,19 +1,12 @@
-import styled, { createGlobalStyle } from "styled-components";
-import { APP } from "./constant/common";
+import { createGlobalStyle } from "styled-components";
 import { PALETTE } from "./constant/palette";
-
-export const RootContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  & > * {
-    width: ${APP.MAX_WIDTH};
-  }
-`;
 
 export const GlobalStyle = createGlobalStyle`
   font-family: "Noto Sans KR", sans-serif;
+
+  html {
+    width: 100%;
+  }
 
   #root {
     width: 100vw;
