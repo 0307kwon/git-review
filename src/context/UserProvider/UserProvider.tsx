@@ -1,5 +1,8 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import { requestUserProfile } from "../../API/firebaseAPI";
+import {
+  requestUpdateUserProfile,
+  requestUserProfile,
+} from "../../API/firebaseAPI";
 import { LOCAL_STORAGE_KEY } from "../../constant/common";
 import { Profile } from "../../util/types";
 
@@ -13,6 +16,7 @@ interface ContextValue {
   login: (userProfile: Profile) => void;
   logout: () => void;
   refetch: () => void;
+  modifyProfile: (profile: Partial<Profile>) => Promise<void>;
 }
 
 export const Context = createContext<ContextValue | null>(null);
@@ -23,6 +27,13 @@ const UserProvider = ({ children }: Props) => {
 
   const login = async (userProfile: Profile) => {
     setUserProfile(userProfile);
+
+    if (userProfile.githubToken) {
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY.GITHUB_TOKEN,
+        userProfile.githubToken
+      );
+    }
   };
 
   const logout = () => {
@@ -44,8 +55,19 @@ const UserProvider = ({ children }: Props) => {
     }
   };
 
+  const modifyProfile = async (profile: Partial<Profile>) => {
+    if (!userProfile) {
+      return;
+    }
+
+    return await requestUpdateUserProfile({
+      ...userProfile,
+      ...profile,
+    });
+  };
+
   const contextValue = useMemo<ContextValue>(
-    () => ({ userProfile, isLogin, login, logout, refetch }),
+    () => ({ userProfile, isLogin, login, logout, refetch, modifyProfile }),
     [userProfile, isLogin]
   );
 

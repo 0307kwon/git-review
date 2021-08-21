@@ -19,6 +19,6 @@ export const ModalInner = styled.div`
   width: 100%;
   display: inline-block;
   background-color: white;
-  border-radius: 25px;
+  border-radius: 25px 25px 0 0;
   padding: 3rem;
 `;
