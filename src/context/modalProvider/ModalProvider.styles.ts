@@ -1,5 +1,14 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Z_INDEX } from "../../constant/common";
+
+const show = keyframes`
+  from {
+    transform: translateY(20rem);
+  }
+  to {
+    
+  }
+`;
 
 export const ModalContainer = styled.div`
   position: fixed;
@@ -21,4 +30,5 @@ export const ModalInner = styled.div`
   background-color: white;
   border-radius: 25px 25px 0 0;
   padding: 3rem;
+  animation: ${show} 0.17s ease;
 `;
