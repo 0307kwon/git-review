@@ -4,7 +4,6 @@ import styled, { css } from "styled-components";
 import { PALETTE } from "../../../constant/palette";
 
 const code = css`
-  //TODO: 색깔 고민
   background-color: ${PALETTE.PRIMARY_200};
   border-radius: 8px;
   font-size: 0.8rem;
