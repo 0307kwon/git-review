@@ -19,8 +19,7 @@ const Navigation = () => {
   const user = useUser();
 
   const handleSignIn = async () => {
-    await signInWithGithub();
-    const profile = await requestUserProfile();
+    const profile = await signInWithGithub();
 
     if (profile) {
       user.login(profile);
