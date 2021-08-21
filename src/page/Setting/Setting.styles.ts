@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import Avatar from "../../component/@common/Avatar/Avatar";
+import Button from "../../component/@common/Button/Button";
 import { PALETTE } from "../../constant/palette";
+
+export const SettingButton = styled(Button)`
+  height: 2rem;
+  background-color: ${PALETTE.RED_200};
+  /* border: 2px solid ${PALETTE.RED_200}; */
+`;
 
 export const SettingContainer = styled.div`
   background-color: white;

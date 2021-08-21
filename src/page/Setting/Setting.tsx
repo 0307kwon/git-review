@@ -1,11 +1,13 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useEffect } from "react";
+import Button from "../../component/@common/Button/Button";
 import FlexContainer from "../../component/@common/FlexContainer/FlexContainer";
 import IconButton from "../../component/@common/IconButton/IconButton";
 import Input from "../../component/Input/Input";
 import URLCard from "../../component/URLCard/URLCard";
 import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
 import { PULL_REQUEST_URL } from "../../constant/validation";
+import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
 import useUser from "../../context/UserProvider/useUser";
 import { ReactComponent as PlusIcon } from "../../icon/plus.svg";
@@ -15,13 +17,16 @@ import {
   AvatarContainer,
   Form,
   SettingAvatar,
+  SettingButton,
   SettingContainer,
   SubTitleContainer,
 } from "./Setting.styles";
+import TokenSettingModal from "./TokenSettingModal/TokenSettingModal";
 
 const Setting = () => {
   const { pullRequestURLs, addURL, refetchURLs } = usePullRequestURL();
   const user = useUser();
+  const modal = useModal();
   const [pullRequestFormData, setPullRequestFormData] = useState<
     Pick<PullRequestURL, "nickname" | "url">
   >({
@@ -68,10 +73,19 @@ const Setting = () => {
         <SettingAvatar imgURL={userProfile.avatarURL} />
         <p>{userProfile.nickname}</p>
       </AvatarContainer>
-      <SubTitleContainer>
-        <PullRequestIcon />
-        <h2>pull request url</h2>
-      </SubTitleContainer>
+      <FlexContainer
+        alignItems="center"
+        gap="1rem"
+        justifyContent="space-between"
+      >
+        <SubTitleContainer>
+          <PullRequestIcon />
+          <h2>pull request url</h2>
+        </SubTitleContainer>
+        <SettingButton onClick={() => modal.openModal(<TokenSettingModal />)}>
+          token 등록
+        </SettingButton>
+      </FlexContainer>
       <FlexContainer flexDirection="column" gap="0.75rem" alignItems="center">
         <Form onSubmit={handleAddPullRequestURL}>
           <URLCardTemplate>
