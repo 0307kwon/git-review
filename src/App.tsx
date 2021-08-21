@@ -10,19 +10,19 @@ import ModalProvider from "./context/modalProvider/ModalProvider";
 function App() {
   return (
     <BrowserRouter>
-      <ModalProvider>
-        <UserProvider>
-          <PullRequestURLProvider>
-            <Header>
-              <div>
-                <Link to="/">
-                  <h1>📖 gitBook</h1>
-                </Link>
-                <Navigation />
-              </div>
-            </Header>
-            <RootContainer>
-              <div>
+      <UserProvider>
+        <PullRequestURLProvider>
+          <Header>
+            <div>
+              <Link to="/">
+                <h1>📖 gitBook</h1>
+              </Link>
+              <Navigation />
+            </div>
+          </Header>
+          <RootContainer>
+            <div>
+              <ModalProvider>
                 <Main>
                   <Switch>
                     <Route exact path="/">
@@ -33,11 +33,11 @@ function App() {
                     </Route>
                   </Switch>
                 </Main>
-              </div>
-            </RootContainer>
-          </PullRequestURLProvider>
-        </UserProvider>
-      </ModalProvider>
+              </ModalProvider>
+            </div>
+          </RootContainer>
+        </PullRequestURLProvider>
+      </UserProvider>
     </BrowserRouter>
   );
 }

@@ -4,6 +4,7 @@ import FlexContainer from "../../../component/@common/FlexContainer/FlexContaine
 import Input from "../../../component/Input/Input";
 import { LOCAL_STORAGE_KEY } from "../../../constant/common";
 import useModal from "../../../context/modalProvider/useModal";
+import useUser from "../../../context/UserProvider/useUser";
 import {
   CustomATag,
   Form,
@@ -16,12 +17,17 @@ const TokenSettingModal = () => {
     localStorage.getItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN) || ""
   );
   const modal = useModal();
+  const user = useUser();
 
-  const handleSaveToken = (event: FormEvent) => {
+  const handleSaveToken = async (event: FormEvent) => {
     event.preventDefault();
+    await user.modifyProfile({
+      githubToken: token,
+    });
+
     localStorage.setItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN, token);
     modal.closeModal();
-    alert("token 등록에 성공했습니다 적용하려면 새로고침해주세요");
+    alert("token 등록에 성공했습니다.");
   };
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {

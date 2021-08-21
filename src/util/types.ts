@@ -37,6 +37,7 @@ export interface CodeReview {
 export interface Profile {
   nickname: string;
   avatarURL: string;
+  githubToken?: string;
 }
 
 export interface PullRequestURL {

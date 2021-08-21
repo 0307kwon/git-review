@@ -1,6 +1,6 @@
 import { LOCAL_STORAGE_KEY } from "../constant/common";
 import { firestoreDB, myFirebase } from "../util/firebase";
-import { PullRequestURL } from "../util/types";
+import { Profile, PullRequestURL } from "../util/types";
 
 interface GithubProfile {
   name: string;
@@ -19,7 +19,7 @@ const signUpWithGithub = (
 
   const { name, avatar_url } = profile as GithubProfile;
 
-  return firestoreDB(uid)["user/profile"].set({
+  return requestUpdateUserProfile({
     nickname: name,
     avatarURL: avatar_url,
   });
@@ -73,10 +73,7 @@ export const requestUserPullRequestURLs = async () => {
   return pullRequestURLs;
 };
 
-export const requestUpdateUserProfile = async (
-  nickname: string,
-  avatarURL: string
-) => {
+export const requestUpdateUserProfile = async (profile: Profile) => {
   const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
   if (!uid) {
@@ -85,10 +82,7 @@ export const requestUpdateUserProfile = async (
     return;
   }
 
-  return firestoreDB(uid)["user/profile"].update({
-    nickname,
-    avatarURL,
-  });
+  return firestoreDB(uid)["user/profile"].update(profile);
 };
 
 export const requestUpdatePullRequestURLs = (pullRequestURLs: {
