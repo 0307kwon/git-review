@@ -8,11 +8,13 @@ import {
   storeCodeReviewIDB,
 } from "../API/indexedDB";
 import usePullRequestURL from "../context/PullRequestURLProvider/usePullRequestURL";
+import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
 
 const useCodeReviews = () => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
   const { pullRequestURLs, modifyURL } = usePullRequestURL();
+  const user = useUser();
 
   const onError = (failedURLs: string[]) => {
     alert(
@@ -124,7 +126,7 @@ const useCodeReviews = () => {
   };
 
   useEffect(() => {
-    const isOffline = pullRequestURLs.length === 0;
+    const isOffline = pullRequestURLs.length === 0 && !user.isLogin;
 
     if (isOffline) {
       loadCodeReviewFromIDB();
@@ -132,7 +134,7 @@ const useCodeReviews = () => {
     }
 
     syncCodeReviews();
-  }, [pullRequestURLs]);
+  }, [pullRequestURLs, user.isLogin]);
 
   return {
     data: codeReviews,
