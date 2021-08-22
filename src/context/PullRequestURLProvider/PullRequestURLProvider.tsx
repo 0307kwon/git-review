@@ -13,6 +13,7 @@ interface Props {
 
 interface ContextValue {
   pullRequestURLs: PullRequestURL[];
+  isLoading: boolean;
   deleteURL: (url: string) => Promise<void>;
   addURL: (nickname: string, url: string) => Promise<void>;
   modifyURL: (
@@ -25,6 +26,7 @@ export const Context = createContext<ContextValue | null>(null);
 
 const PullRequestURLProvider = ({ children }: Props) => {
   const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURL[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const user = useUser();
 
   const deleteURL = async (url: string) => {
@@ -91,6 +93,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
   };
 
   const refetchURLs = async () => {
+    setIsLoading(true);
     const pullRequestURLs = await requestUserPullRequestURLs();
 
     if (pullRequestURLs) {
@@ -99,6 +102,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
       );
 
       setPullRequestURLs(urls);
+      setIsLoading(false);
     }
   };
 
@@ -111,21 +115,11 @@ const PullRequestURLProvider = ({ children }: Props) => {
     refetchURLs();
   }, [user.isLogin]);
 
-  // const contextValue = useMemo(
-  //   () => ({
-  //     pullRequestURLs,
-  //     modifyURL,
-  //     addURL,
-  //     deleteURL,
-  //     refetchURLs,
-  //   }),
-  //   [pullRequestURLs]
-  // );
-
   return (
     <Context.Provider
       value={{
         pullRequestURLs,
+        isLoading,
         modifyURL,
         addURL,
         deleteURL,

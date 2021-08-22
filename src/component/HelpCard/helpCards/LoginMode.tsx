@@ -6,7 +6,7 @@ const LoginMode = () => {
     <HelpCardTemplate>
       {{
         title: "👋 안녕하세요! 오늘도 좋은 하루예요.",
-        subTitle: "프로필 - 설정을 클릭해 PR 목록을 업데이트 해보세요!",
+        subTitle: "검색하고 싶은 키워드로 검색해보세요!",
       }}
     </HelpCardTemplate>
   );
