@@ -4,6 +4,8 @@ import Button from "../../component/@common/Button/Button";
 import { PALETTE } from "../../constant/palette";
 
 export const SettingButton = styled(Button)`
+  flex-basis: 6rem;
+  flex-shrink: 0;
   height: 2rem;
   background-color: ${PALETTE.RED_200};
   /* border: 2px solid ${PALETTE.RED_200}; */
