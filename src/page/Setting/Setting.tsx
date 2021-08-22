@@ -73,19 +73,22 @@ const Setting = () => {
         <SettingAvatar imgURL={userProfile.avatarURL} />
         <p>{userProfile.nickname}</p>
       </AvatarContainer>
-      <FlexContainer
-        alignItems="center"
-        gap="1rem"
-        justifyContent="space-between"
-      >
-        <SubTitleContainer>
+      <SubTitleContainer>
+        <FlexContainer gap="0.5rem" alignItems="center">
           <PullRequestIcon />
           <h2>pull request url</h2>
-        </SubTitleContainer>
-        <SettingButton onClick={() => modal.openModal(<TokenSettingModal />)}>
-          token 등록
-        </SettingButton>
-      </FlexContainer>
+        </FlexContainer>
+        <FlexContainer
+          alignItems="center"
+          gap="1rem"
+          justifyContent="space-between"
+        >
+          <p>PR 내용 중 리뷰어의 코멘트만 코드 리뷰로 저장됩니다</p>
+          <SettingButton onClick={() => modal.openModal(<TokenSettingModal />)}>
+            token 등록
+          </SettingButton>
+        </FlexContainer>
+      </SubTitleContainer>
       <FlexContainer flexDirection="column" gap="0.75rem" alignItems="center">
         <Form onSubmit={handleAddPullRequestURL}>
           <URLCardTemplate>

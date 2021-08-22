@@ -69,25 +69,27 @@ const Home = () => {
       </SearchContainer>
       <HomeContents>
         {searchResults.length === 0 && (
-          <HelpCard
-            searchKeyword={searchKeyword.current}
-            searchResults={searchResults}
-            codeReviews={codeReviews}
-          />
-        )}
-        {searchResults.length === 0 && recommendedReviews.length > 0 && (
           <>
-            <SubTitleContainer>
-              <h2>😊 이런 PR은 어떠세요?</h2>
-              <p>오늘의 추천 PR 입니다</p>
-            </SubTitleContainer>
-            {recommendedReviews.map((review) => (
-              <ReviewCard
-                key={review.id}
-                codeReview={review}
-                className="review-card"
-              />
-            ))}
+            <HelpCard
+              searchKeyword={searchKeyword.current}
+              searchResults={searchResults}
+              codeReviews={codeReviews}
+            />
+            {recommendedReviews.length > 0 && (
+              <>
+                <SubTitleContainer>
+                  <h2>😊 이런 코드 리뷰는 어떠세요?</h2>
+                  <p>오늘의 추천 리뷰 입니다</p>
+                </SubTitleContainer>
+                {recommendedReviews.map((review) => (
+                  <ReviewCard
+                    key={review.id}
+                    codeReview={review}
+                    className="review-card"
+                  />
+                ))}
+              </>
+            )}
           </>
         )}
         {searchResults.map((searchResult) => (

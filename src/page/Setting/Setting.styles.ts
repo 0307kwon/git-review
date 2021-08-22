@@ -30,11 +30,10 @@ export const AvatarContainer = styled.div`
 
 export const SubTitleContainer = styled.div`
   display: flex;
-  gap: 0.5rem;
-  padding: 1rem 0;
-  align-items: center;
+  flex-direction: column;
+  padding: 0.5rem 0;
 
-  & > * {
+  & h2 {
     font-size: 1.25rem;
   }
 `;
