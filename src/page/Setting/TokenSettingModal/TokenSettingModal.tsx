@@ -38,7 +38,7 @@ const TokenSettingModal = () => {
     <SettingModalContainer>
       <FlexContainer flexDirection="column" gap="0.5rem">
         <h2>Github access token 등록</h2>
-        <p>token 미등록 시 하루 60개의 요청 제한이 있어요</p>
+        <p>token 미등록 시 시간 당 60개의 요청 제한이 있어요</p>
       </FlexContainer>
       <Form onSubmit={handleSaveToken}>
         <FlexContainer flexDirection="column" gap="0.25rem">
