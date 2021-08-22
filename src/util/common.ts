@@ -8,3 +8,11 @@ export const isSameURLPath = (url1: string, url2: string) => {
 
   return urlPath1 === urlPath2;
 };
+
+export const getRandomNumber = (from: number, to: number) => {
+  if (to < from) {
+    return -1;
+  }
+
+  return from + Math.round(Math.random() * (to - from));
+};

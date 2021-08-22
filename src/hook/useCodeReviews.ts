@@ -12,8 +12,14 @@ import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
 
 const useCodeReviews = () => {
+  //TODO: 로딩 만드는 중임
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
-  const { pullRequestURLs, modifyURL } = usePullRequestURL();
+  const [isLoading, setIsLoading] = useState(true);
+  const {
+    pullRequestURLs,
+    isLoading: isPRLoading,
+    modifyURL,
+  } = usePullRequestURL();
   const user = useUser();
 
   const onError = (failedURLs: string[]) => {
@@ -46,9 +52,10 @@ const useCodeReviews = () => {
     const codeReviewsInIdb = await loadAllCodeReviewIDB();
 
     setCodeReview(codeReviewsInIdb);
+    setIsLoading(false);
   };
 
-  const syncCodeReviews = async () => {
+  const syncCodeReviewsInIDB = async () => {
     const updatingURLSet = new Set(
       pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
     );
@@ -71,7 +78,6 @@ const useCodeReviews = () => {
     }
 
     if (updatingURLSet.size === 0) {
-      loadCodeReviewFromIDB();
       return;
     }
 
@@ -97,10 +103,6 @@ const useCodeReviews = () => {
     }
 
     await storeCodeReviewIDB(additionalCodeReviews);
-
-    const codeReviewsInIdb = await loadAllCodeReviewIDB();
-
-    setCodeReview(codeReviewsInIdb);
   };
 
   const findByKeyword = (keyword: string) => {
@@ -126,20 +128,25 @@ const useCodeReviews = () => {
   };
 
   useEffect(() => {
-    const isOffline = pullRequestURLs.length === 0 && !user.isLogin;
+    const isOffline = !user.isLogin;
 
     if (isOffline) {
       loadCodeReviewFromIDB();
       return;
     }
 
-    syncCodeReviews();
-  }, [pullRequestURLs, user.isLogin]);
+    if (isPRLoading) return;
+
+    syncCodeReviewsInIDB().then(() => {
+      loadCodeReviewFromIDB();
+    });
+  }, [isPRLoading, user.isLogin]);
 
   return {
     data: codeReviews,
+    isLoading,
     findByKeyword,
-    syncCodeReviews,
+    syncCodeReviews: syncCodeReviewsInIDB,
     loadOneCodeReview,
   };
 };

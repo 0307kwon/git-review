@@ -2,6 +2,12 @@ import styled from "styled-components";
 import FlexContainer from "../../component/@common/FlexContainer/FlexContainer";
 import { PALETTE } from "../../constant/palette";
 
+export const LoadingContainer = styled.div`
+  display: flex;
+  width: 100%;
+  min-height: 50vh;
+`;
+
 export const SearchContainer = styled(FlexContainer)`
   align-items: center;
   padding-bottom: 1rem;
@@ -29,5 +35,16 @@ export const HomeContents = styled.div`
 
   & > .review-card {
     margin-bottom: 1.5rem;
+  }
+`;
+
+export const SubTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0 1.5rem;
+  & > h2 {
+    font-size: 20px;
+    margin-bottom: 0.5rem;
   }
 `;
