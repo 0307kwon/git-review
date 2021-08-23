@@ -1,5 +1,5 @@
 {
-  "name": "temp",
+  "name": "git-review",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,7 +12,6 @@
     "@types/react-dom": "^17.0.8",
     "@types/styled-components": "^5.1.10",
     "axios": "^0.21.1",
-    "firebase-tools": "^9.16.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-markdown": "^6.0.2",
@@ -28,8 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
-    "fb-hosting": "firebase deploy --only hosting"
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": [

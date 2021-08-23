@@ -15,7 +15,7 @@ function App() {
           <Header>
             <div>
               <Link to="/">
-                <h1>📖 gitBook</h1>
+                <h1>📖 gitReview</h1>
               </Link>
               <Navigation />
             </div>
