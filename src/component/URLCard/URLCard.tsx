@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { PULL_REQUEST_URL } from "../../constant/validation";
 import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
-import { ReactComponent as DeleteIcon } from "../../icon/cancel.svg";
-import { ReactComponent as ModifyIcon } from "../../icon/modify.svg";
+import { ReactComponent as DeleteIcon } from "../../asset/icon/cancel.svg";
+import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
 import { PullRequestURL } from "../../util/types";
 import Button from "../@common/Button/Button";
 import IconButton from "../@common/IconButton/IconButton";

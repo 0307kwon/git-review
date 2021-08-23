@@ -6,7 +6,7 @@ import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Setting from "./page/Setting/Setting";
 import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequestURLProvider";
 import ModalProvider from "./context/modalProvider/ModalProvider";
-import { ReactComponent as Logo } from "./icon/logo.svg";
+import { ReactComponent as Logo } from "./asset/icon/logo.svg";
 import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
 
 function App() {

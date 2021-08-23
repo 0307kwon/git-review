@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { requestUserProfile, signInWithGithub } from "../../API/firebaseAPI";
 import useUser from "../../context/UserProvider/useUser";
-import { ReactComponent as LogoutIcon } from "../../icon/logout.svg";
-import { ReactComponent as SettingIcon } from "../../icon/setting.svg";
+import { ReactComponent as LogoutIcon } from "../../asset/icon/logout.svg";
+import { ReactComponent as SettingIcon } from "../../asset/icon/setting.svg";
 import Avatar from "../@common/Avatar/Avatar";
 import {
   Arrow,

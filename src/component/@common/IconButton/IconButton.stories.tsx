@@ -1,6 +1,6 @@
 import React from "react";
 import IconButton from "./IconButton";
-import { ReactComponent as ModifyIcon } from "../../../icon/modify.svg";
+import { ReactComponent as ModifyIcon } from "../../../asset/icon/modify.svg";
 
 export default {
   component: IconButton,

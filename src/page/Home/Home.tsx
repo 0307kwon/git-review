@@ -3,7 +3,7 @@ import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import useCodeReviews from "../../hook/useCodeReviews";
-import { ReactComponent as SearchIcon } from "../../icon/search.svg";
+import { ReactComponent as SearchIcon } from "../../asset/icon/search.svg";
 import { getRandomNumber } from "../../util/common";
 import { CodeReview } from "../../util/types";
 import {

@@ -6,6 +6,7 @@ const IconButton = styled(Button)<{ size: string }>`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  padding: 0;
   width: ${({ size }) => size};
   height: ${({ size }) => size};
 `;
