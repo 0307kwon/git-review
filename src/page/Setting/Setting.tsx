@@ -56,6 +56,15 @@ const Setting = () => {
 
     const { nickname, url } = pullRequestFormData;
 
+    const isAlreadyExist = pullRequestURLs.some(
+      (pullRequestURL) => pullRequestURL.url === url
+    );
+
+    if (isAlreadyExist) {
+      alert("이미 존재하는 url입니다.");
+      return;
+    }
+
     await addURL(nickname, url);
     await refetchURLs();
 

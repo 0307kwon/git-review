@@ -42,14 +42,6 @@ const PullRequestURLProvider = ({ children }: Props) => {
   };
 
   const addURL = async (nickname: string, url: string) => {
-    const isAlreadyExist = pullRequestURLs.some(
-      (pullRequestURL) => pullRequestURL.url === url
-    );
-
-    if (isAlreadyExist) {
-      throw new Error("이미 존재하는 url입니다.");
-    }
-
     const updatingURLs: { [url: string]: PullRequestURL } = {};
 
     pullRequestURLs.forEach((pullRequestURL) => {
