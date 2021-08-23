@@ -1,12 +1,11 @@
-import React, { ChangeEvent, FormEvent } from "react";
-import { useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import { Anchor } from "../../../component/@common/Anchor/Anchor";
 import FlexContainer from "../../../component/@common/FlexContainer/FlexContainer";
 import Input from "../../../component/Input/Input";
 import { LOCAL_STORAGE_KEY } from "../../../constant/common";
 import useModal from "../../../context/modalProvider/useModal";
 import useUser from "../../../context/UserProvider/useUser";
 import {
-  CustomATag,
   Form,
   SettingButton,
   SettingModalContainer,
@@ -50,12 +49,12 @@ const TokenSettingModal = () => {
           />
           <p>
             ({" "}
-            <CustomATag
+            <Anchor
               target="blank"
               href="https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token"
             >
               여기
-            </CustomATag>
+            </Anchor>
             를 참고해주세요 )
           </p>
         </FlexContainer>

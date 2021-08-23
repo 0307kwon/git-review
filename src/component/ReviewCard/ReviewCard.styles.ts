@@ -16,6 +16,7 @@ export const ReviewCardContainer = styled.div`
 export const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0.5rem 0.7rem;
   border-bottom: 1px solid ${PALETTE.GRAY_200};
 `;
