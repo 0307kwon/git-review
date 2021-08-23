@@ -7,6 +7,7 @@ import Avatar from "../@common/Avatar/Avatar";
 import MarkDown from "../@common/MarkDown/MarkDown";
 import {
   ProfileContainer,
+  ReviewCardAnchor,
   ReviewCardContainer,
   ReviewContent,
 } from "./ReviewCard.styles";
@@ -20,10 +21,15 @@ const ReviewCard: VFC<Props> = ({ codeReview, className }) => {
   return (
     <ReviewCardContainer className={className}>
       <ProfileContainer>
-        <Avatar
-          imgURL={codeReview.author.avatarUrl}
-          nickname={codeReview.author.userName}
-        />
+        <ReviewCardAnchor
+          target="blank"
+          href={`https://github.com/${codeReview.author.userName}`}
+        >
+          <Avatar
+            imgURL={codeReview.author.avatarUrl}
+            nickname={codeReview.author.userName}
+          />
+        </ReviewCardAnchor>
         <Anchor target="blank" href={codeReview.url}>
           코드 리뷰로 이동
         </Anchor>
