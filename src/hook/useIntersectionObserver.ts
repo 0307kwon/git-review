@@ -18,7 +18,6 @@ const useIntersectionObserver = ({ callback, observedElementDeps }: Props) => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        console.log(entries);
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             callbackRef.current();

@@ -28,7 +28,7 @@ const Home = () => {
   const searchKeyword = useRef("");
   const { observedElementRef } = useIntersectionObserver({
     callback: readAdditionalReviews,
-    observedElementDeps: [isLoading],
+    observedElementDeps: [isLoading, searchResults.length === 0],
   });
 
   const handleChangeInput = async (event: ChangeEvent<HTMLInputElement>) => {
