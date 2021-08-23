@@ -1,13 +1,15 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ReactComponent as SearchIcon } from "../../asset/icon/search.svg";
 import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import useCodeReviews from "../../hook/useCodeReviews";
+import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import { CodeReview } from "../../util/types";
 import {
   HomeContents,
   LoadingContainer,
+  ObservedElement,
   SearchContainer,
   SearchInput,
   SearchLabel,
@@ -18,11 +20,16 @@ const Home = () => {
   const {
     data: codeReviews,
     readAdditionalReviews,
+    isPageEnded,
     isLoading,
     findByKeyword,
   } = useCodeReviews();
   const [searchResults, setSearchResults] = useState<CodeReview[]>([]);
   const searchKeyword = useRef("");
+  const { observedElementRef } = useIntersectionObserver({
+    callback: readAdditionalReviews,
+    observedElementDeps: [isLoading],
+  });
 
   const handleChangeInput = async (event: ChangeEvent<HTMLInputElement>) => {
     searchKeyword.current = event.target.value;
@@ -70,17 +77,24 @@ const Home = () => {
                     className="review-card"
                   />
                 ))}
+                {isPageEnded && (
+                  <SubTitleContainer>
+                    <h2>🤩 저장된 리뷰는 여기까지예요</h2>
+                  </SubTitleContainer>
+                )}
+                <ObservedElement ref={observedElementRef}></ObservedElement>
               </>
             )}
           </>
         )}
-        {searchResults.map((searchResult) => (
-          <ReviewCard
-            key={searchResult.id}
-            codeReview={searchResult}
-            className="review-card"
-          />
-        ))}
+        {searchResults.length > 0 &&
+          searchResults.map((searchResult) => (
+            <ReviewCard
+              key={searchResult.id}
+              codeReview={searchResult}
+              className="review-card"
+            />
+          ))}
       </HomeContents>
     </div>
   );

@@ -5,7 +5,6 @@ import {
   deleteCodeReviewIDB,
   findByKeywordInIDB,
   getAllURLsIDB,
-  loadAllCodeReviewIDB,
   readReviewsInIDB,
   storeCodeReviewIDB,
 } from "../API/indexedDB";
@@ -13,7 +12,7 @@ import usePullRequestURL from "../context/PullRequestURLProvider/usePullRequestU
 import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
 
-const REVIEW_COUNT_PER_PAGE = 10;
+const REVIEW_COUNT_PER_PAGE = 5;
 
 const useCodeReviews = () => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
@@ -25,6 +24,7 @@ const useCodeReviews = () => {
   } = usePullRequestURL();
   const user = useUser();
   const randomNumberForPagination = useRef(Math.random() * 100);
+  const [isPageEnded, setIsPageEnded] = useState(false);
   const currentPage = useRef(1);
 
   const onError = (failedURLs: string[]) => {
@@ -70,7 +70,9 @@ const useCodeReviews = () => {
   };
 
   const readAdditionalReviews = async () => {
-    setIsLoading(true);
+    if (isPageEnded === true) {
+      return;
+    }
 
     currentPage.current++;
 
@@ -80,9 +82,11 @@ const useCodeReviews = () => {
       randomNumber: randomNumberForPagination.current,
     });
 
-    setCodeReview([...codeReviews, ...reviews]);
+    if (reviews.length === 0) {
+      setIsPageEnded(true);
+    }
 
-    setIsLoading(false);
+    setCodeReview([...codeReviews, ...reviews]);
   };
 
   const syncCodeReviewsInIDB = async () => {
@@ -167,6 +171,7 @@ const useCodeReviews = () => {
   return {
     data: codeReviews,
     isLoading,
+    isPageEnded,
     readAdditionalReviews,
     findByKeyword,
     syncCodeReviews: syncCodeReviewsInIDB,

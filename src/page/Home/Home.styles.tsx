@@ -48,3 +48,9 @@ export const SubTitleContainer = styled.div`
     margin-bottom: 0.5rem;
   }
 `;
+
+export const ObservedElement = styled.div`
+  /* visibility: hidden; */
+  height: 2rem;
+  width: 100%;
+`;
