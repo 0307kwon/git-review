@@ -8,4 +8,8 @@ export const Anchor = styled.a`
   text-decoration-line: underline;
   cursor: pointer;
   user-select: none;
+
+  &:hover {
+    color: ${PALETTE.PRIMARY_600};
+  }
 `;

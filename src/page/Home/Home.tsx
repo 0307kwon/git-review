@@ -66,6 +66,7 @@ const Home = () => {
         <SearchIcon />
         <SearchLabel>search</SearchLabel>
         <SearchInput
+          type="search"
           placeholder="코드 리뷰 내용을 검색할 수 있어요"
           onChange={handleChangeInput}
         />
