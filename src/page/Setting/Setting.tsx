@@ -8,9 +8,11 @@ import { PULL_REQUEST_URL } from "../../constant/validation";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
 import useUser from "../../context/UserProvider/useUser";
-import { ReactComponent as PlusIcon } from "../../icon/plus.svg";
-import { ReactComponent as PullRequestIcon } from "../../icon/pullRequest.svg";
+import { ReactComponent as HelpIcon } from "../../asset/icon/help.svg";
+import { ReactComponent as PlusIcon } from "../../asset/icon/plus.svg";
+import { ReactComponent as PullRequestIcon } from "../../asset/icon/pullRequest.svg";
 import { PullRequestURL } from "../../util/types";
+import PullRequestHelpModal from "./PullRequestHelpModal/PullRequestHelpModal";
 import {
   AvatarContainer,
   Form,
@@ -56,6 +58,15 @@ const Setting = () => {
 
     const { nickname, url } = pullRequestFormData;
 
+    const isAlreadyExist = pullRequestURLs.some(
+      (pullRequestURL) => pullRequestURL.url === url
+    );
+
+    if (isAlreadyExist) {
+      alert("이미 존재하는 url입니다.");
+      return;
+    }
+
     await addURL(nickname, url);
     await refetchURLs();
 
@@ -75,6 +86,14 @@ const Setting = () => {
         <FlexContainer gap="0.5rem" alignItems="center">
           <PullRequestIcon />
           <h2>pull request url</h2>
+          <IconButton
+            size="24px"
+            onClick={() => {
+              modal.openModal(<PullRequestHelpModal />);
+            }}
+          >
+            <HelpIcon />
+          </IconButton>
         </FlexContainer>
         <FlexContainer
           alignItems="center"

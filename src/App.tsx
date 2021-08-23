@@ -6,6 +6,8 @@ import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Setting from "./page/Setting/Setting";
 import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequestURLProvider";
 import ModalProvider from "./context/modalProvider/ModalProvider";
+import { ReactComponent as Logo } from "./asset/icon/logo.svg";
+import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
 
 function App() {
   return (
@@ -15,7 +17,10 @@ function App() {
           <Header>
             <div>
               <Link to="/">
-                <h1>📖 gitReview</h1>
+                <FlexContainer alignItems="center" gap="0.5rem">
+                  <Logo />
+                  <h1>GitReview</h1>
+                </FlexContainer>
               </Link>
               <Navigation />
             </div>

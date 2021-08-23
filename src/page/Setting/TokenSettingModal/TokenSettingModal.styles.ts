@@ -12,13 +12,6 @@ export const SettingModalContainer = styled.div`
   }
 `;
 
-export const CustomATag = styled.a`
-  text-decoration: none;
-  color: ${PALETTE.PRIMARY_600};
-  font-weight: 600;
-  text-decoration-line: underline;
-`;
-
 export const SettingButton = styled(Button)`
   background-color: ${PALETTE.GRAY_100};
 `;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { PALETTE } from "../../constant/palette";
 import Button from "../@common/Button/Button";
-import { ReactComponent as DownArrow } from "../../icon/downArrow.svg";
+import { ReactComponent as DownArrow } from "../../asset/icon/downArrow.svg";
 import Dropdown from "../@common/Dropdown/Dropdown";
 
 export const AvatarContainer = styled.div`

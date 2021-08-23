@@ -5,9 +5,9 @@ import {
   NameContainer,
   URLContainer,
 } from "./URLCardTemplate.styles";
-import { ReactComponent as ModifyIcon } from "../../icon/modify.svg";
-import { ReactComponent as DeleteIcon } from "../../icon/cancel.svg";
-import { ReactComponent as LinkIcon } from "../../icon/link.svg";
+import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
+import { ReactComponent as DeleteIcon } from "../../asset/icon/cancel.svg";
+import { ReactComponent as LinkIcon } from "../../asset/icon/link.svg";
 import IconButton from "../@common/IconButton/IconButton";
 
 interface Children {
