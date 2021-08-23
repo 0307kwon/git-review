@@ -10,6 +10,7 @@ import CodeReviewNotExist from "./helpCards/CodeReviewNotExist";
 import SearchResultsNotExist from "./helpCards/SearchResultsNotExist";
 
 interface Props {
+  //codeReviews -> isCodeReviewExist 로 수정
   codeReviews: CodeReview[];
   searchKeyword: string;
   searchResults: CodeReview[];

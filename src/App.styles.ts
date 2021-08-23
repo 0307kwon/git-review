@@ -19,6 +19,7 @@ export const Header = styled.header`
   justify-content: center;
   padding: 0.5rem 0;
   width: 100vw;
+  height: 4rem;
   background: ${PALETTE.PRIMARY_400};
 
   & > div {

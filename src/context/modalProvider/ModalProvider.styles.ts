@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { Z_INDEX } from "../../constant/common";
+import { APP, Z_INDEX } from "../../constant/common";
 
 const show = keyframes`
   from {
@@ -26,6 +26,7 @@ export const ModalContainer = styled.div`
 export const ModalInner = styled.div`
   position: relative;
   width: 100%;
+  max-width: ${APP.MAX_WIDTH};
   display: inline-block;
   background-color: white;
   border-radius: 25px 25px 0 0;

@@ -5,6 +5,14 @@ interface ProfileImgProps {
   imgUrl: string;
 }
 
+export const ReviewCardAnchor = styled.a`
+  &:hover {
+    & {
+      text-decoration: underline;
+    }
+  }
+`;
+
 export const ReviewCardContainer = styled.div`
   width: 100%;
   border: 1px solid ${PALETTE.GRAY_200};

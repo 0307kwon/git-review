@@ -1,6 +1,15 @@
 import { CODE_REVIEW_IDB } from "../constant/indexedDB";
 import { filterURLToPath } from "../util/common";
 import { CodeReview } from "../util/types";
+interface CursorWithValue<T> extends IDBCursorWithValue {
+  value: T;
+}
+
+const isCursorWithValue = <T>(
+  cursor: IDBCursor
+): cursor is CursorWithValue<T> => {
+  return (cursor as IDBCursorWithValue)?.value;
+};
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
   const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 7);
@@ -44,10 +53,11 @@ export const loadAllCodeReviewIDB = async (): Promise<CodeReview[]> => {
   codeReviewObjectStore.openCursor().onsuccess = (event) => {
     const cursor = (event.target as IDBRequest<IDBCursor>).result;
 
-    if (!cursor) {
+    if (!isCursorWithValue<CodeReview>(cursor)) {
       return;
     }
-    const codeReview: CodeReview = (cursor as IDBCursorWithValue).value;
+
+    const codeReview: CodeReview = cursor.value;
 
     codeReviews.push(codeReview);
     cursor.continue();
@@ -102,10 +112,10 @@ export const getAllURLsIDB = async () => {
   codeReviewObjectStore.openCursor().onsuccess = (event) => {
     const cursor = (event.target as IDBRequest<IDBCursor>).result;
 
-    if (!cursor) {
+    if (!isCursorWithValue<CodeReview>(cursor)) {
       return;
     }
-    const codeReview: CodeReview = (cursor as IDBCursorWithValue).value;
+    const codeReview: CodeReview = cursor.value;
 
     urlSet.add(filterURLToPath(codeReview.url));
     cursor.continue();
@@ -134,10 +144,10 @@ export const deleteCodeReviewIDB = async (urlPath: string) => {
   codeReviewObjectStore.openCursor().onsuccess = (event) => {
     const cursor = (event.target as IDBRequest<IDBCursor>).result;
 
-    if (!cursor) {
+    if (!isCursorWithValue<CodeReview>(cursor)) {
       return;
     }
-    const targetURL: string = (cursor as IDBCursorWithValue).value.url;
+    const targetURL: string = cursor.value.url;
 
     if (targetURL.includes(urlPath)) {
       cursor.delete();
@@ -149,6 +159,105 @@ export const deleteCodeReviewIDB = async (urlPath: string) => {
   return new Promise((resolve, reject) => {
     codeReviewObjectStore.transaction.oncomplete = () => {
       resolve(true);
+    };
+    codeReviewObjectStore.transaction.onerror = () =>
+      reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
+  });
+};
+
+export const findByKeywordInIDB = async (keyword: string) => {
+  const db = await openCodeReviewIDB();
+
+  const transaction = db.transaction(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
+    "readwrite"
+  );
+  const codeReviewObjectStore = transaction.objectStore(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+  );
+
+  const foundReviews: CodeReview[] = [];
+
+  codeReviewObjectStore.openCursor().onsuccess = (event) => {
+    const cursor = (event.target as IDBRequest<IDBCursor>).result;
+
+    if (!isCursorWithValue<CodeReview>(cursor)) {
+      return;
+    }
+    const codeReview: CodeReview = cursor.value;
+
+    if (codeReview.plainText.includes(keyword)) {
+      codeReview.content = codeReview.content.replaceAll(
+        keyword,
+        ` _🔍${keyword}_ `
+      );
+
+      foundReviews.push(codeReview);
+    }
+
+    cursor.continue();
+  };
+
+  return new Promise<CodeReview[]>((resolve, reject) => {
+    codeReviewObjectStore.transaction.oncomplete = () => {
+      resolve(foundReviews);
+    };
+    codeReviewObjectStore.transaction.onerror = () =>
+      reject(new Error("indexedDB에서 검색 결과를 가져오는데 실패했습니다."));
+  });
+};
+
+interface ReadReviewsInIDBParam {
+  pageNumber: number;
+  randomNumber: number;
+  reviewCountPerPage: number;
+}
+
+export const readReviewsInIDB = async ({
+  pageNumber,
+  randomNumber,
+  reviewCountPerPage,
+}: ReadReviewsInIDBParam) => {
+  if (pageNumber <= 0) {
+    throw new Error("pageNumber는 1이상의 숫자여야합니다.");
+  }
+
+  const db = await openCodeReviewIDB();
+
+  const codeReviewObjectStore = db
+    .transaction(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS)
+    .objectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
+  const codeReviews: CodeReview[] = [];
+
+  codeReviewObjectStore.openCursor().onsuccess = (event) => {
+    const cursor = (event.target as IDBRequest<IDBCursor>).result;
+
+    if (!isCursorWithValue<CodeReview>(cursor)) {
+      return;
+    }
+
+    const codeReview: CodeReview = cursor.value;
+
+    codeReviews.push(codeReview);
+    cursor.continue();
+  };
+
+  return new Promise<CodeReview[]>((resolve, reject) => {
+    codeReviewObjectStore.transaction.oncomplete = () => {
+      const positiveRandomInt = 1 + ((Math.abs(randomNumber) * 56) % 67);
+      const sortedReviewsByRandom = codeReviews.sort((a, b) => {
+        const calculatedA = a.id % positiveRandomInt;
+        const calculatedB = b.id % positiveRandomInt;
+
+        return calculatedA - calculatedB;
+      });
+
+      const paginatedResult = sortedReviewsByRandom.slice(
+        (pageNumber - 1) * reviewCountPerPage,
+        pageNumber * reviewCountPerPage
+      );
+
+      resolve(paginatedResult);
     };
     codeReviewObjectStore.transaction.onerror = () =>
       reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
