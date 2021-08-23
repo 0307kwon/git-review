@@ -3,7 +3,7 @@ import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import useCodeReviews from "../../hook/useCodeReviews";
-import SearchIcon from "../../icon/SearchIcon";
+import { ReactComponent as SearchIcon } from "../../icon/search.svg";
 import { getRandomNumber } from "../../util/common";
 import { CodeReview } from "../../util/types";
 import {
@@ -65,7 +65,10 @@ const Home = () => {
       <SearchContainer>
         <SearchIcon />
         <SearchLabel>search</SearchLabel>
-        <SearchInput onChange={handleChangeInput} />
+        <SearchInput
+          placeholder="코드 리뷰 내용을 검색할 수 있어요"
+          onChange={handleChangeInput}
+        />
       </SearchContainer>
       <HomeContents>
         {searchResults.length === 0 && (

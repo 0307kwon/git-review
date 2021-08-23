@@ -4,7 +4,7 @@ import { PALETTE } from "../../constant/palette";
 const show = keyframes`
   from {
     opacity: 0;
-    transform: translateY(3rem);
+    transform: translateY(1rem);
   }
 
   to {
@@ -15,7 +15,7 @@ const show = keyframes`
 export const CardContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 20rem;
+  height: 10rem;
   background-color: white;
   border-radius: 7px;
   margin-bottom: 1rem;
