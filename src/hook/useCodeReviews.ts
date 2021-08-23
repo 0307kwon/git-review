@@ -3,6 +3,7 @@ import { useState } from "react";
 import { requestCodeReview } from "../API/githubAPI";
 import {
   deleteCodeReviewIDB,
+  findByKeywordInIDB,
   getAllURLsIDB,
   loadAllCodeReviewIDB,
   storeCodeReviewIDB,
@@ -48,10 +49,12 @@ const useCodeReviews = () => {
     storeCodeReviewIDB(codeReview.resolvedValue);
   };
 
-  const loadCodeReviewFromIDB = async () => {
-    const codeReviewsInIdb = await loadAllCodeReviewIDB();
+  const loadAllCodeReviewFromIDB = async () => {
+    const codeReviewsInIDB = await loadAllCodeReviewIDB();
 
-    setCodeReview(codeReviewsInIdb);
+    console.log(codeReviewsInIDB);
+
+    setCodeReview(codeReviewsInIDB);
     setIsLoading(false);
   };
 
@@ -105,7 +108,7 @@ const useCodeReviews = () => {
     await storeCodeReviewIDB(additionalCodeReviews);
   };
 
-  const findByKeyword = (keyword: string) => {
+  const findByKeyword = async (keyword: string) => {
     if (!keyword) return [];
 
     if (!keyword.replaceAll(" ", "")) {
@@ -114,15 +117,7 @@ const useCodeReviews = () => {
 
     const filteredKeyword = keyword.trim();
 
-    const result = codeReviews
-      .filter((codeReview) => codeReview.plainText.includes(filteredKeyword))
-      .map((codeReview) => ({
-        ...codeReview,
-        content: codeReview.content.replaceAll(
-          filteredKeyword,
-          ` _🔍${filteredKeyword}_ `
-        ),
-      }));
+    const result = await findByKeywordInIDB(filteredKeyword);
 
     return result;
   };
@@ -131,14 +126,14 @@ const useCodeReviews = () => {
     const isOffline = !user.isLogin;
 
     if (isOffline) {
-      loadCodeReviewFromIDB();
+      loadAllCodeReviewFromIDB();
       return;
     }
 
     if (isPRLoading) return;
 
     syncCodeReviewsInIDB().then(() => {
-      loadCodeReviewFromIDB();
+      loadAllCodeReviewFromIDB();
     });
   }, [isPRLoading, user.isLogin]);
 

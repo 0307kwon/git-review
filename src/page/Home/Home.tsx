@@ -23,9 +23,10 @@ const Home = () => {
     []
   );
 
-  const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeInput = async (event: ChangeEvent<HTMLInputElement>) => {
     searchKeyword.current = event.target.value;
-    setSearchResults(findByKeyword(searchKeyword.current));
+    const foundReviews = await findByKeyword(searchKeyword.current);
+    setSearchResults(foundReviews);
   };
 
   const getRecommendedReviews = (numberOfReviews: number) => {
