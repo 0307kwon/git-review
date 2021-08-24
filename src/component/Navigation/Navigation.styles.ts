@@ -16,7 +16,10 @@ export const AvatarButton = styled(Button)`
   padding: 0.5rem;
 `;
 
-export const AvatarDropdown = styled(Dropdown)`
+export const AvatarDropdown = styled(Dropdown)<{ isDropdownVisible: boolean }>`
+  visibility: ${({ isDropdownVisible }) =>
+    isDropdownVisible ? "visible" : "hidden"};
+
   &:first-child:hover {
     background-color: ${PALETTE.PRIMARY_400};
   }

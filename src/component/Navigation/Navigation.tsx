@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { requestUserProfile, signInWithGithub } from "../../API/firebaseAPI";
 import useUser from "../../context/UserProvider/useUser";
@@ -17,6 +17,7 @@ const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const history = useHistory();
   const user = useUser();
+  const dropdownRef = useRef(null);
 
   const handleSignIn = async () => {
     const profile = await signInWithGithub();
@@ -39,27 +40,40 @@ const Navigation = () => {
 
   const { userProfile } = user;
 
+  useEffect(() => {
+    if (!dropdownRef?.current) return;
+
+    const targetElement: Element = dropdownRef.current as any;
+
+    document.addEventListener("mousedown", (event: MouseEvent) => {
+      if (!event.target) return;
+
+      if (!targetElement.contains(event.target as Node)) {
+        setIsDropdownVisible(false);
+      }
+    });
+  }, [dropdownRef.current]);
+
   return (
     <div>
       {userProfile ? (
-        <AvatarContainer>
+        <AvatarContainer ref={dropdownRef}>
           <AvatarButton onClick={handleToggleDropdown}>
             <Avatar imgURL={userProfile.avatarURL} />
             <Arrow />
           </AvatarButton>
-          {isDropdownVisible && (
-            <AvatarDropdown>
-              <div className="welcome">{`👋 ${userProfile.nickname}님 환영합니다.`}</div>
-              <Link onClick={handleToggleDropdown} to="/setting">
-                <SettingIcon />
-                설정
-              </Link>
-              <button onClick={handleLogout} className="red">
-                <LogoutIcon />
-                로그아웃
-              </button>
-            </AvatarDropdown>
-          )}
+
+          <AvatarDropdown isDropdownVisible={isDropdownVisible}>
+            <div className="welcome">{`👋 ${userProfile.nickname}님 환영합니다.`}</div>
+            <Link onClick={handleToggleDropdown} to="/setting">
+              <SettingIcon />
+              설정
+            </Link>
+            <button onClick={handleLogout} className="red">
+              <LogoutIcon />
+              로그아웃
+            </button>
+          </AvatarDropdown>
         </AvatarContainer>
       ) : (
         <LoginButton onClick={handleSignIn}>로그인</LoginButton>

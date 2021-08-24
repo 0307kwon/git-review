@@ -1,4 +1,5 @@
 import React from "react";
+import { forwardRef } from "react";
 import { Menu } from "./Dropdown.styles";
 
 interface Props {
@@ -6,8 +7,14 @@ interface Props {
   className?: string;
 }
 
-const Dropdown = ({ children, className }: Props) => {
-  return <Menu className={className}>{children}</Menu>;
-};
+const Dropdown = forwardRef<HTMLDivElement, Props>(
+  ({ children, className }, ref) => {
+    return (
+      <Menu ref={ref} className={className}>
+        {children}
+      </Menu>
+    );
+  }
+);
 
 export default Dropdown;
