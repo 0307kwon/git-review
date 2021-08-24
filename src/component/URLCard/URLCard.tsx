@@ -9,6 +9,7 @@ import IconButton from "../@common/IconButton/IconButton";
 import Input from "../Input/Input";
 import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLCardForm, URLParagraph } from "./URLCard.styles";
+import { Anchor } from "../@common/Anchor/Anchor";
 
 interface Props {
   pullRequestURL: PullRequestURL;
@@ -107,7 +108,13 @@ const URLCard = ({ pullRequestURL }: Props) => {
               )}
             </>
           ),
-          content: <URLParagraph>{pullRequestURL.url}</URLParagraph>,
+          content: (
+            <URLParagraph>
+              <Anchor target="blank" href={pullRequestURL.url}>
+                {pullRequestURL.url}
+              </Anchor>
+            </URLParagraph>
+          ),
         }}
       </URLCardTemplate>
     </URLCardForm>
