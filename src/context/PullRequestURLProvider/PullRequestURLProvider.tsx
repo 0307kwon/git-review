@@ -101,6 +101,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
   useEffect(() => {
     if (!user.isLogin) {
       setPullRequestURLs([]);
+      setIsLoading(false);
       return;
     }
 
