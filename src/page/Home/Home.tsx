@@ -10,6 +10,7 @@ import {
   HomeContents,
   LoadingContainer,
   ObservedElement,
+  ReviewCardButton,
   SearchContainer,
   SearchInput,
   SearchLabel,
@@ -71,11 +72,9 @@ const Home = () => {
                   <p>저장된 리뷰를 랜덤으로 보여드릴게요</p>
                 </SubTitleContainer>
                 {codeReviews.map((review) => (
-                  <ReviewCard
-                    key={review.id}
-                    codeReview={review}
-                    className="review-card"
-                  />
+                  <ReviewCardButton>
+                    <ReviewCard key={review.id} codeReview={review} />
+                  </ReviewCardButton>
                 ))}
                 {isPageEnded && (
                   <SubTitleContainer>

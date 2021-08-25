@@ -12,6 +12,7 @@ interface ModalContext {
 }
 
 export const Context = React.createContext<ModalContext | null>(null);
+
 const modalRoot = document.getElementById("modal-root");
 
 const ModalProvider = ({ children }: Props) => {

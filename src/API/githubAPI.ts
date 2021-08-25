@@ -69,6 +69,7 @@ const filterResponse = (
         },
         content: item.body,
         plainText: removeMd(item.body),
+        diffHunk: item?.diff_hunk,
       })
     );
 };

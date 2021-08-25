@@ -32,10 +32,6 @@ export const SearchInput = styled.input`
 
 export const HomeContents = styled.div`
   padding-top: 10px;
-
-  & > .review-card {
-    margin-bottom: 1.5rem;
-  }
 `;
 
 export const SubTitleContainer = styled.div`
@@ -53,4 +49,15 @@ export const ObservedElement = styled.div`
   /* visibility: hidden; */
   height: 2rem;
   width: 100%;
+`;
+
+export const ReviewCardButton = styled.div`
+  border: none;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;

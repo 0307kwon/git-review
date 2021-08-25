@@ -15,6 +15,7 @@ export interface PullRequestResponse {
     avatar_url: string;
     login: string;
   };
+  diff_hunk?: string;
 }
 
 export interface IssueResponse extends PullRequestResponse {
@@ -32,6 +33,7 @@ export interface CodeReview {
   };
   content: string;
   plainText: string;
+  diffHunk?: string;
 }
 
 export interface Profile {
