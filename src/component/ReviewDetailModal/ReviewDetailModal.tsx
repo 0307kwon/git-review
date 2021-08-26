@@ -5,9 +5,10 @@ import Avatar from "../@common/Avatar/Avatar";
 import MarkDown from "../@common/MarkDown/MarkDown";
 import CodeViewer from "../CodeViewer/CodeViewer";
 import {
-  ContentWrapper,
   ContentContainer,
-  ProfileContainer,
+  ProfileWrapper,
+  MarkDownWrapper,
+  ContentWrapper,
 } from "./ReviewDetailModal.styles";
 
 interface Props {
@@ -17,8 +18,9 @@ interface Props {
 const ReviewDetailModal = ({ review }: Props) => {
   return (
     <ContentContainer>
-      <ProfileContainer>
-        <ContentWrapper>
+      {review.diffHunk && <CodeViewer diffHunk={review.diffHunk} />}
+      <ContentWrapper>
+        <ProfileWrapper>
           <Avatar
             imgURL={review.author.avatarUrl}
             nickname={review.author.userName}
@@ -26,12 +28,11 @@ const ReviewDetailModal = ({ review }: Props) => {
           <Anchor target="blank" href={review.url}>
             코드 리뷰로 이동
           </Anchor>
-        </ContentWrapper>
-        {review.diffHunk && <CodeViewer diffHunk={review.diffHunk} />}
-        <ContentWrapper>
+        </ProfileWrapper>
+        <MarkDownWrapper>
           <MarkDown>{review.content}</MarkDown>
-        </ContentWrapper>
-      </ProfileContainer>
+        </MarkDownWrapper>
+      </ContentWrapper>
     </ContentContainer>
   );
 };

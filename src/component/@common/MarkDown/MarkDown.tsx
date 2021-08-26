@@ -1,85 +1,43 @@
-import { FC } from "react";
-import ReactMarkdown from "react-markdown";
-import styled, { css } from "styled-components";
-import { PALETTE } from "../../../constant/palette";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vs } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { StyledMarkDown } from "./MarkDown.styles";
 
-const code = css`
-  background-color: ${PALETTE.PRIMARY_200};
-  border-radius: 8px;
-  font-size: 0.8rem;
-  vertical-align: middle;
-`;
+interface Props {
+  children: string;
+}
 
-const MarkDown: FC<ReactMarkdown.ReactMarkdownOptions> = styled(ReactMarkdown)`
-  white-space: normal;
-  line-height: 1.8rem;
-
-  pre {
-    overflow-x: auto;
-    ${code}
-    padding: 2rem 1rem;
-
-    & code {
-      //TODO: js 코드 위아래 간격 좀 수정하고 싶음
-      line-height: 1.5rem;
-      background-color: rgba(0, 0, 0, 0);
-    }
-  }
-
-  blockquote {
-    border-left: 5px solid ${PALETTE.GRAY_300};
-    padding-left: 0.5rem;
-    & > p {
-      color: ${PALETTE.GRAY_400};
-    }
-  }
-
-  code {
-    ${code}
-    color: ${PALETTE.PRIMARY_600};
-    font-weight: 600;
-    padding: 0.4rem;
-  }
-
-  h1 {
-    font-size: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid ${PALETTE.GRAY_200};
-  }
-
-  h2 {
-    font-size: 1.7rem;
-    padding: 1rem 0;
-  }
-
-  h3 {
-    font-size: 1.4rem;
-    padding: 0.5rem 0;
-  }
-
-  h4 {
-    font-size: 1.1rem;
-    padding: 0.5rem 0;
-  }
-
-  em {
-    font-style: normal;
-    background-color: yellow;
-  }
-
-  li {
-    list-style: inside;
-    margin-left: 1rem;
-    padding: 0.25rem;
-  }
-
-  ol li {
-    list-style: decimal;
-  }
-
-  p {
-    margin: 1rem 0;
-  }
-`;
+const MarkDown = ({ children }: Props) => {
+  return (
+    <StyledMarkDown
+      components={{
+        code({ node, inline, className, children, ...props }) {
+          const match = /language-(\w+)/.exec(className || "");
+          return !inline && match ? (
+            <SyntaxHighlighter
+              language={match[1]}
+              PreTag="div"
+              style={vs}
+              customStyle={{
+                background: "transparent",
+                border: "none",
+              }}
+              codeTagProps={{
+                className: "pre-code",
+              }}
+              children={String(children).replace(/\n$/, "")}
+              {...props}
+            />
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          );
+        },
+      }}
+    >
+      {children}
+    </StyledMarkDown>
+  );
+};
 
 export default MarkDown;

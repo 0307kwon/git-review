@@ -8,7 +8,7 @@ export const CodeLineViewerContainer = styled.div<{ type: CodeLineType }>`
       "+": PALETTE.GREEN_100,
       "-": PALETTE.RED_100,
       "@": PALETTE.PRIMARY_200,
-      " ": "",
+      " ": PALETTE.GRAY_100,
     };
 
     return typeToColorMap[type];
@@ -16,7 +16,7 @@ export const CodeLineViewerContainer = styled.div<{ type: CodeLineType }>`
   display: flex;
   gap: 0.2rem;
   font-size: 14px;
-  white-space: pre;
+  white-space: pre-wrap;
   min-height: 16px;
 
   & > * {
@@ -24,10 +24,11 @@ export const CodeLineViewerContainer = styled.div<{ type: CodeLineType }>`
   }
 
   & > .type {
-    display: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: rgba(0, 0, 0, 0.05);
     width: 1rem;
-    text-align: center;
     padding: 0 0.3rem;
   }
 `;

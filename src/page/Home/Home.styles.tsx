@@ -56,8 +56,13 @@ export const ReviewCardButton = styled.div`
   margin-bottom: 1.5rem;
   transition: all 0.2s ease;
   width: 100%;
+  cursor: pointer;
 
   &:hover {
     transform: scale(1.02);
   }
 `;
+
+ReviewCardButton.defaultProps = {
+  role: "button",
+};

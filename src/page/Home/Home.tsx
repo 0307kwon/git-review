@@ -3,6 +3,8 @@ import { ReactComponent as SearchIcon } from "../../asset/icon/search.svg";
 import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
+import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailModal";
+import useModal from "../../context/modalProvider/useModal";
 import useCodeReviews from "../../hook/useCodeReviews";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import { CodeReview } from "../../util/types";
@@ -25,6 +27,7 @@ const Home = () => {
     isLoading,
     findByKeyword,
   } = useCodeReviews();
+  const modal = useModal();
   const [searchResults, setSearchResults] = useState<CodeReview[]>([]);
   const searchKeyword = useRef("");
   const { observedElementRef } = useIntersectionObserver({
@@ -72,8 +75,13 @@ const Home = () => {
                   <p>저장된 리뷰를 랜덤으로 보여드릴게요</p>
                 </SubTitleContainer>
                 {codeReviews.map((review) => (
-                  <ReviewCardButton>
-                    <ReviewCard key={review.id} codeReview={review} />
+                  <ReviewCardButton
+                    key={review.id}
+                    onClick={() => {
+                      modal.openModal(<ReviewDetailModal review={review} />);
+                    }}
+                  >
+                    <ReviewCard codeReview={review} />
                   </ReviewCardButton>
                 ))}
                 {isPageEnded && (
