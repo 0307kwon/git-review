@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import { PALETTE } from "../../constant/palette";
 
-interface ProfileImgProps {
-  imgUrl: string;
-}
-
 export const ReviewCardAnchor = styled.a`
   &:hover {
     & {

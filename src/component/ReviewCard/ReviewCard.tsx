@@ -30,9 +30,6 @@ const ReviewCard: VFC<Props> = ({ codeReview, className }) => {
             nickname={codeReview.author.userName}
           />
         </ReviewCardAnchor>
-        <Anchor target="blank" href={codeReview.url}>
-          코드 리뷰로 이동
-        </Anchor>
       </ProfileContainer>
       <ReviewContent>
         <MarkDown
