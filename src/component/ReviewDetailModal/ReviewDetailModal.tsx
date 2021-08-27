@@ -18,7 +18,12 @@ interface Props {
 const ReviewDetailModal = ({ review }: Props) => {
   return (
     <ContentContainer>
-      {review.diffHunk && <CodeViewer diffHunk={review.diffHunk} />}
+      {review.code && (
+        <CodeViewer
+          fileExtension={review.code.path.match(/\.(.+)$/)?.[1]}
+          diffHunk={review.code.diffHunk}
+        />
+      )}
       <ContentWrapper>
         <ProfileWrapper>
           <Avatar

@@ -60,17 +60,27 @@ const filterResponse = (
   return data
     .filter((item) => item.body && item.user.login !== pullRequestAuthor)
     .map(
-      (item): CodeReview => ({
-        id: item.id,
-        url: item.html_url,
-        author: {
-          avatarUrl: item.user.avatar_url,
-          userName: item.user.login,
-        },
-        content: item.body,
-        plainText: removeMd(item.body),
-        diffHunk: item?.diff_hunk,
-      })
+      (item): CodeReview => {
+        const codeReview: CodeReview = {
+          id: item.id,
+          url: item.html_url,
+          author: {
+            avatarUrl: item.user.avatar_url,
+            userName: item.user.login,
+          },
+          content: item.body,
+          plainText: removeMd(item.body),
+        };
+
+        if (item.diff_hunk && item.path) {
+          codeReview.code = {
+            diffHunk: item.diff_hunk,
+            path: item.path,
+          };
+        }
+
+        return codeReview;
+      }
     );
 };
 

@@ -16,6 +16,7 @@ export interface PullRequestResponse {
     login: string;
   };
   diff_hunk?: string;
+  path?: string;
 }
 
 export interface IssueResponse extends PullRequestResponse {
@@ -33,7 +34,10 @@ export interface CodeReview {
   };
   content: string;
   plainText: string;
-  diffHunk?: string;
+  code?: {
+    diffHunk: string;
+    path: string;
+  };
 }
 
 export interface Profile {

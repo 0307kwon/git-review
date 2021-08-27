@@ -3,13 +3,17 @@ import CodeLineViewer from "./CodeLineViewer/CodeLineViewer";
 
 interface Props {
   diffHunk: string;
+  fileExtension?: string;
 }
 
-const CodeViewer = ({ diffHunk }: Props) => {
+const CodeViewer = ({ diffHunk, fileExtension = "" }: Props) => {
   return (
     <div>
       {diffHunk.split("\n").map((rawCodeLine) => (
-        <CodeLineViewer rawCodeLine={rawCodeLine} />
+        <CodeLineViewer
+          fileExtension={fileExtension}
+          rawCodeLine={rawCodeLine}
+        />
       ))}
     </div>
   );
