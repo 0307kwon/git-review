@@ -53,7 +53,7 @@ const useCodeReviews = () => {
     storeCodeReviewIDB(codeReview.resolvedValue);
   };
 
-  const initialLoadReviews = async () => {
+  const initialCodeLoadReviews = async () => {
     setIsLoading(true);
 
     currentPage.current = 1;
@@ -65,7 +65,6 @@ const useCodeReviews = () => {
     });
 
     setCodeReview(reviews);
-
     setIsLoading(false);
   };
 
@@ -156,15 +155,15 @@ const useCodeReviews = () => {
   useEffect(() => {
     const isOffline = !user.isLogin;
 
-    if (isPRLoading) return;
-
     if (isOffline) {
-      initialLoadReviews();
+      initialCodeLoadReviews();
       return;
     }
 
+    if (isPRLoading) return;
+
     syncCodeReviewsInIDB().then(() => {
-      initialLoadReviews();
+      initialCodeLoadReviews();
     });
   }, [isPRLoading, user.isLogin]);
 

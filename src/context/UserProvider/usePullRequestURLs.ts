@@ -1,33 +1,16 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   requestUpdatePullRequestURLs,
   requestUserPullRequestURLs,
 } from "../../API/firebaseAPI";
 import { myFirebase } from "../../util/firebase";
 import { PullRequestURL, RequiredOnly } from "../../util/types";
-import useUser from "../UserProvider/useUser";
+import useUser from "./useUser";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-interface ContextValue {
-  pullRequestURLs: PullRequestURL[];
-  isLoading: boolean;
-  deleteURL: (url: string) => Promise<void>;
-  addURL: (nickname: string, url: string) => Promise<void>;
-  modifyURL: (
-    pullRequestURL: RequiredOnly<PullRequestURL, "url">
-  ) => Promise<void>;
-  refetchURLs: () => Promise<void>;
-}
-
-export const Context = createContext<ContextValue | null>(null);
-
-const PullRequestURLProvider = ({ children }: Props) => {
+const usePullRequestURLs = () => {
   const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURL[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const user = useUser();
+  const isLoading = useRef(true);
+  const { isLogin } = useUser();
 
   const deleteURL = async (url: string) => {
     const updatingURLs: { [url: string]: PullRequestURL } = {};
@@ -85,43 +68,36 @@ const PullRequestURLProvider = ({ children }: Props) => {
   };
 
   const refetchURLs = async () => {
-    setIsLoading(true);
-    const pullRequestURLs = await requestUserPullRequestURLs();
+    isLoading.current = true;
+    const prURLs = await requestUserPullRequestURLs();
 
-    if (pullRequestURLs) {
-      const urls = Object.values(pullRequestURLs).sort(
+    if (prURLs) {
+      const freshURLs = Object.values(prURLs).sort(
         (a, b) => b.modificationTime.seconds - a.modificationTime.seconds
       );
 
-      setPullRequestURLs(urls);
-      setIsLoading(false);
+      setPullRequestURLs(freshURLs);
+      isLoading.current = false;
     }
   };
 
   useEffect(() => {
-    if (!user.isLogin) {
-      setPullRequestURLs([]);
-      setIsLoading(true);
+    if (!isLogin) {
+      isLoading.current = false;
       return;
     }
 
     refetchURLs();
-  }, [user.isLogin]);
+  }, [isLogin]);
 
-  return (
-    <Context.Provider
-      value={{
-        pullRequestURLs,
-        isLoading,
-        modifyURL,
-        addURL,
-        deleteURL,
-        refetchURLs,
-      }}
-    >
-      {children}
-    </Context.Provider>
-  );
+  return {
+    pullRequestURLs,
+    isLoading: isLoading.current,
+    modifyURL,
+    addURL,
+    deleteURL,
+    refetchURLs,
+  };
 };
 
-export default PullRequestURLProvider;
+export default usePullRequestURLs;

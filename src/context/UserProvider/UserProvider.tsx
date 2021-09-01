@@ -5,6 +5,7 @@ import {
 } from "../../API/firebaseAPI";
 import { LOCAL_STORAGE_KEY } from "../../constant/common";
 import { Profile } from "../../util/types";
+import usePullRequestURLs from "./usePullRequestURLs";
 
 interface Props {
   children: React.ReactNode;
@@ -67,7 +68,14 @@ const UserProvider = ({ children }: Props) => {
   };
 
   const contextValue = useMemo<ContextValue>(
-    () => ({ userProfile, isLogin, login, logout, refetch, modifyProfile }),
+    () => ({
+      userProfile,
+      isLogin,
+      login,
+      logout,
+      refetch,
+      modifyProfile,
+    }),
     [userProfile, isLogin]
   );
 
