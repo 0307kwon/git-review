@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { ReactComponent as SearchIcon } from "../../asset/icon/search.svg";
 import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
@@ -95,13 +95,21 @@ const Home = () => {
           </>
         )}
         {searchResults.length > 0 &&
-          searchResults.map((searchResult) => (
-            <ReviewCard
-              key={searchResult.id}
-              codeReview={searchResult}
-              className="review-card"
-            />
-          ))}
+          searchResults.map((searchResult) => {
+            return (
+              <ReviewCardButton
+                onClick={() => {
+                  modal.openModal(<ReviewDetailModal review={searchResult} />);
+                }}
+              >
+                <ReviewCard
+                  key={searchResult.id}
+                  codeReview={searchResult}
+                  className="review-card"
+                />
+              </ReviewCardButton>
+            );
+          })}
       </HomeContents>
     </div>
   );

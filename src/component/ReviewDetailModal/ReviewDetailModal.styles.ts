@@ -4,8 +4,6 @@ import { PALETTE } from "../../constant/palette";
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 70vh;
-  overflow-y: auto;
   gap: 0.5rem;
 `;
 
