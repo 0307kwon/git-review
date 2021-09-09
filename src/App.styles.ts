@@ -18,7 +18,7 @@ export const Header = styled.header`
   display: flex;
   justify-content: center;
   padding: 0.5rem 0;
-  width: 100vw;
+  width: 100%;
   height: 4rem;
   background: ${PALETTE.PRIMARY_400};
 

@@ -2,6 +2,7 @@ import { FC } from "react";
 import ReactMarkdown from "react-markdown";
 import styled, { css } from "styled-components";
 import { PALETTE } from "../../../constant/palette";
+import { AnchorStyle } from "../Anchor/Anchor";
 
 const code = css`
   background-color: ${PALETTE.PRIMARY_200};
@@ -39,6 +40,14 @@ export const StyledMarkDown = styled(ReactMarkdown)`
     color: ${PALETTE.PRIMARY_600};
     font-weight: 600;
     padding: 0.4rem;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  a {
+    ${AnchorStyle}
   }
 
   h1 {

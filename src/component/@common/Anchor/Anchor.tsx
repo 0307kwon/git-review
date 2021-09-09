@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { PALETTE } from "../../../constant/palette";
 
-export const Anchor = styled.a`
+export const AnchorStyle = css`
   text-decoration: none;
   color: ${PALETTE.PRIMARY_500};
   font-weight: 600;
@@ -12,4 +12,8 @@ export const Anchor = styled.a`
   &:hover {
     color: ${PALETTE.PRIMARY_600};
   }
+`;
+
+export const Anchor = styled.a`
+  ${AnchorStyle}
 `;
