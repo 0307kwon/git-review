@@ -30,8 +30,13 @@ export const ModalInner = styled.div`
   display: inline-block;
   background-color: white;
   border-radius: 25px 25px 0 0;
-  padding: 2rem 1.5rem;
+  padding: 0 1.5rem;
   animation: ${show} 0.17s ease;
-  max-height: 50vh;
+`;
+
+export const ModalInnerContent = styled.div`
+  height: 100%;
+  margin: 2rem 0;
+  max-height: 70vh;
   overflow-y: auto;
 `;

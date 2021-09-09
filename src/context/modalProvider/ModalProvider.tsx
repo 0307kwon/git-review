@@ -1,6 +1,10 @@
 import React, { ReactNode, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { ModalContainer, ModalInner } from "./ModalProvider.styles";
+import {
+  ModalContainer,
+  ModalInner,
+  ModalInnerContent,
+} from "./ModalProvider.styles";
 
 interface Props {
   children: ReactNode;
@@ -36,7 +40,9 @@ const ModalProvider = ({ children }: Props) => {
 
   const modalElement: React.ReactNode = (
     <ModalContainer onMouseDown={handleClickDimmed}>
-      <ModalInner>{modal && modal}</ModalInner>
+      <ModalInner>
+        <ModalInnerContent>{modal && modal}</ModalInnerContent>
+      </ModalInner>
     </ModalContainer>
   );
 
