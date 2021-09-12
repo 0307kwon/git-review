@@ -12,12 +12,13 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  //TODO: diffHunk 때문에 8버전으로 버전 업 해야됨
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 7);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 11);
 
-  return new Promise((resolve, rejects) => {
+  return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
+
+      db.deleteObjectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
 
       const objectStore = db.createObjectStore(
         CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
@@ -36,8 +37,9 @@ const openCodeReviewIDB = (): Promise<IDBDatabase> => {
     };
 
     request.onsuccess = (event) => resolve((event.target as IDBRequest).result);
+
     request.onerror = (event) =>
-      rejects(new Error((event.target as IDBRequest).error?.message));
+      reject((event.target as IDBRequest).error?.message);
   });
 };
 

@@ -1,5 +1,7 @@
+import { MEDIA_QUERY } from "./mediaQuery";
+
 export const APP = {
-  MAX_WIDTH: "600px",
+  MAX_WIDTH: MEDIA_QUERY.TABLET,
 };
 
 export const LOCAL_STORAGE_KEY = {
