@@ -6,7 +6,6 @@ import URLCard from "../../component/URLCard/URLCard";
 import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
 import { PULL_REQUEST_URL } from "../../constant/validation";
 import useModal from "../../context/modalProvider/useModal";
-import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
 import useUser from "../../context/UserProvider/useUser";
 import { ReactComponent as HelpIcon } from "../../asset/icon/help.svg";
 import { ReactComponent as PlusIcon } from "../../asset/icon/plus.svg";
@@ -22,9 +21,10 @@ import {
   SubTitleContainer,
 } from "./Setting.styles";
 import TokenSettingModal from "./TokenSettingModal/TokenSettingModal";
+import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 
 const Setting = () => {
-  const { pullRequestURLs, addURL, refetchURLs } = usePullRequestURL();
+  const { pullRequestURLs, addURL, refetchURLs } = usePullRequestURLs();
   const user = useUser();
   const modal = useModal();
   const [pullRequestFormData, setPullRequestFormData] = useState<

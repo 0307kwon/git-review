@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { PULL_REQUEST_URL } from "../../constant/validation";
-import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
 import { ReactComponent as DeleteIcon } from "../../asset/icon/cancel.svg";
 import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
 import { PullRequestURL } from "../../util/types";
@@ -10,13 +9,14 @@ import Input from "../Input/Input";
 import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLCardForm, URLParagraph } from "./URLCard.styles";
 import { Anchor } from "../@common/Anchor/Anchor";
+import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 
 interface Props {
   pullRequestURL: PullRequestURL;
 }
 
 const URLCard = ({ pullRequestURL }: Props) => {
-  const { modifyURL, deleteURL, refetchURLs } = usePullRequestURL();
+  const { modifyURL, deleteURL, refetchURLs } = usePullRequestURLs();
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [pullRequestFormData, setPullRequestFormData] = useState<
     Pick<PullRequestURL, "nickname" | "url">

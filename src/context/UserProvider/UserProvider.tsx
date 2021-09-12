@@ -5,7 +5,6 @@ import {
 } from "../../API/firebaseAPI";
 import { LOCAL_STORAGE_KEY } from "../../constant/common";
 import { Profile } from "../../util/types";
-import usePullRequestURLs from "./usePullRequestURLs";
 
 interface Props {
   children: React.ReactNode;

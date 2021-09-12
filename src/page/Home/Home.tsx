@@ -1,10 +1,11 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ReactComponent as SearchIcon } from "../../asset/icon/search.svg";
 import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailModal";
 import useModal from "../../context/modalProvider/useModal";
+import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useCodeReviews from "../../hook/useCodeReviews";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import { CodeReview } from "../../util/types";
@@ -27,6 +28,11 @@ const Home = () => {
     isLoading,
     findByKeyword,
   } = useCodeReviews();
+  const {
+    pullRequestURLs,
+    resetFailedURLs,
+    refetchURLs,
+  } = usePullRequestURLs();
   const modal = useModal();
   const [searchResults, setSearchResults] = useState<CodeReview[]>([]);
   const searchKeyword = useRef("");
@@ -40,6 +46,18 @@ const Home = () => {
     const foundReviews = await findByKeyword(searchKeyword.current);
     setSearchResults(foundReviews);
   };
+
+  useEffect(() => {
+    if (codeReviews.length === 0) return;
+
+    if (pullRequestURLs.length === 0) return;
+
+    if (pullRequestURLs.some((pullRequestURL) => pullRequestURL.isFailedURL)) {
+      resetFailedURLs().then(() => {
+        refetchURLs();
+      });
+    }
+  }, [codeReviews, pullRequestURLs]);
 
   if (isLoading) {
     return (

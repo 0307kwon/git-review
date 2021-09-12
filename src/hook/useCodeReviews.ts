@@ -8,7 +8,7 @@ import {
   readReviewsInIDB,
   storeCodeReviewIDB,
 } from "../API/indexedDB";
-import usePullRequestURL from "../context/PullRequestURLProvider/usePullRequestURL";
+import usePullRequestURLs from "../context/PullRequestURLProvider/usePullRequestURLs";
 import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
 
@@ -21,7 +21,7 @@ const useCodeReviews = () => {
     pullRequestURLs,
     isLoading: isPRLoading,
     modifyURL,
-  } = usePullRequestURL();
+  } = usePullRequestURLs();
   const user = useUser();
   const randomNumberForPagination = useRef(Math.random() * 100);
   const [isPageEnded, setIsPageEnded] = useState(false);
