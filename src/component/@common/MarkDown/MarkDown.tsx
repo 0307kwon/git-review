@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vs } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { StyledMarkDown } from "./MarkDown.styles";
@@ -7,9 +8,29 @@ interface Props {
 }
 
 const MarkDown = ({ children }: Props) => {
+  const searchedTarget = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (searchedTarget.current) {
+      const y = searchedTarget.current.offsetTop;
+      searchedTarget.current.offsetParent?.scroll(0, y);
+    }
+  }, [searchedTarget]);
+
   return (
     <StyledMarkDown
       components={{
+        em({ node, children, ...props }) {
+          if (searchedTarget.current) {
+            return <em>{children}</em>;
+          }
+
+          if (String(children).includes("🔍")) {
+            return <em ref={searchedTarget}>{children}</em>;
+          }
+
+          return <em>{children}</em>;
+        },
         a({ node, children, ...props }) {
           return (
             <a target="_blank" {...props}>

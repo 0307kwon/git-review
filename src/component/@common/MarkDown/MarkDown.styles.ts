@@ -12,6 +12,10 @@ const code = css`
 `;
 
 export const StyledMarkDown = styled(ReactMarkdown)`
+  position: relative;
+  padding: 0.5rem 2rem;
+  max-height: inherit;
+  overflow-y: hidden;
   white-space: normal;
   line-height: 1.8rem;
 

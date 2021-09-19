@@ -9,8 +9,9 @@ interface Props {
 const CodeViewer = ({ diffHunk, fileExtension = "" }: Props) => {
   return (
     <div>
-      {diffHunk.split("\n").map((rawCodeLine) => (
+      {diffHunk.split("\n").map((rawCodeLine, index) => (
         <CodeLineViewer
+          key={index}
           fileExtension={fileExtension}
           rawCodeLine={rawCodeLine}
         />

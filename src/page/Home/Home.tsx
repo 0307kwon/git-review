@@ -116,15 +116,12 @@ const Home = () => {
           searchResults.map((searchResult) => {
             return (
               <ReviewCardButton
+                key={searchResult.id}
                 onClick={() => {
                   modal.openModal(<ReviewDetailModal review={searchResult} />);
                 }}
               >
-                <ReviewCard
-                  key={searchResult.id}
-                  codeReview={searchResult}
-                  className="review-card"
-                />
+                <ReviewCard codeReview={searchResult} className="review-card" />
               </ReviewCardButton>
             );
           })}

@@ -37,7 +37,6 @@ const delayToShow = keyframes`
 
 export const ReviewContent = styled.div<{ isDimmedVisible: boolean }>`
   position: relative;
-  padding: 0.5rem 2rem;
   white-space: pre-line;
   max-height: 20rem;
   overflow: hidden;
