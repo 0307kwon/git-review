@@ -20,3 +20,11 @@ export const getRandomNumber = (from: number, to: number) => {
 export const escapeRegExp = (string: string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
+
+export const genNewId = function* () {
+  let id = 0;
+
+  while (true) {
+    yield id++;
+  }
+};

@@ -12,12 +12,15 @@ import {
   AvatarDropdown,
   LoginButton,
 } from "./Navigation.styles";
+import useFocusOut from "../../hook/useFocusOut";
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const history = useHistory();
   const user = useUser();
-  const dropdownRef = useRef(null);
+  const dropdownRef = useFocusOut<HTMLDivElement>(() => {
+    setIsDropdownVisible(false);
+  });
 
   const handleSignIn = async () => {
     const profile = await signInWithGithub();
@@ -39,20 +42,6 @@ const Navigation = () => {
   };
 
   const { userProfile } = user;
-
-  useEffect(() => {
-    if (!dropdownRef?.current) return;
-
-    const targetElement: Element = dropdownRef.current as any;
-
-    document.addEventListener("mousedown", (event: MouseEvent) => {
-      if (!event.target) return;
-
-      if (!targetElement.contains(event.target as Node)) {
-        setIsDropdownVisible(false);
-      }
-    });
-  }, [dropdownRef.current]);
 
   return (
     <div>
