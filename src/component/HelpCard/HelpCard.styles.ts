@@ -4,7 +4,7 @@ import { PALETTE } from "../../constant/palette";
 const show = keyframes`
   from {
     opacity: 0;
-    transform: translateY(1rem);
+    /* transform: translateY(1rem); */
   }
 
   to {
