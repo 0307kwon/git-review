@@ -166,7 +166,17 @@ export const deleteCodeReviewIDB = async (urlPath: string) => {
   });
 };
 
-export const findByKeywordInIDB = async (keyword: string) => {
+interface FindByKeywordInIDBParam {
+  keyword: string;
+  pageNumber: number;
+  reviewCountPerPage: number;
+}
+
+export const findByKeywordInIDB = async ({
+  keyword,
+  pageNumber,
+  reviewCountPerPage,
+}: FindByKeywordInIDBParam) => {
   const db = await openCodeReviewIDB();
 
   const transaction = db.transaction(
@@ -200,7 +210,12 @@ export const findByKeywordInIDB = async (keyword: string) => {
 
   return new Promise<CodeReview[]>((resolve, reject) => {
     codeReviewObjectStore.transaction.oncomplete = () => {
-      resolve(foundReviews);
+      resolve(
+        foundReviews.slice(
+          (pageNumber - 1) * reviewCountPerPage,
+          pageNumber * reviewCountPerPage
+        )
+      );
     };
     codeReviewObjectStore.transaction.onerror = () =>
       reject(new Error("indexedDB에서 검색 결과를 가져오는데 실패했습니다."));

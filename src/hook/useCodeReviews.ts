@@ -25,7 +25,7 @@ const useCodeReviews = () => {
   const user = useUser();
   const randomNumberForPagination = useRef(Math.random() * 100);
   const [isPageEnded, setIsPageEnded] = useState(false);
-  const currentPage = useRef(1);
+  const currentPageNumber = useRef(1);
 
   const onError = (failedURLs: string[]) => {
     alert(
@@ -56,12 +56,12 @@ const useCodeReviews = () => {
   const initialCodeLoadReviews = async () => {
     setIsLoading(true);
 
-    currentPage.current = 1;
+    currentPageNumber.current = 1;
 
     const reviews = await readReviewsInIDB({
-      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-      pageNumber: currentPage.current,
+      pageNumber: currentPageNumber.current,
       randomNumber: randomNumberForPagination.current,
+      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
     });
 
     setCodeReview(reviews);
@@ -73,11 +73,11 @@ const useCodeReviews = () => {
       return;
     }
 
-    currentPage.current++;
+    currentPageNumber.current++;
 
     const reviews = await readReviewsInIDB({
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-      pageNumber: currentPage.current,
+      pageNumber: currentPageNumber.current,
       randomNumber: randomNumberForPagination.current,
     });
 
@@ -138,7 +138,13 @@ const useCodeReviews = () => {
     await storeCodeReviewIDB(additionalCodeReviews);
   };
 
-  const findByKeyword = async (keyword: string) => {
+  const findByKeyword = async ({
+    keyword,
+    pageNumber,
+  }: {
+    keyword: string;
+    pageNumber: number;
+  }) => {
     if (!keyword) return [];
 
     if (!keyword.replaceAll(" ", "")) {
@@ -147,7 +153,11 @@ const useCodeReviews = () => {
 
     const filteredKeyword = keyword.trim();
 
-    const result = await findByKeywordInIDB(filteredKeyword);
+    const result = await findByKeywordInIDB({
+      keyword: filteredKeyword,
+      pageNumber: pageNumber,
+      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
+    });
 
     return result;
   };

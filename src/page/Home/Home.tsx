@@ -37,20 +37,56 @@ const Home = () => {
   const modal = useModal();
   const [searchResults, setSearchResults] = useState<CodeReview[]>([]);
   const searchKeyword = useRef("");
-  const { observedElementRef } = useIntersectionObserver({
+  const searchedCodeReviewPageNumber = useRef(1);
+  const {
+    observedElementRef: recommendedReviewInfinityScroll,
+  } = useIntersectionObserver({
     callback: readAdditionalReviews,
     observedElementDeps: [isLoading, searchResults.length === 0],
   });
+  const [isSearchedPageEnded, setIsSearchedPageEnded] = useState(false);
   const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    searchedCodeReviewPageNumber.current = 1;
+    setIsSearchedPageEnded(false);
     searchKeyword.current = event.target.value;
 
     registerDebounceCallback(async () => {
-      const foundReviews = await findByKeyword(searchKeyword.current);
+      const foundReviews = await findByKeyword({
+        keyword: searchKeyword.current,
+        pageNumber: searchedCodeReviewPageNumber.current,
+      });
       setSearchResults(foundReviews);
     });
   };
+
+  const findAdditionalReviews = async () => {
+    if (isSearchedPageEnded) {
+      return;
+    }
+
+    searchedCodeReviewPageNumber.current++;
+
+    const foundReviews = await findByKeyword({
+      keyword: searchKeyword.current,
+      pageNumber: searchedCodeReviewPageNumber.current,
+    });
+
+    if (foundReviews.length === 0) {
+      setIsSearchedPageEnded(true);
+      return;
+    }
+
+    setSearchResults((prevResult) => [...prevResult, ...foundReviews]);
+  };
+
+  const {
+    observedElementRef: searchedReviewInfinityScroll,
+  } = useIntersectionObserver({
+    callback: findAdditionalReviews,
+    observedElementDeps: [isLoading, searchResults.length > 0],
+  });
 
   useEffect(() => {
     if (codeReviews.length === 0) return;
@@ -112,24 +148,42 @@ const Home = () => {
                     <h2>🤩 저장된 리뷰는 여기까지예요</h2>
                   </SubTitleContainer>
                 )}
-                <ObservedElement ref={observedElementRef}></ObservedElement>
+                <ObservedElement
+                  ref={recommendedReviewInfinityScroll}
+                ></ObservedElement>
               </>
             )}
           </>
         )}
-        {searchResults.length > 0 &&
-          searchResults.map((searchResult) => {
-            return (
-              <ReviewCardButton
-                key={searchResult.id}
-                onClick={() => {
-                  modal.openModal(<ReviewDetailModal review={searchResult} />);
-                }}
-              >
-                <ReviewCard codeReview={searchResult} className="review-card" />
-              </ReviewCardButton>
-            );
-          })}
+        {searchResults.length > 0 && (
+          <>
+            {searchResults.map((searchResult) => {
+              return (
+                <ReviewCardButton
+                  key={searchResult.id}
+                  onClick={() => {
+                    modal.openModal(
+                      <ReviewDetailModal review={searchResult} />
+                    );
+                  }}
+                >
+                  <ReviewCard
+                    codeReview={searchResult}
+                    className="review-card"
+                  />
+                </ReviewCardButton>
+              );
+            })}
+            {isSearchedPageEnded && (
+              <SubTitleContainer>
+                <h2>🔬 검색된 리뷰는 여기까지예요</h2>
+              </SubTitleContainer>
+            )}
+            <ObservedElement
+              ref={searchedReviewInfinityScroll}
+            ></ObservedElement>{" "}
+          </>
+        )}
       </HomeContents>
     </div>
   );
