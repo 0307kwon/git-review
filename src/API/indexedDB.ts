@@ -12,13 +12,19 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 11);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 13);
 
   return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
 
-      db.deleteObjectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
+      if (
+        db.objectStoreNames.contains(
+          CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+        )
+      ) {
+        db.deleteObjectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
+      }
 
       const objectStore = db.createObjectStore(
         CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
