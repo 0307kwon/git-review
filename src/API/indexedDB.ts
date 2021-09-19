@@ -172,7 +172,7 @@ interface FindByKeywordInIDBParam {
   reviewCountPerPage: number;
 }
 
-export const findByKeywordInIDB = async ({
+export const searchByKeywordInIDB = async ({
   keyword,
   pageNumber,
   reviewCountPerPage,

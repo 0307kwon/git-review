@@ -3,16 +3,14 @@ import { useState } from "react";
 import { requestCodeReview } from "../API/githubAPI";
 import {
   deleteCodeReviewIDB,
-  findByKeywordInIDB,
   getAllURLsIDB,
   readReviewsInIDB,
   storeCodeReviewIDB,
 } from "../API/indexedDB";
+import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
 import usePullRequestURLs from "../context/PullRequestURLProvider/usePullRequestURLs";
 import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
-
-const REVIEW_COUNT_PER_PAGE = 5;
 
 const useCodeReviews = () => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
@@ -138,30 +136,6 @@ const useCodeReviews = () => {
     await storeCodeReviewIDB(additionalCodeReviews);
   };
 
-  const findByKeyword = async ({
-    keyword,
-    pageNumber,
-  }: {
-    keyword: string;
-    pageNumber: number;
-  }) => {
-    if (!keyword) return [];
-
-    if (!keyword.replaceAll(" ", "")) {
-      return [];
-    }
-
-    const filteredKeyword = keyword.trim();
-
-    const result = await findByKeywordInIDB({
-      keyword: filteredKeyword,
-      pageNumber: pageNumber,
-      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-    });
-
-    return result;
-  };
-
   useEffect(() => {
     const isOffline = !user.isLogin;
 
@@ -182,7 +156,6 @@ const useCodeReviews = () => {
     isLoading,
     isPageEnded,
     readAdditionalReviews,
-    findByKeyword,
     syncCodeReviews: syncCodeReviewsInIDB,
     loadOneCodeReview,
   };

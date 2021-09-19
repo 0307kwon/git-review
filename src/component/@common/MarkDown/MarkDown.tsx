@@ -7,6 +7,10 @@ interface Props {
   children: string;
 }
 
+const changeSearchMarkToCodeBlockStyle = (string: String) => {
+  return string.replace(/_🔍([^_]+)_/g, "🔍($1)");
+};
+
 const MarkDown = ({ children }: Props) => {
   const searchedTarget = useRef<HTMLElement>(null);
 
@@ -41,9 +45,8 @@ const MarkDown = ({ children }: Props) => {
         code({ node, inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || "");
 
-          const parsedChildren = String(children).replace(
-            /\s_🔍([^_])+_\s/g,
-            "🔍($1)"
+          const parsedChildren = changeSearchMarkToCodeBlockStyle(
+            String(children)
           );
 
           return !inline && match ? (

@@ -9,7 +9,7 @@ import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequ
 import useCodeReviews from "../../hook/useCodeReviews";
 import useDebounce from "../../hook/useDebounce";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
-import { CodeReview } from "../../util/types";
+import useReviewSearchEngine from "../../hook/useReviewSearchEngine";
 import {
   HomeContents,
   LoadingContainer,
@@ -22,71 +22,51 @@ import {
 } from "./Home.styles";
 
 const Home = () => {
-  const {
-    data: codeReviews,
-    readAdditionalReviews,
-    isPageEnded,
-    isLoading,
-    findByKeyword,
-  } = useCodeReviews();
+  const modal = useModal();
   const {
     pullRequestURLs,
     resetFailedURLs,
     refetchURLs,
   } = usePullRequestURLs();
-  const modal = useModal();
-  const [searchResults, setSearchResults] = useState<CodeReview[]>([]);
-  const searchKeyword = useRef("");
-  const searchedCodeReviewPageNumber = useRef(1);
+
+  const {
+    data: codeReviews,
+    readAdditionalReviews,
+    isPageEnded,
+    isLoading,
+  } = useCodeReviews();
+
+  const {
+    searchedReviews,
+    isPageEnded: isSearchPageEnded,
+    searchByNewKeyword,
+    readAdditionalSearchedReviews,
+  } = useReviewSearchEngine();
+
   const {
     observedElementRef: recommendedReviewInfinityScroll,
   } = useIntersectionObserver({
     callback: readAdditionalReviews,
-    observedElementDeps: [isLoading, searchResults.length === 0],
+    observedElementDeps: [isLoading, searchedReviews.length === 0],
   });
-  const [isSearchedPageEnded, setIsSearchedPageEnded] = useState(false);
-  const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
-
-  const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    searchedCodeReviewPageNumber.current = 1;
-    setIsSearchedPageEnded(false);
-    searchKeyword.current = event.target.value;
-
-    registerDebounceCallback(async () => {
-      const foundReviews = await findByKeyword({
-        keyword: searchKeyword.current,
-        pageNumber: searchedCodeReviewPageNumber.current,
-      });
-      setSearchResults(foundReviews);
-    });
-  };
-
-  const findAdditionalReviews = async () => {
-    if (isSearchedPageEnded) {
-      return;
-    }
-
-    searchedCodeReviewPageNumber.current++;
-
-    const foundReviews = await findByKeyword({
-      keyword: searchKeyword.current,
-      pageNumber: searchedCodeReviewPageNumber.current,
-    });
-
-    if (foundReviews.length === 0) {
-      setIsSearchedPageEnded(true);
-      return;
-    }
-
-    setSearchResults((prevResult) => [...prevResult, ...foundReviews]);
-  };
 
   const {
     observedElementRef: searchedReviewInfinityScroll,
   } = useIntersectionObserver({
-    callback: findAdditionalReviews,
-    observedElementDeps: [isLoading, searchResults.length > 0],
+    callback: readAdditionalSearchedReviews,
+    observedElementDeps: [isLoading, searchedReviews.length > 0],
   });
+
+  const searchKeyword = useRef("");
+  const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
+
+  const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    searchKeyword.current = event.target.value;
+
+    registerDebounceCallback(() => {
+      searchByNewKeyword(searchKeyword.current);
+    });
+  };
 
   useEffect(() => {
     if (codeReviews.length === 0) return;
@@ -120,11 +100,11 @@ const Home = () => {
         />
       </SearchContainer>
       <HomeContents>
-        {searchResults.length === 0 && (
+        {searchedReviews.length === 0 && (
           <>
             <HelpCard
               searchKeyword={searchKeyword.current}
-              searchResults={searchResults}
+              searchResults={searchedReviews}
               codeReviews={codeReviews}
             />
             {codeReviews.length > 0 && (
@@ -155,9 +135,9 @@ const Home = () => {
             )}
           </>
         )}
-        {searchResults.length > 0 && (
+        {searchedReviews.length > 0 && (
           <>
-            {searchResults.map((searchResult) => {
+            {searchedReviews.map((searchResult) => {
               return (
                 <ReviewCardButton
                   key={searchResult.id}
@@ -174,7 +154,7 @@ const Home = () => {
                 </ReviewCardButton>
               );
             })}
-            {isSearchedPageEnded && (
+            {isSearchPageEnded && (
               <SubTitleContainer>
                 <h2>🔬 검색된 리뷰는 여기까지예요</h2>
               </SubTitleContainer>

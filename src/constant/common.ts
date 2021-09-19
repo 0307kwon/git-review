@@ -12,3 +12,5 @@ export const LOCAL_STORAGE_KEY = {
 export const Z_INDEX = {
   MODAL: 100,
 };
+
+export const REVIEW_COUNT_PER_PAGE = 5;
