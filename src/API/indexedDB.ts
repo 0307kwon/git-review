@@ -1,5 +1,5 @@
 import { CODE_REVIEW_IDB } from "../constant/indexedDB";
-import { filterURLToPath } from "../util/common";
+import { escapeRegExp, filterURLToPath } from "../util/common";
 import { CodeReview } from "../util/types";
 interface CursorWithValue<T> extends IDBCursorWithValue {
   value: T;
@@ -187,11 +187,10 @@ export const findByKeywordInIDB = async (keyword: string) => {
     }
     const codeReview: CodeReview = cursor.value;
 
-    if (codeReview.plainText.includes(keyword)) {
-      codeReview.content = codeReview.content.replaceAll(
-        keyword,
-        ` _🔍${keyword}_ `
-      );
+    const regex = new RegExp(`(${escapeRegExp(keyword)})`, "gi");
+
+    if (regex.test(codeReview.plainText)) {
+      codeReview.content = codeReview.content.replaceAll(regex, " _🔍$1_ ");
 
       foundReviews.push(codeReview);
     }

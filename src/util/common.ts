@@ -16,3 +16,7 @@ export const getRandomNumber = (from: number, to: number) => {
 
   return from + Math.round(Math.random() * (to - from));
 };
+
+export const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};

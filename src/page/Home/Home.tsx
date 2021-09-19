@@ -43,6 +43,7 @@ const Home = () => {
 
   const handleChangeInput = async (event: ChangeEvent<HTMLInputElement>) => {
     searchKeyword.current = event.target.value;
+
     const foundReviews = await findByKeyword(searchKeyword.current);
     setSearchResults(foundReviews);
   };
