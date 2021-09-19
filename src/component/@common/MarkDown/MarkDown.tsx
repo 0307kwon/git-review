@@ -20,8 +20,10 @@ const MarkDown = ({ children }: Props) => {
         code({ node, inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || "");
 
-          if (!inline) {
-          }
+          const parsedChildren = String(children).replace(
+            /\s_🔍([^_])+_\s/g,
+            "🔍($1)"
+          );
 
           return !inline && match ? (
             <SyntaxHighlighter
@@ -35,12 +37,12 @@ const MarkDown = ({ children }: Props) => {
               codeTagProps={{
                 className: "pre-code",
               }}
-              children={String(children).replace(/\n$/, "")}
+              children={parsedChildren.replace(/\n$/, "")}
               {...props}
             />
           ) : (
             <code className={className} {...props}>
-              {children}
+              {parsedChildren}
             </code>
           );
         },
