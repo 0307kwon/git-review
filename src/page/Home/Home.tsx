@@ -7,6 +7,7 @@ import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailMod
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useCodeReviews from "../../hook/useCodeReviews";
+import useDebounce from "../../hook/useDebounce";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import { CodeReview } from "../../util/types";
 import {
@@ -40,12 +41,15 @@ const Home = () => {
     callback: readAdditionalReviews,
     observedElementDeps: [isLoading, searchResults.length === 0],
   });
+  const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
 
-  const handleChangeInput = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     searchKeyword.current = event.target.value;
 
-    const foundReviews = await findByKeyword(searchKeyword.current);
-    setSearchResults(foundReviews);
+    registerDebounceCallback(async () => {
+      const foundReviews = await findByKeyword(searchKeyword.current);
+      setSearchResults(foundReviews);
+    });
   };
 
   useEffect(() => {

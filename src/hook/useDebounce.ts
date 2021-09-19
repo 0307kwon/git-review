@@ -7,7 +7,7 @@ interface Props {
 const useDebounce = ({ waitingTimeMs }: Props) => {
   const ref = useRef<null | NodeJS.Timeout>(null);
 
-  const debounce = (callback: () => void) => {
+  const registerDebounceCallback = (callback: () => void) => {
     if (ref.current) {
       clearTimeout(ref.current);
     }
@@ -18,7 +18,7 @@ const useDebounce = ({ waitingTimeMs }: Props) => {
   };
 
   return {
-    debounce,
+    registerDebounceCallback,
   };
 };
 
