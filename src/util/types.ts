@@ -25,13 +25,15 @@ export interface IssueResponse extends PullRequestResponse {
   };
 }
 
+export interface Author {
+  avatarUrl: string;
+  userName: string;
+}
+
 export interface CodeReview {
   id: number;
   url: string;
-  author: {
-    avatarUrl: string;
-    userName: string;
-  };
+  author: Author;
   content: string;
   plainText: string;
   code?: {

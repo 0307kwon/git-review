@@ -16,6 +16,8 @@ interface Props {
 }
 
 const ReviewDetailModal = ({ review }: Props) => {
+  console.log(review);
+
   return (
     <ContentContainer>
       {review.code && (

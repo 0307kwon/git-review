@@ -28,6 +28,11 @@ export const SearchInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    font-weight: 600;
+    border: 1px solid ${PALETTE.GRAY_400};
+  }
 `;
 
 export const HomeContents = styled.div`

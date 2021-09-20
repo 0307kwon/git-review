@@ -4,6 +4,7 @@ import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailModal";
+import { DUMMY_REVIEWS } from "../../constant/dummy";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useCodeReviews from "../../hook/useCodeReviews";
@@ -95,7 +96,12 @@ const Home = () => {
         <SearchLabel>search</SearchLabel>
         <SearchInput
           type="search"
-          placeholder="코드 리뷰 내용을 검색할 수 있어요"
+          placeholder={
+            codeReviews.length === 0
+              ? "로그인 후 리뷰 모음을 만들어주세요!"
+              : "코드 리뷰 내용을 검색할 수 있어요"
+          }
+          disabled={codeReviews.length === 0}
           onChange={handleChangeInput}
         />
       </SearchContainer>
@@ -107,7 +113,24 @@ const Home = () => {
               searchResults={searchedReviews}
               codeReviews={codeReviews}
             />
-            {codeReviews.length > 0 && (
+            {codeReviews.length === 0 ? (
+              <>
+                <SubTitleContainer>
+                  <h2>📒 코드 리뷰 예시를 보여드릴게요</h2>
+                  <p>리뷰 모음집을 만들면 이렇게 보여져요</p>
+                </SubTitleContainer>
+                {DUMMY_REVIEWS.map((review) => (
+                  <ReviewCardButton
+                    key={review.id}
+                    onClick={() => {
+                      modal.openModal(<ReviewDetailModal review={review} />);
+                    }}
+                  >
+                    <ReviewCard codeReview={review} />
+                  </ReviewCardButton>
+                ))}
+              </>
+            ) : (
               <>
                 <SubTitleContainer>
                   <h2>😊 코드 리뷰를 둘러보는 건 어떠세요?</h2>
