@@ -8,7 +8,7 @@ export const ContentContainer = styled.div`
 `;
 
 export const CodeViewerContainer = styled.div`
-  max-height: 10rem;
+  max-height: 15rem;
   overflow-x: auto;
 `;
 
