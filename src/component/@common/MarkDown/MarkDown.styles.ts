@@ -1,4 +1,3 @@
-import { FC } from "react";
 import ReactMarkdown from "react-markdown";
 import styled, { css } from "styled-components";
 import { PALETTE } from "../../../constant/palette";
@@ -55,23 +54,19 @@ export const StyledMarkDown = styled(ReactMarkdown)`
   }
 
   h1 {
-    font-size: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid ${PALETTE.GRAY_200};
   }
 
   h2 {
-    font-size: 1.7rem;
     padding: 1rem 0;
   }
 
   h3 {
-    font-size: 1.4rem;
     padding: 0.5rem 0;
   }
 
   h4 {
-    font-size: 1.1rem;
     padding: 0.5rem 0;
   }
 

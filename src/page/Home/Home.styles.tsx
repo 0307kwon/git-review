@@ -47,7 +47,6 @@ export const SubTitleContainer = styled.div`
   align-items: center;
   padding: 1rem 0 1.5rem;
   & > h2 {
-    font-size: 20px;
     margin-bottom: 0.5rem;
   }
 `;

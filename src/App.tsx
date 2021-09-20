@@ -20,7 +20,7 @@ function App() {
               <Link to="/">
                 <FlexContainer alignItems="center" gap="0.5rem">
                   <Logo />
-                  <h1>GitReview</h1>
+                  <h1 className="logo">GitReview</h1>
                 </FlexContainer>
               </Link>
               <Navigation />

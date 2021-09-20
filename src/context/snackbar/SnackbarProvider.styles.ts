@@ -22,6 +22,8 @@ export const SnackbarWrapper = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   bottom: 1rem;
+  max-width: 23.75rem;
+  width: 90%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -35,7 +37,7 @@ export const Snackbar = styled.div<{ isHidden: boolean }>`
   align-items: center;
   gap: 0.5rem;
   padding-left: 1rem;
-  width: 23.75rem;
+  width: 100%;
   height: 3rem;
   background-color: ${PALETTE.BLACK};
   opacity: 0.8;

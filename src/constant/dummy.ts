@@ -74,7 +74,7 @@ export const DUMMY_REVIEWS: CodeReview[] = [
   },
   {
     author: DUMMY_AUTHOR.MICKEY,
-    content: "`preload` 사용이 좋습니다! 👍👍",
+    content: "`preload` 사용 좋습니다! 👍👍",
     plainText: "이 부분에 대해서 설명 가능하실까요?",
     id: getNewId.next().value,
     url: "https://github.com/0307kwon/git-review",
