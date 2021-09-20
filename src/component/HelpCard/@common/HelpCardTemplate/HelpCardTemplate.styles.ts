@@ -37,6 +37,7 @@ export const TitleParagraph = styled.h2`
 
 export const SubTitleParagraph = styled.p`
   font-size: 14px;
+  text-align: center;
 
   animation: ${subtitleShow} 2s ease;
 `;

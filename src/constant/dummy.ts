@@ -55,8 +55,8 @@ export const DUMMY_REVIEWS: CodeReview[] = [
   },
   {
     author: DUMMY_AUTHOR.MICKEY,
-    content: "이 부분에 대해서 설명 가능하실까요?",
-    plainText: "이 부분에 대해서 설명 가능하실까요?",
+    content: "# 코드리뷰 \n 안녕하세요! 이 코드에 대해서 설명 가능하실까요?",
+    plainText: "이 코드에 대해서 설명 가능하실까요?",
     id: getNewId.next().value,
     url: "https://github.com/0307kwon/git-review",
     code: {
