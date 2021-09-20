@@ -3,16 +3,15 @@ import { useState } from "react";
 import { requestCodeReview } from "../API/githubAPI";
 import {
   deleteCodeReviewIDB,
-  findByKeywordInIDB,
   getAllURLsIDB,
   readReviewsInIDB,
   storeCodeReviewIDB,
 } from "../API/indexedDB";
-import usePullRequestURL from "../context/PullRequestURLProvider/usePullRequestURL";
+import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
+import usePullRequestURLs from "../context/PullRequestURLProvider/usePullRequestURLs";
+import useSnackbar from "../context/snackbar/useSnackbar";
 import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
-
-const REVIEW_COUNT_PER_PAGE = 5;
 
 const useCodeReviews = () => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
@@ -21,11 +20,12 @@ const useCodeReviews = () => {
     pullRequestURLs,
     isLoading: isPRLoading,
     modifyURL,
-  } = usePullRequestURL();
+  } = usePullRequestURLs();
   const user = useUser();
   const randomNumberForPagination = useRef(Math.random() * 100);
   const [isPageEnded, setIsPageEnded] = useState(false);
-  const currentPage = useRef(1);
+  const currentPageNumber = useRef(1);
+  const snackbar = useSnackbar();
 
   const onError = (failedURLs: string[]) => {
     alert(
@@ -53,19 +53,18 @@ const useCodeReviews = () => {
     storeCodeReviewIDB(codeReview.resolvedValue);
   };
 
-  const initialLoadReviews = async () => {
+  const initialLoadCodeReviews = async () => {
     setIsLoading(true);
 
-    currentPage.current = 1;
+    currentPageNumber.current = 1;
 
     const reviews = await readReviewsInIDB({
-      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-      pageNumber: currentPage.current,
+      pageNumber: currentPageNumber.current,
       randomNumber: randomNumberForPagination.current,
+      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
     });
 
     setCodeReview(reviews);
-
     setIsLoading(false);
   };
 
@@ -74,11 +73,11 @@ const useCodeReviews = () => {
       return;
     }
 
-    currentPage.current++;
+    currentPageNumber.current++;
 
     const reviews = await readReviewsInIDB({
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-      pageNumber: currentPage.current,
+      pageNumber: currentPageNumber.current,
       randomNumber: randomNumberForPagination.current,
     });
 
@@ -115,6 +114,7 @@ const useCodeReviews = () => {
       return;
     }
 
+    snackbar.addSnackbar("progress", "새로운 PR 목록과 동기화 중입니다", 60000);
     const updatingCodeReviewPromises = Array.from(updatingURLSet).map((url) =>
       requestCodeReview(url)
     );
@@ -137,34 +137,23 @@ const useCodeReviews = () => {
     }
 
     await storeCodeReviewIDB(additionalCodeReviews);
-  };
-
-  const findByKeyword = async (keyword: string) => {
-    if (!keyword) return [];
-
-    if (!keyword.replaceAll(" ", "")) {
-      return [];
-    }
-
-    const filteredKeyword = keyword.trim();
-
-    const result = await findByKeywordInIDB(filteredKeyword);
-
-    return result;
+    snackbar.addSnackbar("success", "코드 리뷰 동기화 완료");
   };
 
   useEffect(() => {
     const isOffline = !user.isLogin;
 
-    if (isPRLoading) return;
-
     if (isOffline) {
-      initialLoadReviews();
+      initialLoadCodeReviews();
+      return;
+    }
+
+    if (isPRLoading) {
       return;
     }
 
     syncCodeReviewsInIDB().then(() => {
-      initialLoadReviews();
+      initialLoadCodeReviews();
     });
   }, [isPRLoading, user.isLogin]);
 
@@ -173,7 +162,6 @@ const useCodeReviews = () => {
     isLoading,
     isPageEnded,
     readAdditionalReviews,
-    findByKeyword,
     syncCodeReviews: syncCodeReviewsInIDB,
     loadOneCodeReview,
   };

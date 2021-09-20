@@ -31,14 +31,13 @@ const subtitleShow = keyframes`
   }
 `;
 
-export const TitleParagraph = styled.p`
-  font-size: 24px;
-
+export const TitleParagraph = styled.h2`
   animation: ${titleShow} 2s ease;
 `;
 
 export const SubTitleParagraph = styled.p`
   font-size: 14px;
+  text-align: center;
 
   animation: ${subtitleShow} 2s ease;
 `;

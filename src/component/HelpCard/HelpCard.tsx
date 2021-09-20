@@ -1,5 +1,5 @@
 import React from "react";
-import usePullRequestURL from "../../context/PullRequestURLProvider/usePullRequestURL";
+import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useUser from "../../context/UserProvider/useUser";
 import { CodeReview } from "../../util/types";
 import FirstVisit from "./helpCards/FirstVisit";

@@ -1,5 +1,5 @@
 import { CODE_REVIEW_IDB } from "../constant/indexedDB";
-import { filterURLToPath } from "../util/common";
+import { escapeRegExp, filterURLToPath } from "../util/common";
 import { CodeReview } from "../util/types";
 interface CursorWithValue<T> extends IDBCursorWithValue {
   value: T;
@@ -12,13 +12,19 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 7);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 13);
 
-  return new Promise((resolve, rejects) => {
+  return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
 
-      // db.deleteObjectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
+      if (
+        db.objectStoreNames.contains(
+          CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+        )
+      ) {
+        db.deleteObjectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
+      }
 
       const objectStore = db.createObjectStore(
         CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
@@ -37,8 +43,9 @@ const openCodeReviewIDB = (): Promise<IDBDatabase> => {
     };
 
     request.onsuccess = (event) => resolve((event.target as IDBRequest).result);
+
     request.onerror = (event) =>
-      rejects(new Error((event.target as IDBRequest).error?.message));
+      reject((event.target as IDBRequest).error?.message);
   });
 };
 
@@ -165,7 +172,17 @@ export const deleteCodeReviewIDB = async (urlPath: string) => {
   });
 };
 
-export const findByKeywordInIDB = async (keyword: string) => {
+interface FindByKeywordInIDBParam {
+  keyword: string;
+  pageNumber: number;
+  reviewCountPerPage: number;
+}
+
+export const searchByKeywordInIDB = async ({
+  keyword,
+  pageNumber,
+  reviewCountPerPage,
+}: FindByKeywordInIDBParam) => {
   const db = await openCodeReviewIDB();
 
   const transaction = db.transaction(
@@ -186,11 +203,10 @@ export const findByKeywordInIDB = async (keyword: string) => {
     }
     const codeReview: CodeReview = cursor.value;
 
-    if (codeReview.plainText.includes(keyword)) {
-      codeReview.content = codeReview.content.replaceAll(
-        keyword,
-        ` _🔍${keyword}_ `
-      );
+    const regex = new RegExp(`(${escapeRegExp(keyword)})`, "gi");
+
+    if (regex.test(codeReview.plainText)) {
+      codeReview.content = codeReview.content.replaceAll(regex, " _🔍$1_ ");
 
       foundReviews.push(codeReview);
     }
@@ -200,7 +216,12 @@ export const findByKeywordInIDB = async (keyword: string) => {
 
   return new Promise<CodeReview[]>((resolve, reject) => {
     codeReviewObjectStore.transaction.oncomplete = () => {
-      resolve(foundReviews);
+      resolve(
+        foundReviews.slice(
+          (pageNumber - 1) * reviewCountPerPage,
+          pageNumber * reviewCountPerPage
+        )
+      );
     };
     codeReviewObjectStore.transaction.onerror = () =>
       reject(new Error("indexedDB에서 검색 결과를 가져오는데 실패했습니다."));

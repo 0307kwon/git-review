@@ -67,7 +67,14 @@ const UserProvider = ({ children }: Props) => {
   };
 
   const contextValue = useMemo<ContextValue>(
-    () => ({ userProfile, isLogin, login, logout, refetch, modifyProfile }),
+    () => ({
+      userProfile,
+      isLogin,
+      login,
+      logout,
+      refetch,
+      modifyProfile,
+    }),
     [userProfile, isLogin]
   );
 

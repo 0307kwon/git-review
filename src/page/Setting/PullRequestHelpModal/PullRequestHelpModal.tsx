@@ -14,7 +14,7 @@ const PullRequestHelpModal = () => {
   return (
     <HelpContainer>
       <FlexContainer flexDirection="column" gap="0.25rem">
-        <h2>도움말</h2>
+        <h2>📖 도움말</h2>
         <p>pull request url 등록은 어떻게 하나요?</p>
       </FlexContainer>
 

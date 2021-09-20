@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { MEDIA_QUERY } from "./constant/mediaQuery";
 import { PALETTE } from "./constant/palette";
 
 export const GlobalStyle = createGlobalStyle`
@@ -9,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   #root {
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     background-color: ${PALETTE.GRAY_100};
   }
@@ -27,9 +28,48 @@ export const GlobalStyle = createGlobalStyle`
     color: ${PALETTE.BLACK};
   }
 
+  h1.logo {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
   h1 {
     font-size: 2rem;
     font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  @media screen and (max-width: ${MEDIA_QUERY.MOBILE}) {
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+    }
+
+    h4 {
+    font-size: 1.1rem;
+    }
   }
 
   li {

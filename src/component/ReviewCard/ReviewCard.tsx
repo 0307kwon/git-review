@@ -1,16 +1,16 @@
-import React, { VFC } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vs } from "react-syntax-highlighter/dist/esm/styles/prism";
+import React, { useState, VFC } from "react";
+import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import { CodeReview } from "../../util/types";
-import { Anchor } from "../@common/Anchor/Anchor";
 import Avatar from "../@common/Avatar/Avatar";
 import MarkDown from "../@common/MarkDown/MarkDown";
 import {
+  ContentEndDiv,
   ProfileContainer,
   ReviewCardAnchor,
   ReviewCardContainer,
   ReviewContent,
 } from "./ReviewCard.styles";
+import { ReactComponent as MoreIcon } from "../../asset/icon/more.svg";
 
 interface Props {
   codeReview: CodeReview;
@@ -18,6 +18,13 @@ interface Props {
 }
 
 const ReviewCard: VFC<Props> = ({ codeReview, className }) => {
+  const [isDimmedVisible, setDimmedVisible] = useState(true);
+  const { observedElementRef } = useIntersectionObserver({
+    callback: () => {
+      setDimmedVisible(false);
+    },
+  });
+
   return (
     <ReviewCardContainer className={className}>
       <ProfileContainer>
@@ -30,40 +37,13 @@ const ReviewCard: VFC<Props> = ({ codeReview, className }) => {
             nickname={codeReview.author.userName}
           />
         </ReviewCardAnchor>
-        <Anchor target="blank" href={codeReview.url}>
-          코드 리뷰로 이동
-        </Anchor>
       </ProfileContainer>
-      <ReviewContent>
-        <MarkDown
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  language={match[1]}
-                  PreTag="div"
-                  style={vs}
-                  customStyle={{
-                    background: "transparent",
-                    border: "none",
-                  }}
-                  codeTagProps={{
-                    className: "pre-code",
-                  }}
-                  children={String(children).replace(/\n$/, "")}
-                  {...props}
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        >
-          {codeReview.content}
-        </MarkDown>
+      <ReviewContent isDimmedVisible={isDimmedVisible}>
+        <MarkDown>{codeReview.content}</MarkDown>
+        <ContentEndDiv ref={observedElementRef}></ContentEndDiv>
+        <div className="dimmed">
+          <MoreIcon stroke="white" height="2.5rem" />
+        </div>
       </ReviewContent>
     </ReviewCardContainer>
   );

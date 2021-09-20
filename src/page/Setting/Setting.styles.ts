@@ -34,10 +34,6 @@ export const SubTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0.5rem 0;
-
-  & h2 {
-    font-size: 1.25rem;
-  }
 `;
 
 export const Form = styled.form`

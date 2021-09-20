@@ -15,6 +15,8 @@ export interface PullRequestResponse {
     avatar_url: string;
     login: string;
   };
+  diff_hunk?: string;
+  path?: string;
 }
 
 export interface IssueResponse extends PullRequestResponse {
@@ -23,15 +25,21 @@ export interface IssueResponse extends PullRequestResponse {
   };
 }
 
+export interface Author {
+  avatarUrl: string;
+  userName: string;
+}
+
 export interface CodeReview {
   id: number;
   url: string;
-  author: {
-    avatarUrl: string;
-    userName: string;
-  };
+  author: Author;
   content: string;
   plainText: string;
+  code?: {
+    diffHunk: string;
+    path: string;
+  };
 }
 
 export interface Profile {

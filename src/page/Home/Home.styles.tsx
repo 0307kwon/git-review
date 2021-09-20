@@ -4,6 +4,8 @@ import { PALETTE } from "../../constant/palette";
 
 export const LoadingContainer = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   min-height: 50vh;
 `;
@@ -28,14 +30,15 @@ export const SearchInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    font-weight: 600;
+    border: 1px solid ${PALETTE.GRAY_400};
+  }
 `;
 
 export const HomeContents = styled.div`
   padding-top: 10px;
-
-  & > .review-card {
-    margin-bottom: 1.5rem;
-  }
 `;
 
 export const SubTitleContainer = styled.div`
@@ -44,7 +47,6 @@ export const SubTitleContainer = styled.div`
   align-items: center;
   padding: 1rem 0 1.5rem;
   & > h2 {
-    font-size: 20px;
     margin-bottom: 0.5rem;
   }
 `;
@@ -54,3 +56,19 @@ export const ObservedElement = styled.div`
   height: 2rem;
   width: 100%;
 `;
+
+export const ReviewCardButton = styled.div`
+  border: none;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+`;
+
+ReviewCardButton.defaultProps = {
+  role: "button",
+};

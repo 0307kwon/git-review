@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import {
   requestUpdatePullRequestURLs,
   requestUserPullRequestURLs,
@@ -19,6 +19,7 @@ interface ContextValue {
   modifyURL: (
     pullRequestURL: RequiredOnly<PullRequestURL, "url">
   ) => Promise<void>;
+  resetFailedURLs: () => Promise<void[]>;
   refetchURLs: () => Promise<void>;
 }
 
@@ -84,6 +85,17 @@ const PullRequestURLProvider = ({ children }: Props) => {
     }
   };
 
+  const resetFailedURLs = async () => {
+    const resetRequests = pullRequestURLs.map((pullRequestURL) => {
+      return modifyURL({
+        url: pullRequestURL.url,
+        isFailedURL: false,
+      });
+    });
+
+    return Promise.all(resetRequests);
+  };
+
   const refetchURLs = async () => {
     setIsLoading(true);
     const pullRequestURLs = await requestUserPullRequestURLs();
@@ -95,13 +107,18 @@ const PullRequestURLProvider = ({ children }: Props) => {
 
       setPullRequestURLs(urls);
       setIsLoading(false);
+
+      return;
     }
+
+    setPullRequestURLs([]);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     if (!user.isLogin) {
       setPullRequestURLs([]);
-      setIsLoading(false);
+      setIsLoading(true);
       return;
     }
 
@@ -114,6 +131,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
         pullRequestURLs,
         isLoading,
         modifyURL,
+        resetFailedURLs,
         addURL,
         deleteURL,
         refetchURLs,
