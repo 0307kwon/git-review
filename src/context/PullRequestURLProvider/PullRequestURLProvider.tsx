@@ -107,7 +107,12 @@ const PullRequestURLProvider = ({ children }: Props) => {
 
       setPullRequestURLs(urls);
       setIsLoading(false);
+
+      return;
     }
+
+    setPullRequestURLs([]);
+    setIsLoading(false);
   };
 
   useEffect(() => {
