@@ -9,6 +9,7 @@ import {
 } from "../API/indexedDB";
 import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
 import usePullRequestURLs from "../context/PullRequestURLProvider/usePullRequestURLs";
+import useSnackbar from "../context/snackbar/useSnackbar";
 import useUser from "../context/UserProvider/useUser";
 import { CodeReview } from "../util/types";
 
@@ -24,6 +25,7 @@ const useCodeReviews = () => {
   const randomNumberForPagination = useRef(Math.random() * 100);
   const [isPageEnded, setIsPageEnded] = useState(false);
   const currentPageNumber = useRef(1);
+  const snackbar = useSnackbar();
 
   const onError = (failedURLs: string[]) => {
     alert(
@@ -51,7 +53,7 @@ const useCodeReviews = () => {
     storeCodeReviewIDB(codeReview.resolvedValue);
   };
 
-  const initialCodeLoadReviews = async () => {
+  const initialLoadCodeReviews = async () => {
     setIsLoading(true);
 
     currentPageNumber.current = 1;
@@ -112,6 +114,7 @@ const useCodeReviews = () => {
       return;
     }
 
+    snackbar.addSnackbar("progress", "새로운 PR 목록과 동기화 중입니다", 60000);
     const updatingCodeReviewPromises = Array.from(updatingURLSet).map((url) =>
       requestCodeReview(url)
     );
@@ -134,20 +137,23 @@ const useCodeReviews = () => {
     }
 
     await storeCodeReviewIDB(additionalCodeReviews);
+    snackbar.addSnackbar("success", "코드 리뷰 동기화 완료");
   };
 
   useEffect(() => {
     const isOffline = !user.isLogin;
 
     if (isOffline) {
-      initialCodeLoadReviews();
+      initialLoadCodeReviews();
       return;
     }
 
-    if (isPRLoading) return;
+    if (isPRLoading) {
+      return;
+    }
 
     syncCodeReviewsInIDB().then(() => {
-      initialCodeLoadReviews();
+      initialLoadCodeReviews();
     });
   }, [isPRLoading, user.isLogin]);
 

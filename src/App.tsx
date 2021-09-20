@@ -8,6 +8,7 @@ import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequest
 import ModalProvider from "./context/modalProvider/ModalProvider";
 import { ReactComponent as Logo } from "./asset/icon/logo.svg";
 import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
+import SnackbarProvider from "./context/snackbar/SnackbarProvider";
 
 function App() {
   return (
@@ -28,16 +29,18 @@ function App() {
           <RootContainer>
             <div>
               <ModalProvider>
-                <Main>
-                  <Switch>
-                    <Route exact path="/">
-                      <Home />
-                    </Route>
-                    <Route path="/setting">
-                      <Setting />
-                    </Route>
-                  </Switch>
-                </Main>
+                <SnackbarProvider>
+                  <Main>
+                    <Switch>
+                      <Route exact path="/">
+                        <Home />
+                      </Route>
+                      <Route path="/setting">
+                        <Setting />
+                      </Route>
+                    </Switch>
+                  </Main>
+                </SnackbarProvider>
               </ModalProvider>
             </div>
           </RootContainer>

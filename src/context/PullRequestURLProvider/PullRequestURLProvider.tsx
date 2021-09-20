@@ -93,8 +93,6 @@ const PullRequestURLProvider = ({ children }: Props) => {
       });
     });
 
-    console.log("요고", resetRequests);
-
     return Promise.all(resetRequests);
   };
 
