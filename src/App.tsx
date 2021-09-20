@@ -9,44 +9,47 @@ import ModalProvider from "./context/modalProvider/ModalProvider";
 import { ReactComponent as Logo } from "./asset/icon/logo.svg";
 import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
 import SnackbarProvider from "./context/snackbar/SnackbarProvider";
+import ErrorBoundary from "./component/@common/ErrorBoundary/ErrorBoundary";
 
 function App() {
   return (
-    <BrowserRouter>
-      <UserProvider>
-        <PullRequestURLProvider>
-          <Header>
-            <div>
-              <Link to="/">
-                <FlexContainer alignItems="center" gap="0.5rem">
-                  <Logo />
-                  <h1 className="logo">GitReview</h1>
-                </FlexContainer>
-              </Link>
-              <Navigation />
-            </div>
-          </Header>
-          <RootContainer>
-            <div>
-              <ModalProvider>
-                <SnackbarProvider>
-                  <Main>
-                    <Switch>
-                      <Route exact path="/">
-                        <Home />
-                      </Route>
-                      <Route path="/setting">
-                        <Setting />
-                      </Route>
-                    </Switch>
-                  </Main>
-                </SnackbarProvider>
-              </ModalProvider>
-            </div>
-          </RootContainer>
-        </PullRequestURLProvider>
-      </UserProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <UserProvider>
+          <PullRequestURLProvider>
+            <Header>
+              <div>
+                <Link to="/">
+                  <FlexContainer alignItems="center" gap="0.5rem">
+                    <Logo />
+                    <h1 className="logo">GitReview</h1>
+                  </FlexContainer>
+                </Link>
+                <Navigation />
+              </div>
+            </Header>
+            <RootContainer>
+              <div>
+                <ModalProvider>
+                  <SnackbarProvider>
+                    <Main>
+                      <Switch>
+                        <Route exact path="/">
+                          <Home />
+                        </Route>
+                        <Route path="/setting">
+                          <Setting />
+                        </Route>
+                      </Switch>
+                    </Main>
+                  </SnackbarProvider>
+                </ModalProvider>
+              </div>
+            </RootContainer>
+          </PullRequestURLProvider>
+        </UserProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
