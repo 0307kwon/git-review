@@ -30,7 +30,7 @@ const ReviewDetailModal = ({ review }: Props) => {
       {review.code && (
         <CodeViewerContainer ref={codeViewerRef}>
           <CodeViewer
-            fileExtension={review.code.path.match(/\.(.+)$/)?.[1]}
+            fileExtension={review.code.path.match(/\.([^.]+)$/)?.[1]}
             diffHunk={review.code.diffHunk}
           />
         </CodeViewerContainer>
