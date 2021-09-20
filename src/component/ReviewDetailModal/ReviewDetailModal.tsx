@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { CodeReview } from "../../util/types";
 import { Anchor } from "../@common/Anchor/Anchor";
 import Avatar from "../@common/Avatar/Avatar";
@@ -9,6 +9,7 @@ import {
   ProfileWrapper,
   MarkDownWrapper,
   ContentWrapper,
+  CodeViewerContainer,
 } from "./ReviewDetailModal.styles";
 
 interface Props {
@@ -16,13 +17,23 @@ interface Props {
 }
 
 const ReviewDetailModal = ({ review }: Props) => {
+  const codeViewerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (codeViewerRef.current) {
+      codeViewerRef.current.scrollTo(0, codeViewerRef.current.scrollHeight);
+    }
+  }, [codeViewerRef]);
+
   return (
     <ContentContainer>
       {review.code && (
-        <CodeViewer
-          fileExtension={review.code.path.match(/\.(.+)$/)?.[1]}
-          diffHunk={review.code.diffHunk}
-        />
+        <CodeViewerContainer ref={codeViewerRef}>
+          <CodeViewer
+            fileExtension={review.code.path.match(/\.(.+)$/)?.[1]}
+            diffHunk={review.code.diffHunk}
+          />
+        </CodeViewerContainer>
       )}
       <ContentWrapper>
         <ProfileWrapper>

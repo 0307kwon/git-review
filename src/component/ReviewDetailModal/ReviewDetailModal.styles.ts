@@ -7,9 +7,16 @@ export const ContentContainer = styled.div`
   gap: 0.5rem;
 `;
 
+export const CodeViewerContainer = styled.div`
+  max-height: 10rem;
+  overflow-x: auto;
+`;
+
 export const ContentWrapper = styled.div`
   border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 7px;
+  max-height: 20rem;
+  overflow-y: auto;
 `;
 
 export const ProfileWrapper = styled.div`
