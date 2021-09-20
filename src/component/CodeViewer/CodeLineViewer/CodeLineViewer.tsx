@@ -28,7 +28,6 @@ const CodeLineViewer = ({ fileExtension, rawCodeLine }: Props) => {
           lineHeight: "normal",
           overflowX: "hidden",
         }}
-        wrapLongLines={true}
       >
         {text}
       </SyntaxHighlighter>

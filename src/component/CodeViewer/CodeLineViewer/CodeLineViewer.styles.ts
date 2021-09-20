@@ -16,7 +16,6 @@ export const CodeLineViewerContainer = styled.div<{ type: CodeLineType }>`
   display: flex;
   gap: 0.2rem;
   font-size: 14px;
-  white-space: pre-wrap;
   min-height: 16px;
 
   & > .type {

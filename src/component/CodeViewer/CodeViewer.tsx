@@ -1,5 +1,6 @@
 import React from "react";
 import CodeLineViewer from "./CodeLineViewer/CodeLineViewer";
+import { CodeViewerContainer } from "./CodeViewer.styles";
 
 interface Props {
   diffHunk: string;
@@ -8,7 +9,7 @@ interface Props {
 
 const CodeViewer = ({ diffHunk, fileExtension = "" }: Props) => {
   return (
-    <div>
+    <CodeViewerContainer>
       {diffHunk.split("\n").map((rawCodeLine, index) => (
         <CodeLineViewer
           key={index}
@@ -16,7 +17,7 @@ const CodeViewer = ({ diffHunk, fileExtension = "" }: Props) => {
           rawCodeLine={rawCodeLine}
         />
       ))}
-    </div>
+    </CodeViewerContainer>
   );
 };
 
