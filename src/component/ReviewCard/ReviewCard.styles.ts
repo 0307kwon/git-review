@@ -1,12 +1,20 @@
 import styled, { keyframes } from "styled-components";
 import { PALETTE } from "../../constant/palette";
+import { Anchor } from "../@common/Anchor/Anchor";
 
-export const ReviewCardAnchor = styled.a`
+export const ReviewerAnchor = styled.a`
   &:hover {
     & {
       text-decoration: underline;
     }
   }
+`;
+
+export const ReviewURLAnchor = styled(Anchor)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50%;
 `;
 
 export const ReviewCardContainer = styled.div`

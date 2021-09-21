@@ -30,7 +30,7 @@ export interface Author {
   userName: string;
 }
 
-export interface CodeReview {
+export interface CodeReviewFromGithub {
   id: number;
   url: string;
   author: Author;
@@ -40,6 +40,10 @@ export interface CodeReview {
     diffHunk: string;
     path: string;
   };
+}
+
+export interface CodeReview extends CodeReviewFromGithub {
+  urlNickname: string;
 }
 
 export interface Profile {

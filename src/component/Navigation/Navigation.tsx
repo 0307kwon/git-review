@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { requestUserProfile, signInWithGithub } from "../../API/firebaseAPI";
-import useUser from "../../context/UserProvider/useUser";
+import { signInWithGithub } from "../../API/firebaseAPI";
 import { ReactComponent as LogoutIcon } from "../../asset/icon/logout.svg";
 import { ReactComponent as SettingIcon } from "../../asset/icon/setting.svg";
+import { ReactComponent as RefreshIcon } from "../../asset/icon/refresh.svg";
+import useUser from "../../context/UserProvider/useUser";
+import useFocusOut from "../../hook/useFocusOut";
 import Avatar from "../@common/Avatar/Avatar";
 import {
   Arrow,
@@ -12,10 +14,11 @@ import {
   AvatarDropdown,
   LoginButton,
 } from "./Navigation.styles";
-import useFocusOut from "../../hook/useFocusOut";
+import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const { forcedSyncAllCodeReviewInIDB } = useCodeReviews();
   const history = useHistory();
   const user = useUser();
   const dropdownRef = useFocusOut<HTMLDivElement>(() => {
@@ -32,6 +35,17 @@ const Navigation = () => {
 
   const handleToggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const handleSyncCodeReview = () => {
+    if (
+      window.confirm(
+        "로컬 저장소의 오래된 정보는 지워지고 최신 정보만을 가져옵니다. 계속하시겠습니까?"
+      )
+    ) {
+      forcedSyncAllCodeReviewInIDB();
+      setIsDropdownVisible(!isDropdownVisible);
+    }
   };
 
   const handleLogout = () => {
@@ -58,6 +72,10 @@ const Navigation = () => {
               <SettingIcon />
               설정
             </Link>
+            <button onClick={handleSyncCodeReview}>
+              <RefreshIcon />
+              코드 리뷰 강제 동기화
+            </button>
             <button onClick={handleLogout} className="red">
               <LogoutIcon />
               로그아웃

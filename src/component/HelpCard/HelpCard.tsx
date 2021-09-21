@@ -1,12 +1,11 @@
 import React from "react";
-import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useUser from "../../context/UserProvider/useUser";
 import { CodeReview } from "../../util/types";
-import FirstVisit from "./helpCards/FirstVisit";
 import { CardContainer } from "./HelpCard.styles";
+import CodeReviewNotExist from "./helpCards/CodeReviewNotExist";
+import FirstVisit from "./helpCards/FirstVisit";
 import LoginMode from "./helpCards/LoginMode";
 import OfflineMode from "./helpCards/OfflineMode";
-import CodeReviewNotExist from "./helpCards/CodeReviewNotExist";
 import SearchResultsNotExist from "./helpCards/SearchResultsNotExist";
 
 interface Props {

@@ -1,22 +1,24 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { PULL_REQUEST_URL } from "../../constant/validation";
+import { ModifyCodeReviewIDB } from "../../API/indexedDB";
 import { ReactComponent as DeleteIcon } from "../../asset/icon/cancel.svg";
 import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
+import { PULL_REQUEST_URL } from "../../constant/validation";
+import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
+import useSnackbar from "../../context/snackbar/useSnackbar";
 import { PullRequestURL } from "../../util/types";
+import { Anchor } from "../@common/Anchor/Anchor";
 import Button from "../@common/Button/Button";
 import IconButton from "../@common/IconButton/IconButton";
 import Input from "../Input/Input";
 import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLCardForm, URLParagraph } from "./URLCard.styles";
-import { Anchor } from "../@common/Anchor/Anchor";
-import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 
 interface Props {
   pullRequestURL: PullRequestURL;
 }
 
 const URLCard = ({ pullRequestURL }: Props) => {
-  const { modifyURL, deleteURL, refetchURLs } = usePullRequestURLs();
+  const { modifyURLs, deleteURL, refetchURLs } = usePullRequestURLs();
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [pullRequestFormData, setPullRequestFormData] = useState<
     Pick<PullRequestURL, "nickname" | "url">
@@ -35,12 +37,18 @@ const URLCard = ({ pullRequestURL }: Props) => {
   const handleModifyURL = async (event: FormEvent) => {
     event.preventDefault();
 
-    await modifyURL({
-      nickname: pullRequestFormData.nickname,
-      url: pullRequestFormData.url,
-      isFailedURL: false,
-    });
+    await modifyURLs([
+      {
+        nickname: pullRequestFormData.nickname,
+        url: pullRequestFormData.url,
+        isFailedURL: false,
+      },
+    ]);
     await refetchURLs();
+
+    await ModifyCodeReviewIDB(pullRequestFormData.url, {
+      urlNickname: pullRequestFormData.nickname,
+    });
     setIsModifyMode(false);
   };
 

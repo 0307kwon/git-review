@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import { CodeReview } from "../../util/types";
-import { Anchor } from "../@common/Anchor/Anchor";
 import Avatar from "../@common/Avatar/Avatar";
 import MarkDown from "../@common/MarkDown/MarkDown";
 import CodeViewer from "../CodeViewer/CodeViewer";
+import { ReviewURLAnchor } from "../ReviewCard/ReviewCard.styles";
 import {
   ContentContainer,
   ProfileWrapper,
@@ -41,9 +41,9 @@ const ReviewDetailModal = ({ review }: Props) => {
             imgURL={review.author.avatarUrl}
             nickname={review.author.userName}
           />
-          <Anchor target="blank" href={review.url}>
-            코드 리뷰로 이동
-          </Anchor>
+          <ReviewURLAnchor target="blank" href={review.url}>
+            {`by ${review.urlNickname}`}
+          </ReviewURLAnchor>
         </ProfileWrapper>
         <MarkDownWrapper>
           <MarkDown>{review.content}</MarkDown>

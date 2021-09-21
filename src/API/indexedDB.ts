@@ -2,6 +2,7 @@ import { CODE_REVIEW_IDB } from "../constant/indexedDB";
 import { escapeRegExp, filterURLToPath } from "../util/common";
 import { CodeReview } from "../util/types";
 interface CursorWithValue<T> extends IDBCursorWithValue {
+  update: <T>(value: T) => IDBRequest<IDBValidKey>;
   value: T;
 }
 
@@ -12,7 +13,7 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 13);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 15);
 
   return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
@@ -137,6 +138,28 @@ export const getAllURLsIDB = async () => {
   });
 };
 
+export const clearAllReviewIDB = async () => {
+  const db = await openCodeReviewIDB();
+
+  const transaction = db.transaction(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
+    "readwrite"
+  );
+  const codeReviewObjectStore = transaction.objectStore(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+  );
+
+  codeReviewObjectStore.clear();
+
+  return new Promise((resolve, reject) => {
+    codeReviewObjectStore.transaction.oncomplete = () => {
+      resolve(true);
+    };
+    codeReviewObjectStore.transaction.onerror = () =>
+      reject(new Error("indexedDB에서 모든 리뷰를 지우는데 실패했습니다."));
+  });
+};
+
 export const deleteCodeReviewIDB = async (urlPath: string) => {
   const db = await openCodeReviewIDB();
 
@@ -169,6 +192,50 @@ export const deleteCodeReviewIDB = async (urlPath: string) => {
     };
     codeReviewObjectStore.transaction.onerror = () =>
       reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
+  });
+};
+
+export const ModifyCodeReviewIDB = async (
+  urlPath: string,
+  codeReviewToChange: Partial<CodeReview>
+) => {
+  const db = await openCodeReviewIDB();
+
+  const transaction = db.transaction(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
+    "readwrite"
+  );
+  const codeReviewObjectStore = transaction.objectStore(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+  );
+
+  codeReviewObjectStore.openCursor().onsuccess = (event) => {
+    const cursor = (event.target as IDBRequest<IDBCursor>).result;
+
+    if (!isCursorWithValue<CodeReview>(cursor)) {
+      return;
+    }
+
+    const targetURL: string = cursor.value.url;
+
+    if (targetURL.includes(urlPath)) {
+      cursor.update<CodeReview>({
+        ...cursor.value,
+        ...codeReviewToChange,
+      });
+    }
+
+    cursor.continue();
+  };
+
+  return new Promise((resolve, reject) => {
+    codeReviewObjectStore.transaction.oncomplete = () => {
+      resolve(true);
+    };
+    codeReviewObjectStore.transaction.onerror = () =>
+      reject(
+        new Error("indexedDB에 urlNickname을 수정하는 과정이 실패했습니다.")
+      );
   });
 };
 

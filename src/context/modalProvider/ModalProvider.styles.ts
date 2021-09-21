@@ -36,7 +36,7 @@ export const ModalInner = styled.div`
 
 export const ModalInnerContent = styled.div`
   height: 100%;
-  margin: 2rem 0;
+  margin: 2rem 0 5rem;
   max-height: 70vh;
   overflow-y: auto;
 `;
