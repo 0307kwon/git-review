@@ -6,6 +6,8 @@
 <p align="middle"><code>지나간 코드 리뷰도 다시보자.</code></p>
 <p align="middle">다시보고 싶은 깃헙 PR을 모아보는 플랫폼, GitReview입니다.</p>
 
+<p align="middle">https://git-review.web.app/</p>
+
 <h2>👋 Introduction</h2>
 
 이전에 받았던 코드 리뷰 내용이 기억이 안 나서 깃헙 PR를 직접 찾아가보신 적이 있으신가요? 🤔
