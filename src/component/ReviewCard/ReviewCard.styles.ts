@@ -14,7 +14,7 @@ export const ReviewURLAnchor = styled(Anchor)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 40%;
+  max-width: 50%;
 `;
 
 export const ReviewCardContainer = styled.div`

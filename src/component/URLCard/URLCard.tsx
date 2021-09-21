@@ -10,12 +10,15 @@ import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLCardForm, URLParagraph } from "./URLCard.styles";
 import { Anchor } from "../@common/Anchor/Anchor";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
+import { ModifyCodeReviewIDB } from "../../API/indexedDB";
+import useSnackbar from "../../context/snackbar/useSnackbar";
 
 interface Props {
   pullRequestURL: PullRequestURL;
 }
 
 const URLCard = ({ pullRequestURL }: Props) => {
+  const snackbar = useSnackbar();
   const { modifyURL, deleteURL, refetchURLs } = usePullRequestURLs();
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [pullRequestFormData, setPullRequestFormData] = useState<
@@ -35,13 +38,22 @@ const URLCard = ({ pullRequestURL }: Props) => {
   const handleModifyURL = async (event: FormEvent) => {
     event.preventDefault();
 
+    snackbar.addSnackbar(
+      "progress",
+      "로컬 저장소에 새로운 별칭을 동기화 중입니다."
+    );
     await modifyURL({
       nickname: pullRequestFormData.nickname,
       url: pullRequestFormData.url,
       isFailedURL: false,
     });
     await refetchURLs();
+
+    await ModifyCodeReviewIDB(pullRequestFormData.url, {
+      urlNickname: pullRequestFormData.nickname,
+    });
     setIsModifyMode(false);
+    snackbar.addSnackbar("success", "동기화 성공");
   };
 
   const handleChangeInput = (key: keyof PullRequestURL) => (
