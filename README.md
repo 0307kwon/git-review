@@ -1,70 +1,25 @@
-# Getting Started with Create React App
+<p align="middle" >
+  <img src=https://user-images.githubusercontent.com/48755175/134144420-84f140c7-55c5-4ba3-9531-eb85d8d2fce7.png width="500px" />
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="middle">📘 GitReview</h1>
+<p align="middle"><code>지나간 코드 리뷰도 다시보자.</code></p>
+<p align="middle">다시보고 싶은 깃헙 PR을 모아보는 플랫폼, GitReview입니다.</p>
 
-## Available Scripts
+<h2>👋 Introduction</h2>
 
-In the project directory, you can run:
+이전에 받았던 코드 리뷰 내용이 기억이 안 나서 깃헙 PR를 직접 찾아가보신 적이 있으신가요? 🤔
 
-### `yarn start`
+어떤 PR인지 기억이라도 나면 다행이지만, 그조차도 기억이 안 난다면 모든 PR을 뒤져야 할지도 모르는 일이죠.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+사실 기억이 나도, PR 찾아 들어가기가 번거롭기도 합니다.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<br>
 
-### `yarn test`
+이 번거로움을 GitReview가 해결해 드립니다!
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+다시 보고 싶은 PR 목록을 등록해두기만 하면, PR에 달린 코드 리뷰들이 로컬에 저장되고 검색도 가능합니다.
 
-### `yarn build`
+자신만의 코드 리뷰 모음집을 만들어보세요 🤩
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<img src=https://user-images.githubusercontent.com/48755175/134152645-964e2785-e9de-4c71-a602-abd2ca725d59.png width="100%" />
