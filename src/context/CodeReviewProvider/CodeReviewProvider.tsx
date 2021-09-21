@@ -36,7 +36,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     isLoading: isPRLoading,
     modifyURL,
   } = usePullRequestURLs();
-  const user = useUser();
+  const { isLogin } = useUser();
   const randomNumberForPagination = useRef(Math.random() * 100);
   const [isPageEnded, setIsPageEnded] = useState(false);
   const currentPageNumber = useRef(1);
@@ -55,21 +55,6 @@ const CodeReviewProvider = ({ children }: Props) => {
         })
       )
     );
-  };
-
-  const LoadCodeReviews = async () => {
-    setIsLoading(true);
-
-    currentPageNumber.current = 1;
-
-    const reviews = await readReviewsInIDB({
-      pageNumber: currentPageNumber.current,
-      randomNumber: randomNumberForPagination.current,
-      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-    });
-
-    setCodeReview(reviews);
-    setIsLoading(false);
   };
 
   const readAdditionalReviews = async () => {
@@ -92,12 +77,28 @@ const CodeReviewProvider = ({ children }: Props) => {
     setCodeReview([...codeReviews, ...reviews]);
   };
 
+  const LoadCodeReviews = async () => {
+    setIsLoading(true);
+
+    currentPageNumber.current = 1;
+
+    const reviews = await readReviewsInIDB({
+      pageNumber: currentPageNumber.current,
+      randomNumber: randomNumberForPagination.current,
+      reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
+    });
+
+    setCodeReview(reviews);
+    setIsLoading(false);
+  };
+
   const syncCodeReviewInIDB = async (updatingURLs: string[]) => {
     const updatingCodeReviewPromises = updatingURLs.map((url) =>
       requestCodeReview(url)
     );
-    const additionalCodeReviews: CodeReview[] = [];
+    const CodeReviewsToStore: CodeReview[] = [];
     const failedURLs: string[] = [];
+    const urlNicknamesNotToHaveReview: string[] = [];
 
     (await Promise.allSettled(updatingCodeReviewPromises)).forEach((result) => {
       if (result.status === "rejected") return;
@@ -107,7 +108,15 @@ const CodeReviewProvider = ({ children }: Props) => {
         return;
       }
 
-      const completedCodeReviews: CodeReview[] = result.value.resolvedValue.map(
+      const codeReviewsFromGithubURL = result.value.resolvedValue;
+
+      if (codeReviewsFromGithubURL.length === 0) {
+        urlNicknamesNotToHaveReview.push(result.value.endPointURL);
+
+        return;
+      }
+
+      const completedCodeReviews: CodeReview[] = codeReviewsFromGithubURL.map(
         (codeReviewFromGithub) => {
           const urlNickname = pullRequestURLs.find((pullRequestURL) =>
             isSameURLPath(pullRequestURL.url, codeReviewFromGithub.url)
@@ -120,14 +129,22 @@ const CodeReviewProvider = ({ children }: Props) => {
         }
       );
 
-      additionalCodeReviews.push(...completedCodeReviews);
+      CodeReviewsToStore.push(...completedCodeReviews);
     });
 
     if (failedURLs.length > 0) {
       onError(failedURLs);
     }
 
-    await storeCodeReviewIDB(additionalCodeReviews);
+    if (urlNicknamesNotToHaveReview.length > 0) {
+      alert(
+        `다음 url에는 코드 리뷰가 존재하지 않습니다. ${urlNicknamesNotToHaveReview.map(
+          (url) => `\n"${url}"`
+        )}`
+      );
+    }
+
+    await storeCodeReviewIDB(CodeReviewsToStore);
   };
 
   const forcedSyncCodeReviewInIDB = async () => {
@@ -150,8 +167,6 @@ const CodeReviewProvider = ({ children }: Props) => {
     );
 
     const urlsInIDB: string[] = await getAllURLsIDB();
-
-    console.log(updatingURLSet, urlsInIDB);
 
     const staleURLsInIDB = urlsInIDB.filter((url) => {
       if (updatingURLSet.has(url)) {
@@ -186,10 +201,7 @@ const CodeReviewProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    console.log(isPRLoading, user.isLogin);
-    const isOffline = !user.isLogin;
-
-    if (isOffline) {
+    if (!isLogin) {
       LoadCodeReviews();
       return;
     }
@@ -199,7 +211,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     }
 
     syncOnlyNewCodeReviewsInIDB();
-  }, [isPRLoading, user.isLogin]);
+  }, [isPRLoading, isLogin]);
 
   return (
     <Context.Provider

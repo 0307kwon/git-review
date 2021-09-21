@@ -74,7 +74,7 @@ const Navigation = () => {
             </Link>
             <button onClick={handleSyncCodeReview}>
               <RefreshIcon />
-              PR 강제 동기화
+              코드 리뷰 강제 동기화
             </button>
             <button onClick={handleLogout} className="red">
               <LogoutIcon />
