@@ -2,7 +2,6 @@ import { AxiosResponse } from "axios";
 import removeMd from "remove-markdown";
 import { githubAxios } from "../util/axiosInstance";
 import {
-  CodeReview,
   CodeReviewFromGithub,
   HttpResponse,
   IssueResponse,

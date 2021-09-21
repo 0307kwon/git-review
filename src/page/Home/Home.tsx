@@ -7,7 +7,7 @@ import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailMod
 import { DUMMY_REVIEWS } from "../../constant/dummy";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
-import useCodeReviews from "../../hook/useCodeReviews";
+import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 import useDebounce from "../../hook/useDebounce";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import useReviewSearchEngine from "../../hook/useReviewSearchEngine";
@@ -31,7 +31,7 @@ const Home = () => {
   } = usePullRequestURLs();
 
   const {
-    data: codeReviews,
+    codeReviews,
     readAdditionalReviews,
     isPageEnded,
     isLoading,

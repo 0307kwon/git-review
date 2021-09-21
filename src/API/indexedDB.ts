@@ -138,6 +138,28 @@ export const getAllURLsIDB = async () => {
   });
 };
 
+export const clearAllReviewIDB = async () => {
+  const db = await openCodeReviewIDB();
+
+  const transaction = db.transaction(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS,
+    "readwrite"
+  );
+  const codeReviewObjectStore = transaction.objectStore(
+    CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS
+  );
+
+  codeReviewObjectStore.clear();
+
+  return new Promise((resolve, reject) => {
+    codeReviewObjectStore.transaction.oncomplete = () => {
+      resolve(true);
+    };
+    codeReviewObjectStore.transaction.onerror = () =>
+      reject(new Error("indexedDB에서 모든 리뷰를 지우는데 실패했습니다."));
+  });
+};
+
 export const deleteCodeReviewIDB = async (urlPath: string) => {
   const db = await openCodeReviewIDB();
 

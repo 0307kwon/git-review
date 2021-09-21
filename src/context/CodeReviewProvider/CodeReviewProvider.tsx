@@ -1,20 +1,34 @@
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import { requestCodeReview } from "../API/githubAPI";
+import { createContext, useEffect, useRef, useState } from "react";
+import { requestCodeReview } from "../../API/githubAPI";
 import {
+  clearAllReviewIDB,
   deleteCodeReviewIDB,
   getAllURLsIDB,
   readReviewsInIDB,
   storeCodeReviewIDB,
-} from "../API/indexedDB";
-import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
-import usePullRequestURLs from "../context/PullRequestURLProvider/usePullRequestURLs";
-import useSnackbar from "../context/snackbar/useSnackbar";
-import useUser from "../context/UserProvider/useUser";
-import { isSameURLPath } from "../util/common";
-import { CodeReview } from "../util/types";
+} from "../../API/indexedDB";
+import { REVIEW_COUNT_PER_PAGE } from "../../constant/common";
+import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
+import useSnackbar from "../../context/snackbar/useSnackbar";
+import useUser from "../../context/UserProvider/useUser";
+import { isSameURLPath } from "../../util/common";
+import { CodeReview } from "../../util/types";
 
-const useCodeReviews = () => {
+interface Props {
+  children: React.ReactNode;
+}
+
+interface ContextValue {
+  codeReviews: CodeReview[];
+  isLoading: boolean;
+  isPageEnded: boolean;
+  readAdditionalReviews: () => Promise<void>;
+  forcedSyncCodeReviewInIDB: () => Promise<void>;
+}
+
+export const Context = createContext<ContextValue | null>(null);
+
+const CodeReviewProvider = ({ children }: Props) => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const {
@@ -43,7 +57,7 @@ const useCodeReviews = () => {
     );
   };
 
-  const initialLoadCodeReviews = async () => {
+  const LoadCodeReviews = async () => {
     setIsLoading(true);
 
     currentPageNumber.current = 1;
@@ -78,35 +92,8 @@ const useCodeReviews = () => {
     setCodeReview([...codeReviews, ...reviews]);
   };
 
-  const syncCodeReviewsInIDB = async () => {
-    const updatingURLSet = new Set(
-      pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
-    );
-
-    const urlsInIDB: string[] = await getAllURLsIDB();
-
-    const staleURLsInIDB = urlsInIDB.filter((url) => {
-      if (updatingURLSet.has(url)) {
-        updatingURLSet.delete(url);
-        return false;
-      }
-
-      return true;
-    });
-
-    if (staleURLsInIDB.length > 0) {
-      await Promise.all(
-        staleURLsInIDB.map((staleURL) => deleteCodeReviewIDB(staleURL))
-      );
-    }
-
-    if (updatingURLSet.size === 0) {
-      return;
-    }
-
-    snackbar.addSnackbar("progress", "새로운 PR 목록과 동기화 중입니다", 60000);
-
-    const updatingCodeReviewPromises = Array.from(updatingURLSet).map((url) =>
+  const syncCodeReviewInIDB = async (updatingURLs: string[]) => {
+    const updatingCodeReviewPromises = updatingURLs.map((url) =>
       requestCodeReview(url)
     );
     const additionalCodeReviews: CodeReview[] = [];
@@ -120,8 +107,6 @@ const useCodeReviews = () => {
         return;
       }
 
-      //깃헙에서 받아온 코드 리뷰'들' with url
-      //url과 url 닉네임 목록
       const completedCodeReviews: CodeReview[] = result.value.resolvedValue.map(
         (codeReviewFromGithub) => {
           const urlNickname = pullRequestURLs.find((pullRequestURL) =>
@@ -143,14 +128,69 @@ const useCodeReviews = () => {
     }
 
     await storeCodeReviewIDB(additionalCodeReviews);
+  };
+
+  const forcedSyncCodeReviewInIDB = async () => {
+    snackbar.addSnackbar(
+      "progress",
+      "최신 PR 목록과 동기화 중입니다",
+      120 * 1000
+    );
+    await clearAllReviewIDB();
+    await syncCodeReviewInIDB(
+      pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
+    );
+    await LoadCodeReviews();
+    snackbar.addSnackbar("success", "코드 리뷰 동기화 완료");
+  };
+
+  const syncOnlyNewCodeReviewsInIDB = async () => {
+    const updatingURLSet = new Set(
+      pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
+    );
+
+    const urlsInIDB: string[] = await getAllURLsIDB();
+
+    console.log(updatingURLSet, urlsInIDB);
+
+    const staleURLsInIDB = urlsInIDB.filter((url) => {
+      if (updatingURLSet.has(url)) {
+        updatingURLSet.delete(url);
+        return false;
+      }
+
+      return true;
+    });
+
+    if (staleURLsInIDB.length > 0) {
+      await Promise.all(
+        staleURLsInIDB.map((staleURL) => deleteCodeReviewIDB(staleURL))
+      );
+    }
+
+    if (updatingURLSet.size === 0) {
+      await LoadCodeReviews();
+      return;
+    }
+
+    snackbar.addSnackbar(
+      "progress",
+      "추가된 PR 목록과 동기화 중입니다",
+      120 * 1000
+    );
+
+    await syncCodeReviewInIDB(Array.from(updatingURLSet));
+    await LoadCodeReviews();
+
     snackbar.addSnackbar("success", "코드 리뷰 동기화 완료");
   };
 
   useEffect(() => {
+    console.log(isPRLoading, user.isLogin);
     const isOffline = !user.isLogin;
 
     if (isOffline) {
-      initialLoadCodeReviews();
+      LoadCodeReviews();
       return;
     }
 
@@ -158,18 +198,22 @@ const useCodeReviews = () => {
       return;
     }
 
-    syncCodeReviewsInIDB().then(() => {
-      initialLoadCodeReviews();
-    });
+    syncOnlyNewCodeReviewsInIDB();
   }, [isPRLoading, user.isLogin]);
 
-  return {
-    data: codeReviews,
-    isLoading,
-    isPageEnded,
-    readAdditionalReviews,
-    syncCodeReviews: syncCodeReviewsInIDB,
-  };
+  return (
+    <Context.Provider
+      value={{
+        codeReviews,
+        isLoading,
+        isPageEnded,
+        readAdditionalReviews,
+        forcedSyncCodeReviewInIDB,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
 };
 
-export default useCodeReviews;
+export default CodeReviewProvider;
