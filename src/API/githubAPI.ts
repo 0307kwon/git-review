@@ -59,7 +59,12 @@ const filterResponse = (
   pullRequestAuthor: string
 ): CodeReviewFromGithub[] => {
   return data
-    .filter((item) => item.body && item.user.login !== pullRequestAuthor)
+    .filter(
+      (item) =>
+        item.body &&
+        item.user.login !== pullRequestAuthor &&
+        !/\[bot\]/.test(item.user.login)
+    )
     .map(
       (item): CodeReviewFromGithub => {
         const codeReview: CodeReviewFromGithub = {

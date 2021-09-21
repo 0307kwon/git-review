@@ -25,6 +25,8 @@ const ReviewDetailModal = ({ review }: Props) => {
     }
   }, [codeViewerRef]);
 
+  console.log(review);
+
   return (
     <ContentContainer>
       {review.code && (
