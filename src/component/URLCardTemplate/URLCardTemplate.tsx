@@ -1,14 +1,11 @@
 import React from "react";
+import { ReactComponent as LinkIcon } from "../../asset/icon/link.svg";
 import FlexContainer from "../@common/FlexContainer/FlexContainer";
 import {
   CardContainer,
   NameContainer,
   URLContainer,
 } from "./URLCardTemplate.styles";
-import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
-import { ReactComponent as DeleteIcon } from "../../asset/icon/cancel.svg";
-import { ReactComponent as LinkIcon } from "../../asset/icon/link.svg";
-import IconButton from "../@common/IconButton/IconButton";
 
 interface Children {
   title: React.ReactNode;

@@ -16,10 +16,8 @@ interface ContextValue {
   isLoading: boolean;
   deleteURL: (url: string) => Promise<void>;
   addURL: (nickname: string, url: string) => Promise<void>;
-  modifyURL: (
-    pullRequestURL: RequiredOnly<PullRequestURL, "url">
-  ) => Promise<void>;
-  resetFailedURLs: () => Promise<void[]>;
+  modifyURLs: (urls: RequiredOnly<PullRequestURL, "url">[]) => Promise<void>;
+  resetFailedURLs: () => Promise<void>;
   refetchURLs: () => Promise<void>;
 }
 
@@ -60,44 +58,33 @@ const PullRequestURLProvider = ({ children }: Props) => {
     });
   };
 
-  const modifyURL = async (
-    pullRequestURL: RequiredOnly<PullRequestURL, "url">
-  ) => {
-    const updatingURLs: { [url: string]: PullRequestURL } = {};
+  const modifyURLs = async (urls: RequiredOnly<PullRequestURL, "url">[]) => {
+    const updatingURLsInFirebase: { [url: string]: PullRequestURL } = {};
 
     pullRequestURLs.forEach((pullRequestURL) => {
-      updatingURLs[pullRequestURL.url] = pullRequestURL;
+      updatingURLsInFirebase[pullRequestURL.url] = pullRequestURL;
     });
 
-    const originalURL = pullRequestURLs.find(
-      ({ url }) => url === pullRequestURL.url
-    );
+    urls.forEach((prURL) => {
+      updatingURLsInFirebase[prURL.url] = {
+        ...updatingURLsInFirebase[prURL.url],
+        ...prURL,
+      };
+    });
 
-    if (originalURL) {
-      await requestUpdatePullRequestURLs({
-        ...updatingURLs,
-        [pullRequestURL.url]: {
-          ...originalURL,
-          modificationTime: myFirebase.firestore.Timestamp.now(),
-          ...pullRequestURL,
-        },
-      });
-    }
+    await requestUpdatePullRequestURLs(updatingURLsInFirebase);
   };
 
   const resetFailedURLs = async () => {
-    const resetRequests = pullRequestURLs.map((pullRequestURL) => {
-      return modifyURL({
+    await modifyURLs(
+      pullRequestURLs.map((pullRequestURL) => ({
         url: pullRequestURL.url,
         isFailedURL: false,
-      });
-    });
-
-    return Promise.all(resetRequests);
+      }))
+    );
   };
 
   const refetchURLs = async () => {
-    setIsLoading(true);
     const pullRequestURLs = await requestUserPullRequestURLs();
 
     if (pullRequestURLs) {
@@ -130,7 +117,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
       value={{
         pullRequestURLs,
         isLoading,
-        modifyURL,
+        modifyURLs,
         resetFailedURLs,
         addURL,
         deleteURL,

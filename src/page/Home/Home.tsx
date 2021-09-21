@@ -5,9 +5,9 @@ import HelpCard from "../../component/HelpCard/HelpCard";
 import ReviewCard from "../../component/ReviewCard/ReviewCard";
 import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailModal";
 import { DUMMY_REVIEWS } from "../../constant/dummy";
+import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
-import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 import useDebounce from "../../hook/useDebounce";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
 import useReviewSearchEngine from "../../hook/useReviewSearchEngine";
@@ -32,6 +32,7 @@ const Home = () => {
 
   const {
     codeReviews,
+    syncOnlyUpdatedCodeReviewsInIDB,
     readAdditionalReviews,
     isPageEnded,
     isLoading,
@@ -73,13 +74,27 @@ const Home = () => {
     if (codeReviews.length === 0) return;
 
     if (pullRequestURLs.length === 0) return;
-
-    if (pullRequestURLs.some((pullRequestURL) => pullRequestURL.isFailedURL)) {
-      resetFailedURLs().then(() => {
-        refetchURLs();
-      });
-    }
   }, [codeReviews, pullRequestURLs]);
+
+  useEffect(() => {
+    if (pullRequestURLs.length === 0) {
+      return;
+    }
+
+    const isFailedURLExist = pullRequestURLs.some(
+      (pullRequestURL) => pullRequestURL.isFailedURL
+    );
+
+    if (isFailedURLExist) {
+      resetFailedURLs().then(() => {
+        syncOnlyUpdatedCodeReviewsInIDB();
+      });
+
+      return;
+    }
+
+    syncOnlyUpdatedCodeReviewsInIDB();
+  }, []);
 
   if (isLoading) {
     return (

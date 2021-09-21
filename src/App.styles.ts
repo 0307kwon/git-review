@@ -7,6 +7,7 @@ export const RootContainer = styled.div`
   flex-direction: column;
   align-items: center;
   opacity: 0.99;
+  padding-bottom: 10rem;
 
   & > * {
     max-width: ${APP.MAX_WIDTH};

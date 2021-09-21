@@ -18,7 +18,7 @@ import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const { forcedSyncCodeReviewInIDB } = useCodeReviews();
+  const { forcedSyncAllCodeReviewInIDB } = useCodeReviews();
   const history = useHistory();
   const user = useUser();
   const dropdownRef = useFocusOut<HTMLDivElement>(() => {
@@ -43,7 +43,7 @@ const Navigation = () => {
         "로컬 저장소의 오래된 정보는 지워지고 최신 정보만을 가져옵니다. 계속하시겠습니까?"
       )
     ) {
-      forcedSyncCodeReviewInIDB();
+      forcedSyncAllCodeReviewInIDB();
       setIsDropdownVisible(!isDropdownVisible);
     }
   };

@@ -22,8 +22,9 @@ interface ContextValue {
   codeReviews: CodeReview[];
   isLoading: boolean;
   isPageEnded: boolean;
+  forcedSyncAllCodeReviewInIDB: () => Promise<void>;
+  syncOnlyUpdatedCodeReviewsInIDB: () => Promise<void>;
   readAdditionalReviews: () => Promise<void>;
-  forcedSyncCodeReviewInIDB: () => Promise<void>;
 }
 
 export const Context = createContext<ContextValue | null>(null);
@@ -32,9 +33,10 @@ const CodeReviewProvider = ({ children }: Props) => {
   const [codeReviews, setCodeReview] = useState<CodeReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const {
+    refetchURLs,
     pullRequestURLs,
     isLoading: isPRLoading,
-    modifyURL,
+    modifyURLs,
   } = usePullRequestURLs();
   const { isLogin } = useUser();
   const randomNumberForPagination = useRef(Math.random() * 100);
@@ -42,19 +44,18 @@ const CodeReviewProvider = ({ children }: Props) => {
   const currentPageNumber = useRef(1);
   const snackbar = useSnackbar();
 
-  const onError = (failedURLs: string[]) => {
+  const onError = async (failedURLs: string[]) => {
     alert(
       "한 개 이상의 URL을 불러오는데 실패했습니다.\n설정 페이지를 확인해주세요."
     );
 
-    Promise.all(
-      failedURLs.map((failedURL) =>
-        modifyURL({
-          url: failedURL,
-          isFailedURL: true,
-        })
-      )
+    await modifyURLs(
+      failedURLs.map((url) => ({
+        url,
+        isFailedURL: true,
+      }))
     );
+    await refetchURLs();
   };
 
   const readAdditionalReviews = async () => {
@@ -78,8 +79,6 @@ const CodeReviewProvider = ({ children }: Props) => {
   };
 
   const LoadCodeReviews = async () => {
-    setIsLoading(true);
-
     currentPageNumber.current = 1;
 
     const reviews = await readReviewsInIDB({
@@ -133,7 +132,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     });
 
     if (failedURLs.length > 0) {
-      onError(failedURLs);
+      await onError(failedURLs);
     }
 
     if (urlNicknamesNotToHaveReview.length > 0) {
@@ -147,7 +146,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     await storeCodeReviewIDB(CodeReviewsToStore);
   };
 
-  const forcedSyncCodeReviewInIDB = async () => {
+  const forcedSyncAllCodeReviewInIDB = async () => {
     snackbar.addSnackbar(
       "progress",
       "최신 PR 목록과 동기화 중입니다",
@@ -161,7 +160,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     snackbar.addSnackbar("success", "코드 리뷰 동기화 완료");
   };
 
-  const syncOnlyNewCodeReviewsInIDB = async () => {
+  const syncOnlyUpdatedCodeReviewsInIDB = async () => {
     const updatingURLSet = new Set(
       pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
     );
@@ -210,7 +209,7 @@ const CodeReviewProvider = ({ children }: Props) => {
       return;
     }
 
-    syncOnlyNewCodeReviewsInIDB();
+    syncOnlyUpdatedCodeReviewsInIDB();
   }, [isPRLoading, isLogin]);
 
   return (
@@ -220,7 +219,8 @@ const CodeReviewProvider = ({ children }: Props) => {
         isLoading,
         isPageEnded,
         readAdditionalReviews,
-        forcedSyncCodeReviewInIDB,
+        syncOnlyUpdatedCodeReviewsInIDB,
+        forcedSyncAllCodeReviewInIDB,
       }}
     >
       {children}
