@@ -3,6 +3,7 @@ import removeMd from "remove-markdown";
 import { githubAxios } from "../util/axiosInstance";
 import {
   CodeReview,
+  CodeReviewFromGithub,
   HttpResponse,
   IssueResponse,
   PullRequest,
@@ -56,12 +57,12 @@ const requestComment: RequestComment = async ({ owner, repo, pullNumber }) => {
 const filterResponse = (
   { data }: AxiosResponse<PullRequestResponse[]>,
   pullRequestAuthor: string
-): CodeReview[] => {
+): CodeReviewFromGithub[] => {
   return data
     .filter((item) => item.body && item.user.login !== pullRequestAuthor)
     .map(
-      (item): CodeReview => {
-        const codeReview: CodeReview = {
+      (item): CodeReviewFromGithub => {
+        const codeReview: CodeReviewFromGithub = {
           id: item.id,
           url: item.html_url,
           author: {
@@ -86,8 +87,8 @@ const filterResponse = (
 
 export const requestCodeReview = async (
   url: string
-): Promise<HttpResponse<CodeReview[]>> => {
-  const httpResponse: HttpResponse<CodeReview[]> = {
+): Promise<HttpResponse<CodeReviewFromGithub[]>> => {
+  const httpResponse: HttpResponse<CodeReviewFromGithub[]> = {
     endPointURL: url,
     resolvedValue: [],
   };

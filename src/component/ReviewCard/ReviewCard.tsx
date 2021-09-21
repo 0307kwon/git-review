@@ -6,9 +6,10 @@ import MarkDown from "../@common/MarkDown/MarkDown";
 import {
   ContentEndDiv,
   ProfileContainer,
-  ReviewCardAnchor,
+  ReviewerAnchor,
   ReviewCardContainer,
   ReviewContent,
+  ReviewURLAnchor,
 } from "./ReviewCard.styles";
 import { ReactComponent as MoreIcon } from "../../asset/icon/more.svg";
 
@@ -28,7 +29,7 @@ const ReviewCard: VFC<Props> = ({ codeReview, className }) => {
   return (
     <ReviewCardContainer className={className}>
       <ProfileContainer>
-        <ReviewCardAnchor
+        <ReviewerAnchor
           target="blank"
           href={`https://github.com/${codeReview.author.userName}`}
         >
@@ -36,7 +37,10 @@ const ReviewCard: VFC<Props> = ({ codeReview, className }) => {
             imgURL={codeReview.author.avatarUrl}
             nickname={codeReview.author.userName}
           />
-        </ReviewCardAnchor>
+        </ReviewerAnchor>
+        <ReviewURLAnchor target="blank" href={codeReview.url}>
+          {`by ${codeReview.urlNickname}`}
+        </ReviewURLAnchor>
       </ProfileContainer>
       <ReviewContent isDimmedVisible={isDimmedVisible}>
         <MarkDown>{codeReview.content}</MarkDown>

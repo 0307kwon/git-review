@@ -11,6 +11,7 @@ import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
 import usePullRequestURLs from "../context/PullRequestURLProvider/usePullRequestURLs";
 import useSnackbar from "../context/snackbar/useSnackbar";
 import useUser from "../context/UserProvider/useUser";
+import { isSameURLPath } from "../util/common";
 import { CodeReview } from "../util/types";
 
 const useCodeReviews = () => {
@@ -40,17 +41,6 @@ const useCodeReviews = () => {
         })
       )
     );
-  };
-
-  const loadOneCodeReview = async (url: string) => {
-    const codeReview = await requestCodeReview(url);
-
-    if (codeReview.error) {
-      onError([url]);
-      return;
-    }
-
-    storeCodeReviewIDB(codeReview.resolvedValue);
   };
 
   const initialLoadCodeReviews = async () => {
@@ -115,6 +105,7 @@ const useCodeReviews = () => {
     }
 
     snackbar.addSnackbar("progress", "새로운 PR 목록과 동기화 중입니다", 60000);
+
     const updatingCodeReviewPromises = Array.from(updatingURLSet).map((url) =>
       requestCodeReview(url)
     );
@@ -129,7 +120,22 @@ const useCodeReviews = () => {
         return;
       }
 
-      additionalCodeReviews.push(...result.value.resolvedValue);
+      //깃헙에서 받아온 코드 리뷰'들' with url
+      //url과 url 닉네임 목록
+      const completedCodeReviews: CodeReview[] = result.value.resolvedValue.map(
+        (codeReviewFromGithub) => {
+          const urlNickname = pullRequestURLs.find((pullRequestURL) =>
+            isSameURLPath(pullRequestURL.url, codeReviewFromGithub.url)
+          )?.nickname;
+
+          return {
+            ...codeReviewFromGithub,
+            urlNickname: urlNickname || "익명의 리뷰",
+          };
+        }
+      );
+
+      additionalCodeReviews.push(...completedCodeReviews);
     });
 
     if (failedURLs.length > 0) {
@@ -163,7 +169,6 @@ const useCodeReviews = () => {
     isPageEnded,
     readAdditionalReviews,
     syncCodeReviews: syncCodeReviewsInIDB,
-    loadOneCodeReview,
   };
 };
 

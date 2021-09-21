@@ -12,7 +12,7 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 13);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 15);
 
   return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
