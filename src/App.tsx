@@ -16,11 +16,11 @@ function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <ModalProvider>
-          <SnackbarProvider>
-            <UserProvider>
-              <PullRequestURLProvider>
-                <CodeReviewProvider>
+        <SnackbarProvider>
+          <UserProvider>
+            <PullRequestURLProvider>
+              <CodeReviewProvider>
+                <ModalProvider>
                   <Header>
                     <div>
                       <Link to="/">
@@ -46,11 +46,11 @@ function App() {
                       </Main>
                     </div>
                   </RootContainer>
-                </CodeReviewProvider>
-              </PullRequestURLProvider>
-            </UserProvider>
-          </SnackbarProvider>
-        </ModalProvider>
+                </ModalProvider>
+              </CodeReviewProvider>
+            </PullRequestURLProvider>
+          </UserProvider>
+        </SnackbarProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );
