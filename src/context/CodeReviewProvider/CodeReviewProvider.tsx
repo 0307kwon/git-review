@@ -96,40 +96,37 @@ const CodeReviewProvider = ({ children }: Props) => {
     const failedURLs: string[] = [];
     const urlNicknamesNotToHaveReview: string[] = [];
 
-    (await Promise.allSettled(updatingCodeReviewPromises)).forEach(
-      (result, index) => {
-        if (result.status === "rejected") return;
+    (await Promise.allSettled(updatingCodeReviewPromises)).forEach((result) => {
+      if (result.status === "rejected") return;
 
-        if (result.value.error) {
-          failedURLs.push(result.value.endPointURL);
-          return;
-        }
-
-        const codeReviewsFromGithubURL = result.value.resolvedValue;
-
-        if (codeReviewsFromGithubURL.length === 0) {
-          urlNicknamesNotToHaveReview.push(result.value.endPointURL);
-
-          return;
-        }
-
-        const completedCodeReviews: CodeReview[] = codeReviewsFromGithubURL.map(
-          (codeReviewFromGithub) => {
-            const urlNickname = pullRequestURLs.find((pullRequestURL) =>
-              isSameURLPath(pullRequestURL.url, codeReviewFromGithub.url)
-            )?.nickname;
-
-            return {
-              ...codeReviewFromGithub,
-              urlNickname: urlNickname || "익명의 리뷰",
-              createdAtInApp: Date.now() + index * 500,
-            };
-          }
-        );
-
-        CodeReviewsToStore.push(...completedCodeReviews);
+      if (result.value.error) {
+        failedURLs.push(result.value.endPointURL);
+        return;
       }
-    );
+
+      const codeReviewsFromGithubURL = result.value.resolvedValue;
+
+      if (codeReviewsFromGithubURL.length === 0) {
+        urlNicknamesNotToHaveReview.push(result.value.endPointURL);
+
+        return;
+      }
+
+      const completedCodeReviews: CodeReview[] = codeReviewsFromGithubURL.map(
+        (codeReviewFromGithub) => {
+          const urlNickname = pullRequestURLs.find((pullRequestURL) =>
+            isSameURLPath(pullRequestURL.url, codeReviewFromGithub.url)
+          )?.nickname;
+
+          return {
+            ...codeReviewFromGithub,
+            urlNickname: urlNickname || "익명의 리뷰",
+          };
+        }
+      );
+
+      CodeReviewsToStore.push(...completedCodeReviews);
+    });
 
     if (failedURLs.length > 0) {
       await onError(failedURLs);

@@ -24,7 +24,6 @@ export const DUMMY_REVIEWS: CodeReview[] = [
     id: getNewId.next().value,
     url: "https://github.com/0307kwon/git-review",
     urlNickname: "코드 리뷰 예시 2",
-    createdAtInApp: 1,
     code: {
       diffHunk: makeCodeReview(`
       @@ -0,0 +1,185 @@
@@ -62,7 +61,6 @@ export const DUMMY_REVIEWS: CodeReview[] = [
     id: getNewId.next().value,
     url: "https://github.com/0307kwon/git-review",
     urlNickname: "코드 리뷰 예시 1",
-    createdAtInApp: 2,
     code: {
       diffHunk: makeCodeReview(`
       @@ -0,0 +1,30 @@
@@ -83,7 +81,6 @@ export const DUMMY_REVIEWS: CodeReview[] = [
     id: getNewId.next().value,
     url: "https://github.com/0307kwon/git-review",
     urlNickname: "코드 리뷰 예시 1",
-    createdAtInApp: 3,
     code: {
       diffHunk: makeCodeReview(`
       @@ -5,6 +5,12 @@

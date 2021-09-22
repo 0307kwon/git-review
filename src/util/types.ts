@@ -44,7 +44,6 @@ export interface CodeReviewFromGithub {
 
 export interface CodeReview extends CodeReviewFromGithub {
   urlNickname: string;
-  createdAtInApp: number;
 }
 
 export interface Profile {

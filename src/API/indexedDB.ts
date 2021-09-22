@@ -17,7 +17,7 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 16);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 17);
 
   return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
@@ -335,11 +335,7 @@ export const readReviewsInIDB = async ({
   return new Promise<CodeReview[]>((resolve, reject) => {
     codeReviewObjectStore.transaction.oncomplete = () => {
       const sortedReviewsByLatestOrder = codeReviews.sort((a, b) => {
-        if (b.createdAtInApp === a.createdAtInApp) {
-          return decideAlphabetOrderFromString(a.urlNickname, b.urlNickname);
-        }
-
-        return b.createdAtInApp - a.createdAtInApp;
+        return decideAlphabetOrderFromString(a.urlNickname, b.urlNickname);
       });
 
       const paginatedResult = sortedReviewsByLatestOrder.slice(
