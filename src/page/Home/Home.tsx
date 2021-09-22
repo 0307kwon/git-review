@@ -24,11 +24,7 @@ import {
 
 const Home = () => {
   const modal = useModal();
-  const {
-    pullRequestURLs,
-    resetFailedURLs,
-    refetchURLs,
-  } = usePullRequestURLs();
+  const { pullRequestURLs, resetFailedURLs } = usePullRequestURLs();
 
   const {
     codeReviews,
@@ -49,7 +45,7 @@ const Home = () => {
     observedElementRef: recommendedReviewInfinityScroll,
   } = useIntersectionObserver({
     callback: readAdditionalReviews,
-    observedElementDeps: [isLoading, searchedReviews.length === 0],
+    observedElementDeps: [isLoading, searchedReviews.length === 0, codeReviews],
   });
 
   const {
@@ -149,7 +145,7 @@ const Home = () => {
               <>
                 <SubTitleContainer>
                   <h2>😊 코드 리뷰를 둘러보는 건 어떠세요?</h2>
-                  <p>저장된 리뷰를 랜덤으로 보여드릴게요</p>
+                  <p>저장된 리뷰를 최신순으로 보여 드릴게요</p>
                 </SubTitleContainer>
                 {codeReviews.map((review) => (
                   <ReviewCardButton
