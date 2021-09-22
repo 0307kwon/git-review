@@ -1,13 +1,20 @@
 import React, { useEffect, useRef } from "react";
+import useThrottle from "./useThrottle";
 
 interface Props {
   callback: () => void;
   observedElementDeps?: React.DependencyList | undefined;
+  throttleTime?: number;
 }
 
-const useIntersectionObserver = ({ callback, observedElementDeps }: Props) => {
+const useIntersectionObserver = ({
+  callback,
+  observedElementDeps,
+  throttleTime = 0,
+}: Props) => {
   const observedElementRef = useRef(null);
   const callbackRef = useRef(callback);
+  const { registerCallback } = useThrottle({ timeout: throttleTime });
 
   useEffect(() => {
     callbackRef.current = callback;
@@ -20,7 +27,7 @@ const useIntersectionObserver = ({ callback, observedElementDeps }: Props) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            callbackRef.current();
+            registerCallback(callbackRef.current);
           }
         });
       },

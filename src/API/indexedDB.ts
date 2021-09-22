@@ -1,5 +1,9 @@
 import { CODE_REVIEW_IDB } from "../constant/indexedDB";
-import { escapeRegExp, filterURLToPath } from "../util/common";
+import {
+  decideAlphabetOrderFromString,
+  escapeRegExp,
+  filterURLToPath,
+} from "../util/common";
 import { CodeReview } from "../util/types";
 interface CursorWithValue<T> extends IDBCursorWithValue {
   update: <T>(value: T) => IDBRequest<IDBValidKey>;
@@ -13,7 +17,7 @@ const isCursorWithValue = <T>(
 };
 
 const openCodeReviewIDB = (): Promise<IDBDatabase> => {
-  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 15);
+  const request = indexedDB.open(CODE_REVIEW_IDB.NAME, 17);
 
   return new Promise((resolve, reject) => {
     request.onupgradeneeded = (event) => {
@@ -297,13 +301,11 @@ export const searchByKeywordInIDB = async ({
 
 interface ReadReviewsInIDBParam {
   pageNumber: number;
-  randomNumber: number;
   reviewCountPerPage: number;
 }
 
 export const readReviewsInIDB = async ({
   pageNumber,
-  randomNumber,
   reviewCountPerPage,
 }: ReadReviewsInIDBParam) => {
   if (pageNumber <= 0) {
@@ -332,15 +334,11 @@ export const readReviewsInIDB = async ({
 
   return new Promise<CodeReview[]>((resolve, reject) => {
     codeReviewObjectStore.transaction.oncomplete = () => {
-      const positiveRandomInt = 1 + ((Math.abs(randomNumber) * 56) % 67);
-      const sortedReviewsByRandom = codeReviews.sort((a, b) => {
-        const calculatedA = a.id % positiveRandomInt;
-        const calculatedB = b.id % positiveRandomInt;
-
-        return calculatedA - calculatedB;
+      const sortedReviewsByLatestOrder = codeReviews.sort((a, b) => {
+        return decideAlphabetOrderFromString(a.urlNickname, b.urlNickname);
       });
 
-      const paginatedResult = sortedReviewsByRandom.slice(
+      const paginatedResult = sortedReviewsByLatestOrder.slice(
         (pageNumber - 1) * reviewCountPerPage,
         pageNumber * reviewCountPerPage
       );

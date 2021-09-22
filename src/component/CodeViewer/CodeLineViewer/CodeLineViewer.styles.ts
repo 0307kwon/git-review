@@ -22,7 +22,7 @@ export const CodeLineViewerContainer = styled.div<{ type: CodeLineType }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.07);
     width: 1rem;
     padding: 0 0.3rem;
   }

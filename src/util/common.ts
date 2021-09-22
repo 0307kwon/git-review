@@ -28,3 +28,21 @@ export const genNewId = function* () {
     yield id++;
   }
 };
+
+export const decideAlphabetOrderFromString = (a: string, b: string) => {
+  const minLength = Math.min(a.length, b.length);
+
+  const aToNumber = Array.prototype.reduce.call<string, any, number>(
+    a.slice(0, minLength),
+    (acc: number, current: string) => acc + current.charCodeAt(0),
+    0
+  );
+
+  const bToNumber = Array.prototype.reduce.call<string, any, number>(
+    b.slice(0, minLength),
+    (acc: number, current: string) => acc + current.charCodeAt(0),
+    0
+  );
+
+  return aToNumber - bToNumber;
+};

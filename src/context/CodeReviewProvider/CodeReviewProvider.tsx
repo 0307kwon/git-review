@@ -39,7 +39,6 @@ const CodeReviewProvider = ({ children }: Props) => {
     modifyURLs,
   } = usePullRequestURLs();
   const { isLogin } = useUser();
-  const randomNumberForPagination = useRef(Math.random() * 100);
   const [isPageEnded, setIsPageEnded] = useState(false);
   const currentPageNumber = useRef(1);
   const snackbar = useSnackbar();
@@ -59,21 +58,20 @@ const CodeReviewProvider = ({ children }: Props) => {
   };
 
   const readAdditionalReviews = async () => {
-    if (isPageEnded === true) {
-      return;
-    }
-
-    currentPageNumber.current++;
-
     const reviews = await readReviewsInIDB({
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
-      pageNumber: currentPageNumber.current,
-      randomNumber: randomNumberForPagination.current,
+      pageNumber: currentPageNumber.current + 1,
     });
 
     if (reviews.length === 0) {
       setIsPageEnded(true);
+
+      return;
     }
+
+    setIsPageEnded(false);
+
+    currentPageNumber.current++;
 
     setCodeReview([...codeReviews, ...reviews]);
   };
@@ -83,7 +81,6 @@ const CodeReviewProvider = ({ children }: Props) => {
 
     const reviews = await readReviewsInIDB({
       pageNumber: currentPageNumber.current,
-      randomNumber: randomNumberForPagination.current,
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
     });
 
