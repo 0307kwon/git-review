@@ -24,6 +24,7 @@
     "typescript": "^4.3.4"
   },
   "scripts": {
+    "start:http": "http-server build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
