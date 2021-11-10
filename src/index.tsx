@@ -4,6 +4,13 @@ import App from "./App";
 import { GlobalStyle } from "./index.styles";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+
+serviceWorkerRegistration.register({
+  onSuccess: () => {
+    console.log("성공");
+  },
+});
 
 Sentry.init({
   dsn:
