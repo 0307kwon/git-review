@@ -1,16 +1,17 @@
+import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import { Header, Main, RootContainer } from "./App.styles";
-import Navigation from "./component/Navigation/Navigation";
-import UserProvider from "./context/UserProvider/UserProvider";
-import Home from "./page/Home/Home";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import Setting from "./page/Setting/Setting";
-import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequestURLProvider";
-import ModalProvider from "./context/modalProvider/ModalProvider";
 import { ReactComponent as Logo } from "./asset/icon/logo.svg";
-import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
-import SnackbarProvider from "./context/snackbar/SnackbarProvider";
 import ErrorBoundary from "./component/@common/ErrorBoundary/ErrorBoundary";
+import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
+import Navigation from "./component/Navigation/Navigation";
 import CodeReviewProvider from "./context/CodeReviewProvider/CodeReviewProvider";
+import ModalProvider from "./context/modalProvider/ModalProvider";
+import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequestURLProvider";
+import SnackbarProvider from "./context/snackbar/SnackbarProvider";
+import UserProvider from "./context/UserProvider/UserProvider";
+import FloatingView from "./FloatingView";
+import Home from "./page/Home/Home";
+import Setting from "./page/Setting/Setting";
 
 function App() {
   return (
@@ -33,18 +34,17 @@ function App() {
                     </div>
                   </Header>
                   <RootContainer>
-                    <div>
-                      <Main>
-                        <Switch>
-                          <Route exact path="/">
-                            <Home />
-                          </Route>
-                          <Route path="/setting">
-                            <Setting />
-                          </Route>
-                        </Switch>
-                      </Main>
-                    </div>
+                    <Main>
+                      <Switch>
+                        <Route exact path="/">
+                          <Home />
+                        </Route>
+                        <Route path="/setting">
+                          <Setting />
+                        </Route>
+                      </Switch>
+                    </Main>
+                    <FloatingView />
                   </RootContainer>
                 </ModalProvider>
               </CodeReviewProvider>

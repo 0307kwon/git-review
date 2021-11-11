@@ -8,12 +8,6 @@ export const RootContainer = styled.div`
   align-items: center;
   opacity: 0.99;
   padding-bottom: 10rem;
-
-  & > * {
-    max-width: ${APP.MAX_WIDTH};
-    width: 100%;
-    padding: 0 0.75rem;
-  }
 `;
 
 export const Header = styled.header`
@@ -38,6 +32,8 @@ export const Header = styled.header`
 `;
 
 export const Main = styled.main`
-  padding-top: 10px;
   height: 100%;
+  max-width: ${APP.MAX_WIDTH};
+  width: 100%;
+  padding: 0.75rem 0.75rem 0;
 `;
