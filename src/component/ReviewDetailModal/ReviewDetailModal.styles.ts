@@ -7,11 +7,6 @@ export const ContentContainer = styled.div`
   gap: 0.5rem;
 `;
 
-export const CodeViewerContainer = styled.div`
-  max-height: 15rem;
-  overflow-x: auto;
-`;
-
 export const ContentWrapper = styled.div`
   border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 7px;
