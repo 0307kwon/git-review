@@ -45,7 +45,7 @@ const CodeReviewProvider = ({ children }: Props) => {
 
   const onError = async (failedURLs: string[]) => {
     alert(
-      "한 개 이상의 URL을 불러오는데 실패했습니다.\n설정 페이지를 확인해주세요."
+      "한 개 이상의 URL을 불러오는데 실패했습니다.\ngithub token이 등록되어있는지 확인해보세요!"
     );
 
     await modifyURLs(
