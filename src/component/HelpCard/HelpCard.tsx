@@ -1,6 +1,7 @@
 import React from "react";
+import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 import useUser from "../../context/UserProvider/useUser";
-import { CodeReview } from "../../util/types";
+import useSearch from "../../page/Home/SearchProvider/useSearch";
 import { CardContainer } from "./HelpCard.styles";
 import CodeReviewNotExist from "./helpCards/CodeReviewNotExist";
 import FirstVisit from "./helpCards/FirstVisit";
@@ -10,16 +11,16 @@ import SearchResultsNotExist from "./helpCards/SearchResultsNotExist";
 
 interface Props {
   //codeReviews -> isCodeReviewExist 로 수정
-  codeReviews: CodeReview[];
   searchKeyword: string;
-  searchResults: CodeReview[];
 }
 
-const HelpCard = ({ codeReviews, searchResults, searchKeyword }: Props) => {
+const HelpCard = ({ searchKeyword }: Props) => {
   const user = useUser();
+  const { codeReviews } = useCodeReviews();
+  const { searchedReviews } = useSearch();
 
   const getCardToShow = (): React.ReactNode => {
-    if (codeReviews.length > 0 && searchKeyword.length > 0) {
+    if (searchedReviews.length === 0 && searchKeyword.length > 0) {
       return <SearchResultsNotExist />;
     }
 

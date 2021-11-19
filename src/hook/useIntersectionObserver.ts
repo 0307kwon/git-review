@@ -35,6 +35,10 @@ const useIntersectionObserver = ({
     );
 
     observer.observe((observedElementRef.current as unknown) as Element);
+
+    return () => {
+      observer.disconnect();
+    };
   }, observedElementDeps);
 
   return {

@@ -1,60 +1,26 @@
-import React, { ChangeEvent, useEffect, useRef } from "react";
+import React, { ChangeEvent, useRef } from "react";
 import { ReactComponent as SearchIcon } from "../../asset/icon/search.svg";
 import Loading from "../../component/@common/Loading/Loading";
 import HelpCard from "../../component/HelpCard/HelpCard";
-import ReviewCard from "../../component/ReviewCard/ReviewCard";
-import ReviewDetailModal from "../../component/ReviewDetailModal/ReviewDetailModal";
-import { DUMMY_REVIEWS } from "../../constant/dummy";
 import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
-import useModal from "../../context/modalProvider/useModal";
-import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useDebounce from "../../hook/useDebounce";
-import useIntersectionObserver from "../../hook/useIntersectionObserver";
-import useReviewSearchEngine from "../../hook/useReviewSearchEngine";
+import ExampleReviews from "./ExampleReviews/ExampleReviews";
 import {
   HomeContents,
   LoadingContainer,
-  ObservedElement,
-  ReviewCardButton,
   SearchContainer,
   SearchInput,
   SearchLabel,
-  SubTitleContainer,
 } from "./Home.styles";
+import RecentReviews from "./RecentReviews/RecentReviews";
+import SearchedReviews from "./SearchedReviews/SearchedReviews";
+import useSearch from "./SearchProvider/useSearch";
 
 const Home = () => {
-  const modal = useModal();
-  const { pullRequestURLs, resetFailedURLs } = usePullRequestURLs();
+  const { codeReviews, isLoading } = useCodeReviews();
+  const { searchedReviews, searchByNewKeyword } = useSearch();
 
-  const {
-    codeReviews,
-    syncOnlyUpdatedCodeReviewsInIDB,
-    readAdditionalReviews,
-    isPageEnded,
-    isLoading,
-  } = useCodeReviews();
-
-  const {
-    searchedReviews,
-    isPageEnded: isSearchPageEnded,
-    searchByNewKeyword,
-    readAdditionalSearchedReviews,
-  } = useReviewSearchEngine();
-
-  const {
-    observedElementRef: recommendedReviewInfinityScroll,
-  } = useIntersectionObserver({
-    callback: readAdditionalReviews,
-    observedElementDeps: [isLoading, searchedReviews.length === 0, codeReviews],
-  });
-
-  const {
-    observedElementRef: searchedReviewInfinityScroll,
-  } = useIntersectionObserver({
-    callback: readAdditionalSearchedReviews,
-    observedElementDeps: [isLoading, searchedReviews.length > 0],
-  });
-
+  // TODO: 검색 패널 의존성 분리
   const searchKeyword = useRef("");
   const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
 
@@ -65,32 +31,6 @@ const Home = () => {
       searchByNewKeyword(searchKeyword.current);
     });
   };
-
-  useEffect(() => {
-    if (codeReviews.length === 0) return;
-
-    if (pullRequestURLs.length === 0) return;
-  }, [codeReviews, pullRequestURLs]);
-
-  useEffect(() => {
-    if (pullRequestURLs.length === 0) {
-      return;
-    }
-
-    const isFailedURLExist = pullRequestURLs.some(
-      (pullRequestURL) => pullRequestURL.isFailedURL
-    );
-
-    if (isFailedURLExist) {
-      resetFailedURLs().then(() => {
-        syncOnlyUpdatedCodeReviewsInIDB();
-      });
-
-      return;
-    }
-
-    syncOnlyUpdatedCodeReviewsInIDB();
-  }, []);
 
   if (isLoading) {
     return (
@@ -117,87 +57,18 @@ const Home = () => {
         />
       </SearchContainer>
       <HomeContents>
-        {searchedReviews.length === 0 && (
-          <>
-            <HelpCard
-              searchKeyword={searchKeyword.current}
-              searchResults={searchedReviews}
-              codeReviews={codeReviews}
-            />
-            {codeReviews.length === 0 ? (
-              <>
-                <SubTitleContainer>
-                  <h2>📒 코드 리뷰 예시를 보여드릴게요</h2>
-                  <p>리뷰 모음집을 만들면 이렇게 보여져요</p>
-                </SubTitleContainer>
-                {DUMMY_REVIEWS.map((review) => (
-                  <ReviewCardButton
-                    key={review.id}
-                    onClick={() => {
-                      modal.openModal(<ReviewDetailModal review={review} />);
-                    }}
-                  >
-                    <ReviewCard codeReview={review} />
-                  </ReviewCardButton>
-                ))}
-              </>
-            ) : (
-              <>
-                <SubTitleContainer>
-                  <h2>😊 코드 리뷰를 둘러보는 건 어떠세요?</h2>
-                  <p>저장된 리뷰를 최신순으로 보여 드릴게요</p>
-                </SubTitleContainer>
-                {codeReviews.map((review) => (
-                  <ReviewCardButton
-                    key={review.id}
-                    onClick={() => {
-                      modal.openModal(<ReviewDetailModal review={review} />);
-                    }}
-                  >
-                    <ReviewCard codeReview={review} />
-                  </ReviewCardButton>
-                ))}
-                {isPageEnded && (
-                  <SubTitleContainer>
-                    <h2>🤩 저장된 리뷰는 여기까지예요</h2>
-                  </SubTitleContainer>
-                )}
-                <ObservedElement
-                  ref={recommendedReviewInfinityScroll}
-                ></ObservedElement>
-              </>
-            )}
-          </>
-        )}
-        {searchedReviews.length > 0 && (
-          <>
-            {searchedReviews.map((searchResult) => {
-              return (
-                <ReviewCardButton
-                  key={searchResult.id}
-                  onClick={() => {
-                    modal.openModal(
-                      <ReviewDetailModal review={searchResult} />
-                    );
-                  }}
-                >
-                  <ReviewCard
-                    codeReview={searchResult}
-                    className="review-card"
-                  />
-                </ReviewCardButton>
-              );
-            })}
-            {isSearchPageEnded && (
-              <SubTitleContainer>
-                <h2>🔬 검색된 리뷰는 여기까지예요</h2>
-              </SubTitleContainer>
-            )}
-            <ObservedElement
-              ref={searchedReviewInfinityScroll}
-            ></ObservedElement>{" "}
-          </>
-        )}
+        <HelpCard searchKeyword={searchKeyword.current} />
+        {(() => {
+          if (codeReviews.length === 0) {
+            return <ExampleReviews />;
+          }
+
+          if (searchedReviews.length > 0) {
+            return <SearchedReviews />;
+          }
+
+          return <RecentReviews />;
+        })()}
       </HomeContents>
     </div>
   );

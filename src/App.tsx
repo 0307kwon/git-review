@@ -11,6 +11,7 @@ import SnackbarProvider from "./context/snackbar/SnackbarProvider";
 import UserProvider from "./context/UserProvider/UserProvider";
 import FloatingView from "./FloatingView";
 import Home from "./page/Home/Home";
+import SearchProvider from "./page/Home/SearchProvider/SearchProvider";
 import Setting from "./page/Setting/Setting";
 
 function App() {
@@ -37,7 +38,9 @@ function App() {
                     <Main>
                       <Switch>
                         <Route exact path="/">
-                          <Home />
+                          <SearchProvider>
+                            <Home />
+                          </SearchProvider>
                         </Route>
                         <Route path="/setting">
                           <Setting />
