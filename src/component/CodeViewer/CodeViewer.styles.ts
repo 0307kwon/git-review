@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { PALETTE } from "../../constant/palette";
 
-export const CodeViewerContainer = styled.div<{ height: string }>`
+export const CodeViewerContainer = styled.div`
   position: relative;
-  height: ${({ height }) => height};
+  max-height: 15rem;
   overflow-y: auto;
   border: 1px solid ${PALETTE.GRAY_200};
   border-radius: 8px 0 0 0;

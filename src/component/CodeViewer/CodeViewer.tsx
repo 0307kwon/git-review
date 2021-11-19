@@ -5,10 +5,9 @@ import { CodeFilePath, CodeViewerContainer } from "./CodeViewer.styles";
 interface Props {
   diffHunk: string;
   filePath: string;
-  height?: string;
 }
 
-const CodeViewer = ({ diffHunk, filePath, height = "15rem" }: Props) => {
+const CodeViewer = ({ diffHunk, filePath }: Props) => {
   const codeViewerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,7 +17,7 @@ const CodeViewer = ({ diffHunk, filePath, height = "15rem" }: Props) => {
   }, [codeViewerRef]);
 
   return (
-    <CodeViewerContainer height={height} ref={codeViewerRef}>
+    <CodeViewerContainer ref={codeViewerRef}>
       <CodeFilePath>{filePath}</CodeFilePath>
       {diffHunk.split("\n").map((rawCodeLine, index) => (
         <CodeLineViewer

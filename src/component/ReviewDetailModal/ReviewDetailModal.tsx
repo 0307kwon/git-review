@@ -20,7 +20,6 @@ const ReviewDetailModal = ({ review }: Props) => {
     <ContentContainer>
       {review.code && (
         <CodeViewer
-          height="15rem"
           filePath={review.code.path}
           diffHunk={review.code.diffHunk}
         />
