@@ -4,7 +4,7 @@ import { PALETTE } from "../../../constant/palette";
 
 export const SearchInputWrapper = styled(FlexContainer)`
   align-items: center;
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
 `;
 
 export const SearchLabel = styled.label`
@@ -26,5 +26,22 @@ export const SearchInput = styled.input`
   &:disabled {
     font-weight: 600;
     border: 1px solid ${PALETTE.GRAY_400};
+  }
+`;
+
+export const URLNicknameSelectionWrapper = styled.div`
+  position: relative;
+  height: 44px;
+
+  & > div {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    gap: 0.25rem;
+    overflow-x: auto;
+
+    & > * {
+      flex-shrink: 0;
+    }
   }
 `;

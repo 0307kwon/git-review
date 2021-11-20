@@ -1,18 +1,22 @@
 import React, { ChangeEvent, useRef } from "react";
-import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import useDebounce from "../../../hook/useDebounce";
 import useSearch from "../SearchProvider/useSearch";
 import {
-  SearchInput,
   SearchInputWrapper,
+  SearchInput,
   SearchLabel,
+  URLNicknameSelectionWrapper,
 } from "./SearchInputPanel.styles";
+import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
+import CheckboxInput from "../../../component/@common/CheckboxInput/CheckboxInput";
+import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 
 const SearchInputPanel = () => {
   const searchKeyword = useRef("");
   const { searchByNewKeyword } = useSearch();
   const { codeReviews } = useCodeReviews();
+  const { pullRequestURLs } = usePullRequestURLs();
 
   const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
 
@@ -22,6 +26,18 @@ const SearchInputPanel = () => {
     registerDebounceCallback(() => {
       searchByNewKeyword(searchKeyword.current);
     });
+  };
+
+  const getURLNicknames = () => {
+    const examplePullRequestURLs = ["리뷰 별칭 1", "리뷰 별칭 2"];
+
+    if (pullRequestURLs.length === 0) {
+      return examplePullRequestURLs;
+    }
+
+    const urlNicknameSet = new Set(pullRequestURLs.map((url) => url.nickname));
+
+    return Array.from(urlNicknameSet);
   };
 
   return (
@@ -40,6 +56,13 @@ const SearchInputPanel = () => {
           onChange={handleChangeInput}
         />
       </SearchInputWrapper>
+      <URLNicknameSelectionWrapper>
+        <div>
+          {getURLNicknames().map((urlNickname) => (
+            <CheckboxInput labelText={"#" + urlNickname} name="urlNickname" />
+          ))}
+        </div>
+      </URLNicknameSelectionWrapper>
     </div>
   );
 };
