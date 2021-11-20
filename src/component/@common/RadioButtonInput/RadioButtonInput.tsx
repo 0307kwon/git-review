@@ -1,11 +1,11 @@
 import React, { InputHTMLAttributes } from "react";
-import { Label } from "./RadioButton.styles";
+import { Label } from "./RadioButtonInput.styles";
 
 interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   labelText: string;
 }
 
-const RadioButton = ({ labelText, ...option }: Props) => {
+const RadioButtonInput = ({ labelText, ...option }: Props) => {
   return (
     <Label>
       <input className="radio-input" type="radio" {...option}></input>
@@ -14,4 +14,4 @@ const RadioButton = ({ labelText, ...option }: Props) => {
   );
 };
 
-export default RadioButton;
+export default RadioButtonInput;

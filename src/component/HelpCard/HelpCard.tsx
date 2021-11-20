@@ -9,18 +9,13 @@ import LoginMode from "./helpCards/LoginMode";
 import OfflineMode from "./helpCards/OfflineMode";
 import SearchResultsNotExist from "./helpCards/SearchResultsNotExist";
 
-interface Props {
-  //codeReviews -> isCodeReviewExist 로 수정
-  searchKeyword: string;
-}
-
-const HelpCard = ({ searchKeyword }: Props) => {
+const HelpCard = () => {
   const user = useUser();
   const { codeReviews } = useCodeReviews();
   const { searchedReviews } = useSearch();
 
   const getCardToShow = (): React.ReactNode => {
-    if (searchedReviews.length === 0 && searchKeyword.length > 0) {
+    if (searchedReviews?.length === 0) {
       return <SearchResultsNotExist />;
     }
 

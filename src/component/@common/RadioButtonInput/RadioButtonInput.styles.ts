@@ -3,9 +3,10 @@ import { PALETTE } from "../../../constant/palette";
 
 export const Label = styled.label`
   .radio-mark {
+    display: block;
+    padding: 5px 8px;
     border: 1px solid ${PALETTE.PRIMARY_400};
     border-radius: 7px;
-    padding: 5px 8px;
     color: ${PALETTE.PRIMARY_400};
     font-weight: 600;
     cursor: pointer;

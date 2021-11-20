@@ -20,7 +20,7 @@ const SearchedReviews = () => {
     observedElementRef: searchedReviewInfinityScroll,
   } = useIntersectionObserver({
     callback: readAdditionalSearchedReviews,
-    observedElementDeps: [isLoading, searchedReviews.length > 0],
+    observedElementDeps: [isLoading, searchedReviews],
   });
 
   return (
@@ -29,7 +29,7 @@ const SearchedReviews = () => {
         <h2>🔍 검색 결과를 알려드릴게요!</h2>
         <p>찾아낸 키워드는 형광펜으로 표시돼요.</p>
       </SubTitleContainer>
-      {searchedReviews.map((searchResult) => {
+      {searchedReviews?.map((searchResult) => {
         return (
           <ReviewCardButton
             key={searchResult.id}

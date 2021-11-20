@@ -4,7 +4,7 @@ import { REVIEW_COUNT_PER_PAGE } from "../../../constant/common";
 import { CodeReview } from "../../../util/types";
 
 interface ContextValue {
-  searchedReviews: CodeReview[];
+  searchedReviews: CodeReview[] | null;
   isPageEnded: boolean;
   searchByNewKeyword: (keyword: string) => Promise<void>;
   readAdditionalSearchedReviews: () => Promise<void>;
@@ -17,19 +17,21 @@ interface Props {
 }
 
 const SearchProvider = ({ children }: Props) => {
-  const [searchedReviews, setSearchedReviews] = useState<CodeReview[]>([]);
+  const [searchedReviews, setSearchedReviews] = useState<CodeReview[] | null>(
+    null
+  );
   const currentKeyword = useRef("");
   const pageNumber = useRef(1);
   const [isPageEnded, setIsPageEnded] = useState(false);
 
   const searchByNewKeyword = async (keyword: string) => {
-    if (!keyword) {
-      setSearchedReviews([]);
+    if (keyword === "") {
+      setSearchedReviews(null);
       return;
     }
 
-    if (!keyword.replaceAll(" ", "")) {
-      setSearchedReviews([]);
+    if (keyword.replaceAll(" ", "") === "") {
+      setSearchedReviews(null);
       return;
     }
 
@@ -47,6 +49,10 @@ const SearchProvider = ({ children }: Props) => {
   };
 
   const readAdditionalSearchedReviews = async () => {
+    if (searchedReviews === null) {
+      return;
+    }
+
     if (isPageEnded) {
       return;
     }
