@@ -11,20 +11,27 @@ import {
 import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
 import RadioInput from "../../../component/@common/RadioInput/RadioInput";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
+import { SearchFilter } from "../../../util/types";
 
 const SearchInputPanel = () => {
-  const searchKeyword = useRef("");
-  const { searchByNewKeyword } = useSearch();
+  const searchFilter = useRef<SearchFilter>({
+    keyword: "",
+    urlNickname: "",
+  });
+  const { searchBy } = useSearch();
   const { codeReviews } = useCodeReviews();
   const { pullRequestURLs } = usePullRequestURLs();
 
   const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    searchKeyword.current = event.target.value;
+    searchFilter.current = {
+      ...searchFilter.current,
+      keyword: event.target.value,
+    };
 
     registerDebounceCallback(() => {
-      searchByNewKeyword(searchKeyword.current);
+      searchBy(searchFilter.current);
     });
   };
 
@@ -38,6 +45,15 @@ const SearchInputPanel = () => {
     const urlNicknameSet = new Set(pullRequestURLs.map((url) => url.nickname));
 
     return Array.from(urlNicknameSet);
+  };
+
+  const onUrlNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    searchFilter.current = {
+      ...searchFilter.current,
+      urlNickname: event.currentTarget.value,
+    };
+
+    searchBy(searchFilter.current);
   };
 
   return (
@@ -58,8 +74,21 @@ const SearchInputPanel = () => {
       </SearchInputWrapper>
       <URLNicknameSelectionWrapper>
         <div>
+          <RadioInput
+            onChange={onUrlNicknameChange}
+            labelText="전체보기"
+            value=""
+            name="urlNickname"
+            checked={searchFilter.current.urlNickname === ""}
+          />
           {getURLNicknames().map((urlNickname) => (
-            <RadioInput labelText={"#" + urlNickname} name="urlNickname" />
+            <RadioInput
+              onChange={onUrlNicknameChange}
+              labelText={"#" + urlNickname}
+              value={urlNickname}
+              name="urlNickname"
+              checked={searchFilter.current.urlNickname === urlNickname}
+            />
           ))}
         </div>
       </URLNicknameSelectionWrapper>

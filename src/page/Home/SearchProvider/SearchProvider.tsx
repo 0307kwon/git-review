@@ -1,12 +1,12 @@
 import React, { ReactNode, useRef, useState } from "react";
-import { searchByKeywordInIDB } from "../../../API/indexedDB";
+import { searchByInIDB } from "../../../API/indexedDB";
 import { REVIEW_COUNT_PER_PAGE } from "../../../constant/common";
-import { CodeReview } from "../../../util/types";
+import { CodeReview, SearchFilter } from "../../../util/types";
 
 interface ContextValue {
   searchedReviews: CodeReview[] | null;
   isPageEnded: boolean;
-  searchByNewKeyword: (keyword: string) => Promise<void>;
+  searchBy: (filter: SearchFilter) => Promise<void>;
   readAdditionalSearchedReviews: () => Promise<void>;
 }
 
@@ -17,34 +17,34 @@ interface Props {
 }
 
 const SearchProvider = ({ children }: Props) => {
+  const currentFilter = useRef<SearchFilter>({
+    keyword: "",
+    urlNickname: "",
+  });
   const [searchedReviews, setSearchedReviews] = useState<CodeReview[] | null>(
     null
   );
-  const currentKeyword = useRef("");
   const pageNumber = useRef(1);
   const [isPageEnded, setIsPageEnded] = useState(false);
 
-  const searchByNewKeyword = async (keyword: string) => {
-    if (keyword === "") {
+  const searchBy = async (filter: SearchFilter) => {
+    const keyword = filter.keyword?.replaceAll(" ", "") || "";
+    const urlNickname = filter.urlNickname || "";
+
+    if (keyword === "" && urlNickname === "") {
       setSearchedReviews(null);
       return;
     }
 
-    if (keyword.replaceAll(" ", "") === "") {
-      setSearchedReviews(null);
-      return;
-    }
+    currentFilter.current = filter;
 
-    const filteredKeyword = keyword.trim();
-
-    setIsPageEnded(false);
-
-    const result = await searchByKeywordInIDB({
-      keyword: (currentKeyword.current = filteredKeyword),
+    const result = await searchByInIDB({
+      ...currentFilter.current,
       pageNumber: (pageNumber.current = 1),
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
     });
 
+    setIsPageEnded(false);
     setSearchedReviews(result);
   };
 
@@ -57,8 +57,8 @@ const SearchProvider = ({ children }: Props) => {
       return;
     }
 
-    const results = await searchByKeywordInIDB({
-      keyword: currentKeyword.current,
+    const results = await searchByInIDB({
+      ...currentFilter.current,
       pageNumber: (pageNumber.current += 1),
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
     });
@@ -76,7 +76,7 @@ const SearchProvider = ({ children }: Props) => {
       value={{
         searchedReviews,
         isPageEnded,
-        searchByNewKeyword,
+        searchBy,
         readAdditionalSearchedReviews,
       }}
     >

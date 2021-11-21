@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { searchByKeywordInIDB } from "../API/indexedDB";
+import { searchByInIDB } from "../API/indexedDB";
 import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
 import { CodeReview } from "../util/types";
 
@@ -24,7 +24,7 @@ const useReviewSearchEngine = () => {
 
     setIsPageEnded(false);
 
-    const result = await searchByKeywordInIDB({
+    const result = await searchByInIDB({
       keyword: (currentKeyword.current = filteredKeyword),
       pageNumber: (pageNumber.current = 1),
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,
@@ -38,7 +38,7 @@ const useReviewSearchEngine = () => {
       return;
     }
 
-    const results = await searchByKeywordInIDB({
+    const results = await searchByInIDB({
       keyword: currentKeyword.current,
       pageNumber: (pageNumber.current += 1),
       reviewCountPerPage: REVIEW_COUNT_PER_PAGE,

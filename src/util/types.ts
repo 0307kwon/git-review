@@ -69,3 +69,8 @@ export interface HttpResponse<T> {
 
 export type RequiredOnly<T, K extends keyof T> = Partial<Exclude<T, K>> &
   Required<Pick<T, K>>;
+
+export interface SearchFilter {
+  keyword?: string;
+  urlNickname?: string;
+}

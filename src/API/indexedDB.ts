@@ -243,17 +243,19 @@ export const ModifyCodeReviewIDB = async (
   });
 };
 
-interface FindByKeywordInIDBParam {
-  keyword: string;
+interface FindByInIDBParam {
+  keyword?: string;
+  urlNickname?: string;
   pageNumber: number;
   reviewCountPerPage: number;
 }
 
-export const searchByKeywordInIDB = async ({
-  keyword,
+export const searchByInIDB = async ({
+  keyword = "",
+  urlNickname = "",
   pageNumber,
   reviewCountPerPage,
-}: FindByKeywordInIDBParam) => {
+}: FindByInIDBParam) => {
   const db = await openCodeReviewIDB();
 
   const transaction = db.transaction(
@@ -274,14 +276,27 @@ export const searchByKeywordInIDB = async ({
     }
     const codeReview: CodeReview = cursor.value;
 
-    const regex = new RegExp(`(${escapeRegExp(keyword)})`, "gi");
+    const keywordRegex = new RegExp(`(${escapeRegExp(keyword) || "."})`, "gi");
+    const urlNicknameRegex = new RegExp(urlNickname || ".", "g");
 
-    if (regex.test(codeReview.plainText)) {
-      codeReview.content = codeReview.content.replaceAll(regex, " _🔍$1_ ");
-
-      foundReviews.push(codeReview);
+    if (!urlNicknameRegex.test(codeReview.urlNickname)) {
+      cursor.continue();
+      return;
     }
 
+    if (!keywordRegex.test(codeReview.plainText)) {
+      cursor.continue();
+      return;
+    }
+
+    if (keyword !== "") {
+      codeReview.content = codeReview.content.replaceAll(
+        keywordRegex,
+        " _🔍$1_ "
+      );
+    }
+
+    foundReviews.push(codeReview);
     cursor.continue();
   };
 
