@@ -9,7 +9,7 @@ import {
   URLNicknameSelectionWrapper,
 } from "./SearchInputPanel.styles";
 import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
-import CheckboxInput from "../../../component/@common/CheckboxInput/CheckboxInput";
+import RadioInput from "../../../component/@common/RadioInput/RadioInput";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 
 const SearchInputPanel = () => {
@@ -59,7 +59,7 @@ const SearchInputPanel = () => {
       <URLNicknameSelectionWrapper>
         <div>
           {getURLNicknames().map((urlNickname) => (
-            <CheckboxInput labelText={"#" + urlNickname} name="urlNickname" />
+            <RadioInput labelText={"#" + urlNickname} name="urlNickname" />
           ))}
         </div>
       </URLNicknameSelectionWrapper>

@@ -1,17 +1,17 @@
 import React, { InputHTMLAttributes } from "react";
-import { Label } from "./CheckboxInput.styles";
+import { Label } from "./RadioInput.styles";
 
 interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   labelText: string;
 }
 
-const CheckboxInput = ({ labelText, ...option }: Props) => {
+const RadioInput = ({ labelText, ...option }: Props) => {
   return (
     <Label>
-      <input className="radio-input" type="checkbox" {...option}></input>
+      <input className="radio-input" type="radio" {...option}></input>
       <span className="radio-mark">{labelText}</span>
     </Label>
   );
 };
 
-export default CheckboxInput;
+export default RadioInput;
