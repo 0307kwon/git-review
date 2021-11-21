@@ -12,6 +12,7 @@ import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
 import RadioInput from "../../../component/@common/RadioInput/RadioInput";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 import { SearchFilter } from "../../../util/types";
+import { PALETTE } from "../../../constant/palette";
 
 const SearchInputPanel = () => {
   const searchFilter = useRef<SearchFilter>({
@@ -88,6 +89,7 @@ const SearchInputPanel = () => {
               value={urlNickname}
               name="urlNickname"
               checked={searchFilter.current.urlNickname === urlNickname}
+              color={PALETTE.GRAY_400}
             />
           ))}
         </div>

@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { PALETTE } from "../../../constant/palette";
 
-export const Label = styled.label`
+export const Label = styled.label<{ color: PALETTE }>`
   .radio-mark {
     display: block;
     padding: 5px 8px;
-    border: 1px solid ${PALETTE.PRIMARY_400};
+    border: 1px solid ${({ color }) => color};
     border-radius: 7px;
-    color: ${PALETTE.PRIMARY_400};
+    color: ${({ color }) => color};
     font-weight: 600;
     cursor: pointer;
     user-select: none;
@@ -22,7 +22,7 @@ export const Label = styled.label`
     &:checked ~ .radio-mark {
       color: ${PALETTE.WHITE};
       border: 1px solid ${PALETTE.WHITE};
-      background-color: ${PALETTE.PRIMARY_400};
+      background-color: ${({ color }) => color};
     }
   }
 `;
