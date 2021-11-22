@@ -4,7 +4,8 @@ import {
   escapeRegExp,
   filterURLToPath,
 } from "../util/common";
-import { CodeReview } from "../util/types";
+import { CodeReview, PullRequestURL } from "../util/types";
+
 interface CursorWithValue<T> extends IDBCursorWithValue {
   update: <T>(value: T) => IDBRequest<IDBValidKey>;
   value: T;
@@ -119,7 +120,7 @@ export const getAllURLsIDB = async () => {
   const codeReviewObjectStore = db
     .transaction(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS)
     .objectStore(CODE_REVIEW_IDB.OBJECT_STORE_NAME.CODE_REVIEWS);
-  const urlSet = new Set<string>();
+  const urls: Pick<PullRequestURL, "url" | "nickname">[] = [];
 
   codeReviewObjectStore.openCursor().onsuccess = (event) => {
     const cursor = (event.target as IDBRequest<IDBCursor>).result;
@@ -129,17 +130,33 @@ export const getAllURLsIDB = async () => {
     }
     const codeReview: CodeReview = cursor.value;
 
-    urlSet.add(filterURLToPath(codeReview.url));
+    const isAlreadyExisted = urls.some(
+      (url) => url.nickname === codeReview.urlNickname
+    );
+
+    if (isAlreadyExisted) {
+      cursor.continue();
+      return;
+    }
+
+    urls.push({
+      url: filterURLToPath(codeReview.url),
+      nickname: codeReview.urlNickname,
+    });
     cursor.continue();
   };
 
-  return new Promise<string[]>((resolve, reject) => {
-    codeReviewObjectStore.transaction.oncomplete = () => {
-      resolve(Array.from(urlSet));
-    };
-    codeReviewObjectStore.transaction.onerror = () =>
-      reject(new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다."));
-  });
+  return new Promise<Pick<PullRequestURL, "url" | "nickname">[]>(
+    (resolve, reject) => {
+      codeReviewObjectStore.transaction.oncomplete = () => {
+        resolve(urls);
+      };
+      codeReviewObjectStore.transaction.onerror = () =>
+        reject(
+          new Error("indexedDB에서 codeReview를 가져오는데 실패했습니다.")
+        );
+    }
+  );
 };
 
 export const clearAllReviewIDB = async () => {

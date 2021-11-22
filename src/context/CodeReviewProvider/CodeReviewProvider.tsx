@@ -162,7 +162,7 @@ const CodeReviewProvider = ({ children }: Props) => {
       pullRequestURLs.map((pullRequestURL) => pullRequestURL.url)
     );
 
-    const urlsInIDB: string[] = await getAllURLsIDB();
+    const urlsInIDB: string[] = (await getAllURLsIDB()).map((url) => url.url);
 
     const staleURLsInIDB = urlsInIDB.filter((url) => {
       if (updatingURLSet.has(url)) {

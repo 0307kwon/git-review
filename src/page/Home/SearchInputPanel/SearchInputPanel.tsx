@@ -1,18 +1,21 @@
-import React, { ChangeEvent, useRef } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { getAllURLsIDB } from "../../../API/indexedDB";
+import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
+import RadioInput from "../../../component/@common/RadioInput/RadioInput";
+import { PALETTE } from "../../../constant/palette";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
+import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 import useDebounce from "../../../hook/useDebounce";
+import { SearchFilter } from "../../../util/types";
 import useSearch from "../SearchProvider/useSearch";
 import {
-  SearchInputWrapper,
   SearchInput,
+  SearchInputWrapper,
   SearchLabel,
   URLNicknameSelectionWrapper,
 } from "./SearchInputPanel.styles";
-import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
-import RadioInput from "../../../component/@common/RadioInput/RadioInput";
-import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
-import { SearchFilter } from "../../../util/types";
-import { PALETTE } from "../../../constant/palette";
+
+const EXAMPLE_URL_NICKNAMES = ["리뷰 별칭 1", "리뷰 별칭 2"];
 
 const SearchInputPanel = () => {
   const searchFilter = useRef<SearchFilter>({
@@ -22,6 +25,7 @@ const SearchInputPanel = () => {
   const { searchBy } = useSearch();
   const { codeReviews } = useCodeReviews();
   const { pullRequestURLs } = usePullRequestURLs();
+  const [urlNicknames, setURLNickNames] = useState<string[]>([]);
 
   const { registerDebounceCallback } = useDebounce({ waitingTimeMs: 250 });
 
@@ -36,18 +40,6 @@ const SearchInputPanel = () => {
     });
   };
 
-  const getURLNicknames = () => {
-    const examplePullRequestURLs = ["리뷰 별칭 1", "리뷰 별칭 2"];
-
-    if (pullRequestURLs.length === 0) {
-      return examplePullRequestURLs;
-    }
-
-    const urlNicknameSet = new Set(pullRequestURLs.map((url) => url.nickname));
-
-    return Array.from(urlNicknameSet);
-  };
-
   const onUrlNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
     searchFilter.current = {
       ...searchFilter.current,
@@ -56,6 +48,21 @@ const SearchInputPanel = () => {
 
     searchBy(searchFilter.current);
   };
+
+  useEffect(() => {
+    if (codeReviews.length === 0) {
+      setURLNickNames([]);
+      return;
+    }
+
+    if (urlNicknames.length !== pullRequestURLs.length) {
+      getAllURLsIDB().then((urls) => {
+        const nicknames = urls.map(({ nickname }) => nickname);
+
+        setURLNickNames(nicknames);
+      });
+    }
+  }, [codeReviews, pullRequestURLs]);
 
   return (
     <div>
@@ -82,16 +89,18 @@ const SearchInputPanel = () => {
             name="urlNickname"
             checked={searchFilter.current.urlNickname === ""}
           />
-          {getURLNicknames().map((urlNickname) => (
-            <RadioInput
-              onChange={onUrlNicknameChange}
-              labelText={"#" + urlNickname}
-              value={urlNickname}
-              name="urlNickname"
-              checked={searchFilter.current.urlNickname === urlNickname}
-              color={PALETTE.GRAY_400}
-            />
-          ))}
+          {(urlNicknames.length > 0 ? urlNicknames : EXAMPLE_URL_NICKNAMES).map(
+            (urlNickname) => (
+              <RadioInput
+                onChange={onUrlNicknameChange}
+                labelText={"#" + urlNickname}
+                value={urlNickname}
+                name="urlNickname"
+                checked={searchFilter.current.urlNickname === urlNickname}
+                color={PALETTE.GRAY_400}
+              />
+            )
+          )}
         </div>
       </URLNicknameSelectionWrapper>
     </div>
