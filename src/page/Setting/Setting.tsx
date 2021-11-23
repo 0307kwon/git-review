@@ -116,7 +116,7 @@ const Setting = () => {
                   onChange={handleChangeInput("nickname")}
                   maxLength={PULL_REQUEST_URL.MAX_NICKNAME_LENGTH}
                   required
-                  placeholder="PR 별칭"
+                  placeholder={`PR 별칭(${PULL_REQUEST_URL.MAX_NICKNAME_LENGTH}자 이내)`}
                 />
               ),
               content: (
