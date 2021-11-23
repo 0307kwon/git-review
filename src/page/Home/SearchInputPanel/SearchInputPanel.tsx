@@ -83,7 +83,7 @@ const SearchInputPanel = () => {
       </SearchInputWrapper>
       <URLNicknameSelectionWrapper>
         <Select
-          width="300px"
+          width="400px"
           labelText="PR 별칭으로 필터링"
           onChange={handleChangeUrlNickname}
         >

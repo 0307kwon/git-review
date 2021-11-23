@@ -38,7 +38,15 @@ export const RootSpan = styled.span<{ width: string }>`
     width: 100%;
   }
 
+  .select-word {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .arrow {
     margin-top: 4px;
+    margin-left: 4px;
   }
 `;

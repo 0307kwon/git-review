@@ -43,7 +43,7 @@ const Select = ({ width, onChange, labelText, children, ...option }: Props) => {
           {children}
         </select>
       </label>
-      <span>{selectedValue ?? ""}</span>
+      <span className="select-word">{selectedValue ?? ""}</span>
       <DownArrow fill={PALETTE.GRAY_300} className="arrow" />
     </RootSpan>
   );
