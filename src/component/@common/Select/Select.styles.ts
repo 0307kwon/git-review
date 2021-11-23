@@ -3,12 +3,13 @@ import { PALETTE } from "../../../constant/palette";
 
 export const RootSpan = styled.span<{ width: string }>`
   position: relative;
-  border: 1px solid ${PALETTE.GRAY_300};
+  border: 1px solid ${PALETTE.GRAY_200};
   padding: 0.5rem 1rem;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
   border-radius: 4px;
+  max-width: 100%;
   width: ${({ width }) => width};
   background-color: ${PALETTE.WHITE};
 
