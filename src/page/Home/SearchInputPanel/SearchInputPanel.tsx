@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { getAllURLsIDB } from "../../../API/indexedDB";
 import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
 import RadioInput from "../../../component/@common/RadioInput/RadioInput";
+import Select from "../../../component/@common/Select/Select";
 import { PALETTE } from "../../../constant/palette";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
@@ -40,10 +41,10 @@ const SearchInputPanel = () => {
     });
   };
 
-  const onUrlNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeUrlNickname = (value: string) => {
     searchFilter.current = {
       ...searchFilter.current,
-      urlNickname: event.currentTarget.value,
+      urlNickname: value === "전체보기" ? "" : value,
     };
 
     searchBy(searchFilter.current);
@@ -81,27 +82,18 @@ const SearchInputPanel = () => {
         />
       </SearchInputWrapper>
       <URLNicknameSelectionWrapper>
-        <div>
-          <RadioInput
-            onChange={onUrlNicknameChange}
-            labelText="전체보기"
-            value=""
-            name="urlNickname"
-            checked={searchFilter.current.urlNickname === ""}
-          />
+        <Select
+          width="300px"
+          labelText="PR 별칭으로 필터링"
+          onChange={handleChangeUrlNickname}
+        >
+          <option value="전체보기">전체보기</option>
           {(urlNicknames.length > 0 ? urlNicknames : EXAMPLE_URL_NICKNAMES).map(
             (urlNickname) => (
-              <RadioInput
-                onChange={onUrlNicknameChange}
-                labelText={"#" + urlNickname}
-                value={urlNickname}
-                name="urlNickname"
-                checked={searchFilter.current.urlNickname === urlNickname}
-                color={PALETTE.GRAY_400}
-              />
+              <option value={urlNickname}>{urlNickname}</option>
             )
           )}
-        </div>
+        </Select>
       </URLNicknameSelectionWrapper>
     </div>
   );

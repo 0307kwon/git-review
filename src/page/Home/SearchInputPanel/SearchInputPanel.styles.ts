@@ -30,18 +30,7 @@ export const SearchInput = styled.input`
 `;
 
 export const URLNicknameSelectionWrapper = styled.div`
-  position: relative;
-  height: 44px;
-
-  & > div {
-    position: absolute;
-    display: flex;
-    width: 100%;
-    gap: 0.25rem;
-    overflow-x: auto;
-
-    & > * {
-      flex-shrink: 0;
-    }
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `;

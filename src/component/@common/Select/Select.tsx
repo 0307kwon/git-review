@@ -13,7 +13,7 @@ import { PALETTE } from "../../../constant/palette";
 interface Props extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "type"> {
   width: string;
   labelText: string;
-  onChange: (value: unknown) => void;
+  onChange: (value: any) => void;
   children: ReactNode;
 }
 
