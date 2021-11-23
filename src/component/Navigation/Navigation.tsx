@@ -15,6 +15,7 @@ import {
   LoginButton,
 } from "./Navigation.styles";
 import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
+import { PALETTE } from "../../constant/palette";
 
 const Navigation = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -63,7 +64,7 @@ const Navigation = () => {
         <AvatarContainer ref={dropdownRef}>
           <AvatarButton onClick={handleToggleDropdown}>
             <Avatar imgURL={userProfile.avatarURL} />
-            <Arrow />
+            <Arrow fill={PALETTE.WHITE} />
           </AvatarButton>
 
           <AvatarDropdown isDropdownVisible={isDropdownVisible}>
