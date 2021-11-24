@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import ReviewCardButton from "../../component/ReviewCardButton/ReviewCardButton";
 
 export const SubTitleContainer = styled.div`
   display: flex;
@@ -10,14 +11,7 @@ export const SubTitleContainer = styled.div`
   }
 `;
 
-export const ReviewCardButton = styled.div`
-  border: none;
+export const StyledReviewCardButton = styled(ReviewCardButton)`
   margin-bottom: 1.5rem;
-  transition: all 0.2s ease;
   width: 100%;
-  cursor: pointer;
-
-  &:hover {
-    transform: scale(1.02);
-  }
 `;

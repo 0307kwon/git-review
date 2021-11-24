@@ -1,10 +1,9 @@
 import React from "react";
-import ReviewCard from "../../../component/ReviewCard/ReviewCard";
 import ReviewDetailModal from "../../../component/ReviewDetailModal/ReviewDetailModal";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import useModal from "../../../context/modalProvider/useModal";
 import useIntersectionObserver from "../../../hook/useIntersectionObserver";
-import { ReviewCardButton, SubTitleContainer } from "../Common.styles";
+import { StyledReviewCardButton, SubTitleContainer } from "../Common.styles";
 import { ObservedElement } from "../Home.styles";
 import useSearch from "../SearchProvider/useSearch";
 
@@ -31,14 +30,13 @@ const SearchedReviews = () => {
       </SubTitleContainer>
       {searchedReviews?.map((searchResult) => {
         return (
-          <ReviewCardButton
+          <StyledReviewCardButton
+            codeReview={searchResult}
             key={searchResult.id}
             onClick={() => {
               modal.openModal(<ReviewDetailModal review={searchResult} />);
             }}
-          >
-            <ReviewCard codeReview={searchResult} className="review-card" />
-          </ReviewCardButton>
+          />
         );
       })}
       {isSearchPageEnded && (

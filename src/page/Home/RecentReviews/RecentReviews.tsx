@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import ReviewCard from "../../../component/ReviewCard/ReviewCard";
 import ReviewDetailModal from "../../../component/ReviewDetailModal/ReviewDetailModal";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import useModal from "../../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 import useIntersectionObserver from "../../../hook/useIntersectionObserver";
-import { ReviewCardButton, SubTitleContainer } from "../Common.styles";
+import { StyledReviewCardButton, SubTitleContainer } from "../Common.styles";
 import { ObservedElement } from "../Home.styles";
 
 const RecentReviews = () => {
@@ -52,14 +51,13 @@ const RecentReviews = () => {
         <p>저장된 리뷰를 최신순으로 보여 드릴게요</p>
       </SubTitleContainer>
       {codeReviews.map((review) => (
-        <ReviewCardButton
+        <StyledReviewCardButton
+          codeReview={review}
           key={review.id}
           onClick={() => {
             modal.openModal(<ReviewDetailModal review={review} />);
           }}
-        >
-          <ReviewCard codeReview={review} />
-        </ReviewCardButton>
+        />
       ))}
       {isPageEnded && (
         <SubTitleContainer>
