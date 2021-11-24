@@ -1,9 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { getAllURLsIDB } from "../../../API/indexedDB";
 import { ReactComponent as SearchIcon } from "../../../asset/icon/search.svg";
-import RadioInput from "../../../component/@common/RadioInput/RadioInput";
 import Select from "../../../component/@common/Select/Select";
-import { PALETTE } from "../../../constant/palette";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 import useDebounce from "../../../hook/useDebounce";

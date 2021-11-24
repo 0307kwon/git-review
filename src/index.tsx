@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { GlobalStyle } from "./index.styles";
+import { GlobalStyle } from "./global.styles";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";

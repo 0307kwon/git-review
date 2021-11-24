@@ -9,7 +9,7 @@ export const LoadingContainer = styled.div`
 `;
 
 export const HomeContents = styled.div`
-  padding-top: 10px;
+  padding-top: 0.5rem;
 `;
 
 export const ObservedElement = styled.div`

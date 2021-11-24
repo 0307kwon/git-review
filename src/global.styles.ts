@@ -1,6 +1,14 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 import { MEDIA_QUERY } from "./constant/mediaQuery";
 import { PALETTE } from "./constant/palette";
+
+export const FocusEffect = css`
+  border-color: ${PALETTE.PRIMARY_400};
+  box-shadow: 1px 1px 2px 1px ${PALETTE.PRIMARY_200},
+    -1px -1px 2px 1px ${PALETTE.PRIMARY_200},
+    1px -1px 2px 1px ${PALETTE.PRIMARY_200},
+    -1px 1px 2px 1px ${PALETTE.PRIMARY_200};
+`;
 
 export const GlobalStyle = createGlobalStyle`
   font-family: "Noto Sans KR", sans-serif;

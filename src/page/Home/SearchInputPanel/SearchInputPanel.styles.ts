@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import FlexContainer from "../../../component/@common/FlexContainer/FlexContainer";
 import { PALETTE } from "../../../constant/palette";
+import { FocusEffect } from "../../../global.styles";
 
 export const SearchInputWrapper = styled(FlexContainer)`
   align-items: center;
@@ -17,10 +18,11 @@ export const SearchInput = styled.input`
   width: 100%;
   padding: 10px;
   border: 1px solid ${PALETTE.GRAY_200};
-  border-radius: 7px;
+  border-radius: 4px;
 
   &:focus {
     outline: none;
+    ${FocusEffect};
   }
 
   &:disabled {

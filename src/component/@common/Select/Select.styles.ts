@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { PALETTE } from "../../../constant/palette";
+import { FocusEffect } from "../../../global.styles";
 
 export const RootSpan = styled.span<{ width: string }>`
   position: relative;
@@ -14,11 +15,7 @@ export const RootSpan = styled.span<{ width: string }>`
   background-color: ${PALETTE.WHITE};
 
   &:hover {
-    border-color: ${PALETTE.PRIMARY_400};
-    box-shadow: 1px 1px 2px 1px ${PALETTE.PRIMARY_200},
-      -1px -1px 2px 1px ${PALETTE.PRIMARY_200},
-      1px -1px 2px 1px ${PALETTE.PRIMARY_200},
-      -1px 1px 2px 1px ${PALETTE.PRIMARY_200};
+    ${FocusEffect}
   }
 
   .visually-hidden {
