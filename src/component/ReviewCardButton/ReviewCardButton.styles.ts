@@ -11,6 +11,7 @@ export const RootDiv = styled.div`
     height: calc(100% - 55px);
     z-index: 1;
     opacity: 0;
+    cursor: pointer;
 
     &:hover ~ .review-card {
       transform: scale(1.02);

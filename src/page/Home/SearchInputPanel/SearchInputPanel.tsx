@@ -88,7 +88,9 @@ const SearchInputPanel = () => {
           <option value="전체보기">전체보기</option>
           {(urlNicknames.length > 0 ? urlNicknames : EXAMPLE_URL_NICKNAMES).map(
             (urlNickname) => (
-              <option value={urlNickname}>{urlNickname}</option>
+              <option value={urlNickname} key={urlNickname}>
+                {urlNickname}
+              </option>
             )
           )}
         </Select>

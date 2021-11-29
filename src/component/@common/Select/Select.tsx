@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { RootSpan } from "./Select.styles";
+import { RootLabel } from "./Select.styles";
 import { ReactComponent as DownArrow } from "../../../asset/icon/downArrow.svg";
 import { PALETTE } from "../../../constant/palette";
 
@@ -36,16 +36,20 @@ const Select = ({ width, onChange, labelText, children, ...option }: Props) => {
   }, [selectRef]);
 
   return (
-    <RootSpan width={width}>
-      <label className="visually-hidden">
-        <span>{labelText}</span>
-        <select onChange={onSelectChange} ref={selectRef}>
-          {children}
-        </select>
-      </label>
-      <span className="select-word">{selectedValue ?? ""}</span>
-      <DownArrow fill={PALETTE.GRAY_300} className="arrow" />
-    </RootSpan>
+    <RootLabel width={width}>
+      <span className="visually-hidden">{labelText}</span>
+      <select
+        onChange={onSelectChange}
+        ref={selectRef}
+        className="visually-hidden"
+      >
+        {children}
+      </select>
+      <div className="select-mark">
+        <span className="select-word">{selectedValue ?? ""}</span>
+        <DownArrow fill={PALETTE.GRAY_300} className="arrow" />
+      </div>
+    </RootLabel>
   );
 };
 
