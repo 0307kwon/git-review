@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { signInWithGithub } from "../../API/firebaseAPI";
 import { ReactComponent as LogoutIcon } from "../../asset/icon/logout.svg";
-import { ReactComponent as SettingIcon } from "../../asset/icon/setting.svg";
 import { ReactComponent as RefreshIcon } from "../../asset/icon/refresh.svg";
-import useUser from "../../context/UserProvider/useUser";
+import { ReactComponent as SettingIcon } from "../../asset/icon/setting.svg";
+import { PALETTE } from "../../constant/palette";
+import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
 import useFocusOut from "../../hook/useFocusOut";
+import useUserInfo from "../../hook/userInfo/useUserInfo";
 import Avatar from "../@common/Avatar/Avatar";
 import {
   Arrow,
@@ -13,26 +14,16 @@ import {
   AvatarContainer,
   AvatarDropdown,
   LoginButton,
-} from "./Navigation.styles";
-import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
-import { PALETTE } from "../../constant/palette";
+} from "./UserProfile.styles";
 
-const Navigation = () => {
+const UserProfile = () => {
+  const user = useUserInfo();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const { forcedSyncAllCodeReviewInIDB } = useCodeReviews();
   const history = useHistory();
-  const user = useUser();
   const dropdownRef = useFocusOut<HTMLDivElement>(() => {
     setIsDropdownVisible(false);
   });
-
-  const handleSignIn = async () => {
-    const profile = await signInWithGithub();
-
-    if (profile) {
-      user.login(profile);
-    }
-  };
 
   const handleToggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
@@ -49,6 +40,10 @@ const Navigation = () => {
     }
   };
 
+  const handleSignIn = () => {
+    user.login();
+  };
+
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       user.logout();
@@ -56,19 +51,17 @@ const Navigation = () => {
     }
   };
 
-  const { userProfile } = user;
-
   return (
     <div>
-      {userProfile ? (
+      {user.data ? (
         <AvatarContainer ref={dropdownRef}>
           <AvatarButton onClick={handleToggleDropdown}>
-            <Avatar imgURL={userProfile.avatarURL} />
+            <Avatar imgURL={user.data.avatarURL} />
             <Arrow fill={PALETTE.WHITE} />
           </AvatarButton>
 
           <AvatarDropdown isDropdownVisible={isDropdownVisible}>
-            <div className="welcome">{`👋 ${userProfile.nickname}님 환영합니다.`}</div>
+            <div className="welcome">{`👋 ${user.data.nickname}님 환영합니다.`}</div>
             <Link onClick={handleToggleDropdown} to="/setting">
               <SettingIcon />
               설정
@@ -90,4 +83,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default UserProfile;

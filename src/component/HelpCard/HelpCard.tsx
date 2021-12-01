@@ -1,6 +1,6 @@
 import React from "react";
 import useCodeReviews from "../../context/CodeReviewProvider/useCodeReviews";
-import useUser from "../../context/UserProvider/useUser";
+import useUserInfo from "../../hook/userInfo/useUserInfo";
 import useSearch from "../../page/Home/SearchProvider/useSearch";
 import { CardContainer } from "./HelpCard.styles";
 import CodeReviewNotExist from "./helpCards/CodeReviewNotExist";
@@ -10,7 +10,7 @@ import OfflineMode from "./helpCards/OfflineMode";
 import SearchResultsNotExist from "./helpCards/SearchResultsNotExist";
 
 const HelpCard = () => {
-  const user = useUser();
+  const user = useUserInfo();
   const { codeReviews } = useCodeReviews();
   const { searchedReviews } = useSearch();
 
@@ -19,11 +19,11 @@ const HelpCard = () => {
       return <SearchResultsNotExist />;
     }
 
-    if (!user.isLogin && codeReviews.length === 0) {
+    if (!user.data && codeReviews.length === 0) {
       return <FirstVisit />;
     }
 
-    if (!user.isLogin) {
+    if (!user.data) {
       return <OfflineMode />;
     }
 

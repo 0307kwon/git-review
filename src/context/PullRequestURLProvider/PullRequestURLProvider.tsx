@@ -3,9 +3,9 @@ import {
   requestUpdatePullRequestURLs,
   requestUserPullRequestURLs,
 } from "../../API/firebaseAPI";
+import useUserInfo from "../../hook/userInfo/useUserInfo";
 import { myFirebase } from "../../util/firebase";
 import { PullRequestURL, RequiredOnly } from "../../util/types";
-import useUser from "../UserProvider/useUser";
 
 interface Props {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export const Context = createContext<ContextValue | null>(null);
 const PullRequestURLProvider = ({ children }: Props) => {
   const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURL[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const user = useUser();
+  const user = useUserInfo();
 
   const deleteURL = async (url: string) => {
     const updatingURLs: { [url: string]: PullRequestURL } = {};
@@ -103,14 +103,14 @@ const PullRequestURLProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    if (!user.isLogin) {
+    if (!user.data) {
       setPullRequestURLs([]);
       setIsLoading(true);
       return;
     }
 
     refetchURLs();
-  }, [user.isLogin]);
+  }, [user.data]);
 
   return (
     <Context.Provider

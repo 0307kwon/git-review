@@ -4,7 +4,7 @@ import FlexContainer from "../../../component/@common/FlexContainer/FlexContaine
 import Input from "../../../component/Input/Input";
 import { LOCAL_STORAGE_KEY } from "../../../constant/common";
 import useModal from "../../../context/modalProvider/useModal";
-import useUser from "../../../context/UserProvider/useUser";
+import useUserInfo from "../../../hook/userInfo/useUserInfo";
 import {
   Form,
   SettingButton,
@@ -16,7 +16,7 @@ const TokenSettingModal = () => {
     localStorage.getItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN) || ""
   );
   const modal = useModal();
-  const user = useUser();
+  const user = useUserInfo();
 
   const handleSaveToken = async (event: FormEvent) => {
     event.preventDefault();

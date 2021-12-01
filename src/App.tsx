@@ -1,25 +1,26 @@
+import { Provider } from "react-redux";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import { Header, Main, RootContainer } from "./App.styles";
 import { ReactComponent as Logo } from "./asset/icon/logo.svg";
 import ErrorBoundary from "./component/@common/ErrorBoundary/ErrorBoundary";
 import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
-import Navigation from "./component/Navigation/Navigation";
+import UserProfile from "./component/UserProfile/UserProfile";
 import CodeReviewProvider from "./context/CodeReviewProvider/CodeReviewProvider";
 import ModalProvider from "./context/modalProvider/ModalProvider";
 import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequestURLProvider";
 import SnackbarProvider from "./context/snackbar/SnackbarProvider";
-import UserProvider from "./context/UserProvider/UserProvider";
 import FloatingView from "./FloatingView";
 import Home from "./page/Home/Home";
 import SearchProvider from "./page/Home/SearchProvider/SearchProvider";
 import Setting from "./page/Setting/Setting";
+import store from "./redux/store";
 
 function App() {
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <SnackbarProvider>
-          <UserProvider>
+    <Provider store={store}>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <SnackbarProvider>
             <PullRequestURLProvider>
               <CodeReviewProvider>
                 <ModalProvider>
@@ -31,7 +32,7 @@ function App() {
                           <h1 className="logo">GitReview</h1>
                         </FlexContainer>
                       </Link>
-                      <Navigation />
+                      <UserProfile />
                     </div>
                   </Header>
                   <RootContainer>
@@ -52,10 +53,10 @@ function App() {
                 </ModalProvider>
               </CodeReviewProvider>
             </PullRequestURLProvider>
-          </UserProvider>
-        </SnackbarProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+          </SnackbarProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </Provider>
   );
 }
 

@@ -10,7 +10,7 @@ import {
 import { REVIEW_COUNT_PER_PAGE } from "../../constant/common";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useSnackbar from "../../context/snackbar/useSnackbar";
-import useUser from "../../context/UserProvider/useUser";
+import useUserInfo from "../../hook/userInfo/useUserInfo";
 import { isSameURLPath } from "../../util/common";
 import { CodeReview } from "../../util/types";
 
@@ -38,7 +38,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     isLoading: isPRLoading,
     modifyURLs,
   } = usePullRequestURLs();
-  const { isLogin } = useUser();
+  const user = useUserInfo();
   const [isPageEnded, setIsPageEnded] = useState(false);
   const currentPageNumber = useRef(1);
   const snackbar = useSnackbar();
@@ -197,7 +197,7 @@ const CodeReviewProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    if (!isLogin) {
+    if (!user.data) {
       LoadCodeReviews();
       return;
     }
@@ -207,7 +207,7 @@ const CodeReviewProvider = ({ children }: Props) => {
     }
 
     syncOnlyUpdatedCodeReviewsInIDB();
-  }, [isPRLoading, isLogin]);
+  }, [isPRLoading, user.data]);
 
   return (
     <Context.Provider

@@ -10,7 +10,7 @@ import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
 import { PULL_REQUEST_URL } from "../../constant/validation";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
-import useUser from "../../context/UserProvider/useUser";
+import useUserInfo from "../../hook/userInfo/useUserInfo";
 import { PullRequestURL } from "../../util/types";
 import PullRequestHelpModal from "./PullRequestHelpModal/PullRequestHelpModal";
 import {
@@ -25,7 +25,7 @@ import TokenSettingModal from "./TokenSettingModal/TokenSettingModal";
 
 const Setting = () => {
   const { pullRequestURLs, addURL, refetchURLs } = usePullRequestURLs();
-  const user = useUser();
+  const user = useUserInfo();
   const modal = useModal();
   const [pullRequestFormData, setPullRequestFormData] = useState<
     Pick<PullRequestURL, "nickname" | "url">
@@ -34,13 +34,11 @@ const Setting = () => {
     url: "",
   });
 
-  const { userProfile } = user;
-
   useEffect(() => {
     refetchURLs();
   }, []);
 
-  if (!userProfile || !pullRequestURLs) {
+  if (!user.data || !pullRequestURLs) {
     return null;
   }
 
@@ -79,8 +77,8 @@ const Setting = () => {
   return (
     <SettingContainer>
       <AvatarContainer>
-        <SettingAvatar imgURL={userProfile.avatarURL} />
-        <p>{userProfile.nickname}</p>
+        <SettingAvatar imgURL={user.data.avatarURL} />
+        <p>{user.data.nickname}</p>
       </AvatarContainer>
       <SubTitleContainer>
         <FlexContainer gap="0.5rem" alignItems="center">
