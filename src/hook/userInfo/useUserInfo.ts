@@ -15,7 +15,14 @@ const useUserInfo = () => {
   const dispatch = useDispatch();
 
   const login = () => {
-    dispatch(actionLoginByPopup());
+    const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
+
+    if (!uid) {
+      dispatch(actionLoginByPopup());
+      return;
+    }
+
+    dispatch(actionLoginByUid(uid));
   };
 
   const logout = () => {
@@ -36,11 +43,7 @@ const useUserInfo = () => {
   };
 
   useEffect(() => {
-    const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
-
-    if (uid) {
-      dispatch(actionLoginByUid(uid));
-    }
+    login();
   }, []);
 
   return {

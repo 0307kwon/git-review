@@ -9,6 +9,19 @@ import {
   LOGIN_BY_UID,
 } from "./action";
 
+const setUseInfoInLocalStorage = (uid: string, profile: Profile) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY.UID, uid);
+
+  if (profile.githubToken) {
+    localStorage.setItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN, profile.githubToken);
+  }
+};
+
+const cleanupLocalStorage = () => {
+  localStorage.removeItem(LOCAL_STORAGE_KEY.UID);
+  localStorage.removeItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN);
+};
+
 function* loginByPopupSaga() {
   try {
     const {
@@ -16,21 +29,17 @@ function* loginByPopupSaga() {
       additionalUserInfo,
     } = yield call(firebaseAPI.getLoginDataByPopup);
 
-    let profile: Profile = yield call(firebaseAPI.getUserProfile, uid);
+    const profile: Profile = yield call(
+      firebaseAPI.getUserProfile,
+      uid,
+      additionalUserInfo
+    );
 
-    if (!profile) {
-      yield call(
-        firebaseAPI.registerAdditionalUserInfo,
-        additionalUserInfo,
-        uid
-      );
-      profile = yield call(firebaseAPI.getUserProfile, uid);
-    }
-
-    localStorage.setItem(LOCAL_STORAGE_KEY.UID, uid);
+    setUseInfoInLocalStorage(uid, profile);
 
     yield put(actionLoginSuccess(profile));
   } catch (error) {
+    cleanupLocalStorage();
     alert(error);
   }
 }
@@ -41,8 +50,11 @@ function* loginByUid(action: ReturnType<typeof actionLoginByUid>) {
   try {
     const profile: Profile = yield call(firebaseAPI.getUserProfile, uid);
 
+    setUseInfoInLocalStorage(uid, profile);
+
     yield put(actionLoginSuccess(profile));
   } catch (error) {
+    cleanupLocalStorage();
     alert(error);
   }
 }

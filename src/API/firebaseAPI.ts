@@ -1,5 +1,6 @@
 import { LOCAL_STORAGE_KEY } from "../constant/common";
 import { firestoreDB, myFirebase } from "../util/firebase";
+import { isProfile } from "../util/typeGuard";
 import { Profile, PullRequestURL } from "../util/types";
 
 interface GithubProfile {
@@ -13,17 +14,33 @@ const getLoginDataByPopup = () => {
   return myFirebase.auth().signInWithPopup(provider);
 };
 
-const getUserProfile = async (uid: string) => {
+const getUserProfile = async (
+  uid: string,
+  additionalUserInfo?: myFirebase.auth.AdditionalUserInfo
+) => {
   const result = await firestoreDB(uid)["user/profile"].get();
 
-  const userProfile = result.data();
+  const profile = result.data();
 
-  return userProfile;
+  if (isProfile(profile)) {
+    return profile;
+  }
+
+  if (!additionalUserInfo) {
+    throw new Error("서버에서 유저 정보를 찾을 수 없습니다.");
+  }
+
+  await registerAdditionalUserInfo(uid, additionalUserInfo);
+
+  const resultAfterReg = await firestoreDB(uid)["user/profile"].get();
+  const profileAfterReg = resultAfterReg.data();
+
+  return profileAfterReg;
 };
 
 const registerAdditionalUserInfo = (
-  additionalUserInfo: myFirebase.auth.AdditionalUserInfo,
-  uid: string
+  uid: string,
+  additionalUserInfo: myFirebase.auth.AdditionalUserInfo
 ) => {
   const profile = additionalUserInfo.profile;
   const nickname = additionalUserInfo.username;
