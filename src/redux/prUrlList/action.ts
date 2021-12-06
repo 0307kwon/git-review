@@ -84,7 +84,41 @@ type DeletePrUrlAction =
       typeof actionDeletePrUrlSuccess
     >;
 
+export const MODIFY_PR_URL_LIST = "PR_URL_LIST/MODIFY";
+export const MODIFY_PR_URL_LIST_SUCCESS = "PR_URL_LIST/MODIFY_SUCCESS";
+
+export const actionModifyPrUrlList = (
+  uid: string,
+  modifiedPrUrlList: PrUrl[]
+) => {
+  return {
+    type: MODIFY_PR_URL_LIST,
+    payload: {
+      uid,
+      modifiedPrUrlList,
+    },
+  };
+};
+
+export const actionModifyPrUrlListSuccess = (modifiedPrUrlMap: PrUrlMap) => {
+  return {
+    type: GET_PR_URL_LIST_SUCCESS,
+    payload: { modifiedPrUrlMap },
+  };
+};
+
+type ModifyPrUrlListAction =
+  | ActionWithPayloadFromCreator<
+      typeof MODIFY_PR_URL_LIST,
+      typeof actionModifyPrUrlList
+    >
+  | ActionWithPayloadFromCreator<
+      typeof MODIFY_PR_URL_LIST_SUCCESS,
+      typeof actionModifyPrUrlListSuccess
+    >;
+
 export type PrUrlListAction =
   | GetPrUrlListAction
   | AddPrUrlAction
-  | DeletePrUrlAction;
+  | DeletePrUrlAction
+  | ModifyPrUrlListAction;

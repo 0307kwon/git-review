@@ -5,6 +5,7 @@ import {
   ADD_PR_URL_SUCCESS,
   DELETE_PR_URL_SUCCESS,
   GET_PR_URL_LIST_SUCCESS,
+  MODIFY_PR_URL_LIST_SUCCESS,
   PrUrlListAction,
 } from "./action";
 
@@ -43,6 +44,14 @@ const PrUrlListReducer: Reducer<PrUrlListState, PrUrlListAction> = (
       return {
         ...state,
         byUrl: state.byUrl.delete(prUrl),
+      };
+    }
+    case MODIFY_PR_URL_LIST_SUCCESS: {
+      const { modifiedPrUrlMap } = action.payload;
+
+      return {
+        ...state,
+        byUrl: state.byUrl.merge(modifiedPrUrlMap),
       };
     }
     default: {

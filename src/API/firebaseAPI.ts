@@ -78,11 +78,10 @@ const getUserPrUrlList = async (uid: string): Promise<PrUrlMap> => {
   return Map(pullRequestURLs);
 };
 
-const updatePrUrl = (uid: string, prUrl: PrUrl) => {
+const addPrUrl = (uid: string, prUrl: PrUrl) => {
   const prUrlList = store.getState().prUrlList;
 
-  const prUrlMap =
-    prUrlList.byUrl?.set(prUrl.url, prUrl) || Map({ [prUrl.url]: prUrl });
+  const prUrlMap = prUrlList.byUrl.set(prUrl.url, prUrl);
 
   return firestoreDB(uid)["user/pullRequestURLs"].set(prUrlMap.toObject());
 };
@@ -90,9 +89,17 @@ const updatePrUrl = (uid: string, prUrl: PrUrl) => {
 const deletePrUrl = (uid: string, prUrl: string) => {
   const prUrlList = store.getState().prUrlList;
 
-  const prUrlMap = prUrlList.byUrl?.delete(prUrl) || Map({});
+  const prUrlMap = prUrlList.byUrl.delete(prUrl);
 
   return firestoreDB(uid)["user/pullRequestURLs"].set(prUrlMap.toObject());
+};
+
+const modifyPrUrlList = (uid: string, prUrlMap: PrUrlMap) => {
+  const prUrlList = store.getState().prUrlList;
+
+  const newPrUrlMap = prUrlList.byUrl.merge(prUrlMap);
+
+  return firestoreDB(uid)["user/pullRequestURLs"].set(newPrUrlMap.toObject());
 };
 
 const firebaseAPI = {
@@ -100,8 +107,9 @@ const firebaseAPI = {
   getUserProfile,
   registerAdditionalUserInfo,
   getUserPrUrlList,
-  updatePrUrl,
+  addPrUrl,
   deletePrUrl,
+  modifyPrUrlList,
 };
 
 export default firebaseAPI;

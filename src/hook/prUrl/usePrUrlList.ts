@@ -4,6 +4,7 @@ import {
   actionAddPrUrl,
   actionDeletePrUrl,
   actionGetUrlList,
+  actionModifyPrUrlList,
 } from "../../redux/prUrlList/action";
 import { useAppSelector } from "../../redux/util";
 import { myFirebase } from "../../util/firebase";
@@ -14,6 +15,14 @@ const usePrUrlList = () => {
   const prUrlMap = useAppSelector(({ prUrlList }) => prUrlList.byUrl);
   const profile = useAppSelector(({ loginInfo }) => loginInfo.data);
   const dispatch = useDispatch();
+
+  const modifyUrlList = (urlList: PrUrl[]) => {
+    if (!profile) {
+      return;
+    }
+
+    dispatch(actionModifyPrUrlList(profile.uid, urlList));
+  };
 
   const deleteUrl = (url: string) => {
     if (!profile) {
@@ -56,6 +65,7 @@ const usePrUrlList = () => {
 
   return {
     data: prUrlMap,
+    modifyUrlList,
     deleteUrl,
     addUrl,
     refetchUrls,
