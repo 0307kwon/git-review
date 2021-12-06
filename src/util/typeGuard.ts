@@ -1,7 +1,7 @@
-import { Profile } from "./types";
+import { ProfileResponse } from "./types";
 
-export const isProfile = (item: any): item is Profile => {
-  const profile: Profile = {
+export const isProfileResponse = (item: any): item is ProfileResponse => {
+  const profile: ProfileResponse = {
     avatarURL: "",
     nickname: "",
     githubToken: "",

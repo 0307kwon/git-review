@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import firebaseAPI from "../../API/firebaseAPI";
 import { LOCAL_STORAGE_KEY } from "../../constant/common";
-import { Profile } from "../../util/types";
+import { Profile, ProfileResponse } from "../../util/types";
 import {
   actionLoginByUid,
   actionLoginSuccess,
@@ -9,8 +9,8 @@ import {
   LOGIN_BY_UID,
 } from "./action";
 
-const setUseInfoInLocalStorage = (uid: string, profile: Profile) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY.UID, uid);
+const setUseInfoInLocalStorage = (profile: Profile) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY.UID, profile.uid);
 
   if (profile.githubToken) {
     localStorage.setItem(LOCAL_STORAGE_KEY.GITHUB_TOKEN, profile.githubToken);
@@ -35,7 +35,7 @@ function* loginByPopupSaga() {
       additionalUserInfo
     );
 
-    setUseInfoInLocalStorage(uid, profile);
+    setUseInfoInLocalStorage(profile);
 
     yield put(actionLoginSuccess(profile));
   } catch (error) {
@@ -50,7 +50,7 @@ function* loginByUid(action: ReturnType<typeof actionLoginByUid>) {
   try {
     const profile: Profile = yield call(firebaseAPI.getUserProfile, uid);
 
-    setUseInfoInLocalStorage(uid, profile);
+    setUseInfoInLocalStorage(profile);
 
     yield put(actionLoginSuccess(profile));
   } catch (error) {

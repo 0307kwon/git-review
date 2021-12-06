@@ -46,13 +46,17 @@ export interface CodeReview extends CodeReviewFromGithub {
   urlNickname: string;
 }
 
-export interface Profile {
+export interface ProfileResponse {
   nickname: string;
   avatarURL: string;
   githubToken?: string;
 }
 
-export interface PullRequestURL {
+export interface Profile extends ProfileResponse {
+  uid: string;
+}
+
+export interface PrUrl {
   url: string;
   nickname: string;
   modificationTime: myFirebase.firestore.Timestamp;

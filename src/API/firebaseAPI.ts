@@ -1,7 +1,8 @@
 import { LOCAL_STORAGE_KEY } from "../constant/common";
+import { ERROR_MSG } from "../constant/message";
 import { firestoreDB, myFirebase } from "../util/firebase";
-import { isProfile } from "../util/typeGuard";
-import { Profile, PullRequestURL } from "../util/types";
+import { isProfileResponse } from "../util/typeGuard";
+import { Profile, PrUrl } from "../util/types";
 
 interface GithubProfile {
   name: string;
@@ -17,17 +18,20 @@ const getLoginDataByPopup = () => {
 const getUserProfile = async (
   uid: string,
   additionalUserInfo?: myFirebase.auth.AdditionalUserInfo
-) => {
+): Promise<Profile> => {
   const result = await firestoreDB(uid)["user/profile"].get();
 
   const profile = result.data();
 
-  if (isProfile(profile)) {
-    return profile;
+  if (isProfileResponse(profile)) {
+    return {
+      uid,
+      ...profile,
+    };
   }
 
   if (!additionalUserInfo) {
-    throw new Error("서버에서 유저 정보를 찾을 수 없습니다.");
+    throw new Error(ERROR_MSG.NOT_EXIST_PROFILE);
   }
 
   await registerAdditionalUserInfo(uid, additionalUserInfo);
@@ -35,7 +39,14 @@ const getUserProfile = async (
   const resultAfterReg = await firestoreDB(uid)["user/profile"].get();
   const profileAfterReg = resultAfterReg.data();
 
-  return profileAfterReg;
+  if (!profileAfterReg) {
+    throw new Error(ERROR_MSG.NOT_EXIST_PROFILE);
+  }
+
+  return {
+    uid,
+    ...profileAfterReg,
+  };
 };
 
 const registerAdditionalUserInfo = (
@@ -53,10 +64,23 @@ const registerAdditionalUserInfo = (
   }
 };
 
+const requestUserPullRequestURLs = async (uid: string): Promise<PrUrl[]> => {
+  const result = await firestoreDB(uid)["user/pullRequestURLs"].get();
+
+  const pullRequestURLs = result.data();
+
+  if (!pullRequestURLs) {
+    return [];
+  }
+
+  return Object.values(pullRequestURLs);
+};
+
 const firebaseAPI = {
   getLoginDataByPopup,
   getUserProfile,
   registerAdditionalUserInfo,
+  requestUserPullRequestURLs,
 };
 
 export default firebaseAPI;
@@ -73,24 +97,8 @@ export const requestUpdateUserProfile = async (profile: Profile) => {
   return firestoreDB(uid)["user/profile"].update(profile);
 };
 
-export const requestUserPullRequestURLs = async () => {
-  const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
-
-  if (!uid) {
-    alert("로그인 정보가 만료되었습니다.");
-
-    return;
-  }
-
-  const result = await firestoreDB(uid)["user/pullRequestURLs"].get();
-
-  const pullRequestURLs = result.data();
-
-  return pullRequestURLs;
-};
-
 export const requestUpdatePullRequestURLs = (pullRequestURLs: {
-  [url: string]: PullRequestURL;
+  [url: string]: PrUrl;
 }) => {
   const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
 
