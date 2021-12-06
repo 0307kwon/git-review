@@ -1,22 +1,19 @@
 import React, { createContext, useEffect, useState } from "react";
-import {
-  requestUpdatePullRequestURLs,
-  requestUserPullRequestURLs,
-} from "../../API/firebaseAPI";
+import { updatePrUrl, getUserPrUrlList } from "../../API/firebaseAPI";
 import useUserInfo from "../../hook/userInfo/useUserInfo";
 import { myFirebase } from "../../util/firebase";
-import { PullRequestURL, RequiredOnly } from "../../util/types";
+import { PrUrl, RequiredOnly } from "../../util/types";
 
 interface Props {
   children: React.ReactNode;
 }
 
 interface ContextValue {
-  pullRequestURLs: PullRequestURL[];
+  pullRequestURLs: PrUrl[];
   isLoading: boolean;
   deleteURL: (url: string) => Promise<void>;
   addURL: (nickname: string, url: string) => Promise<void>;
-  modifyURLs: (urls: RequiredOnly<PullRequestURL, "url">[]) => Promise<void>;
+  modifyURLs: (urls: RequiredOnly<PrUrl, "url">[]) => Promise<void>;
   resetFailedURLs: () => Promise<void>;
   refetchURLs: () => Promise<void>;
 }
@@ -24,12 +21,12 @@ interface ContextValue {
 export const Context = createContext<ContextValue | null>(null);
 
 const PullRequestURLProvider = ({ children }: Props) => {
-  const [pullRequestURLs, setPullRequestURLs] = useState<PullRequestURL[]>([]);
+  const [pullRequestURLs, setPullRequestURLs] = useState<PrUrl[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const user = useUserInfo();
 
   const deleteURL = async (url: string) => {
-    const updatingURLs: { [url: string]: PullRequestURL } = {};
+    const updatingURLs: { [url: string]: PrUrl } = {};
 
     pullRequestURLs.forEach((pullRequestURL) => {
       updatingURLs[pullRequestURL.url] = pullRequestURL;
@@ -37,17 +34,17 @@ const PullRequestURLProvider = ({ children }: Props) => {
 
     delete updatingURLs[url];
 
-    await requestUpdatePullRequestURLs(updatingURLs);
+    await updatePrUrl(updatingURLs);
   };
 
   const addURL = async (nickname: string, url: string) => {
-    const updatingURLs: { [url: string]: PullRequestURL } = {};
+    const updatingURLs: { [url: string]: PrUrl } = {};
 
     pullRequestURLs.forEach((pullRequestURL) => {
       updatingURLs[pullRequestURL.url] = pullRequestURL;
     });
 
-    await requestUpdatePullRequestURLs({
+    await updatePrUrl({
       ...updatingURLs,
       [url]: {
         url,
@@ -58,8 +55,8 @@ const PullRequestURLProvider = ({ children }: Props) => {
     });
   };
 
-  const modifyURLs = async (urls: RequiredOnly<PullRequestURL, "url">[]) => {
-    const updatingURLsInFirebase: { [url: string]: PullRequestURL } = {};
+  const modifyURLs = async (urls: RequiredOnly<PrUrl, "url">[]) => {
+    const updatingURLsInFirebase: { [url: string]: PrUrl } = {};
 
     pullRequestURLs.forEach((pullRequestURL) => {
       updatingURLsInFirebase[pullRequestURL.url] = pullRequestURL;
@@ -72,7 +69,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
       };
     });
 
-    await requestUpdatePullRequestURLs(updatingURLsInFirebase);
+    await updatePrUrl(updatingURLsInFirebase);
   };
 
   const resetFailedURLs = async () => {
@@ -85,7 +82,7 @@ const PullRequestURLProvider = ({ children }: Props) => {
   };
 
   const refetchURLs = async () => {
-    const pullRequestURLs = await requestUserPullRequestURLs();
+    const pullRequestURLs = await getUserPrUrlList();
 
     if (pullRequestURLs) {
       const urls = Object.values(pullRequestURLs).sort(

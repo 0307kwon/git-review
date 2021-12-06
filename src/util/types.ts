@@ -1,3 +1,4 @@
+import { Map } from "immutable";
 import { myFirebase } from "./firebase";
 
 export interface PullRequest {
@@ -62,6 +63,8 @@ export interface PrUrl {
   modificationTime: myFirebase.firestore.Timestamp;
   isFailedURL: boolean;
 }
+
+export type PrUrlMap = Map<string, PrUrl>;
 
 export interface HttpResponse<T> {
   endPointURL: string;

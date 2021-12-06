@@ -7,11 +7,11 @@ import IconButton from "../../component/@common/IconButton/IconButton";
 import Input from "../../component/Input/Input";
 import URLCard from "../../component/URLCard/URLCard";
 import URLCardTemplate from "../../component/URLCardTemplate/URLCardTemplate";
-import { PULL_REQUEST_URL } from "../../constant/validation";
+import { PR_URL } from "../../constant/validation";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useUserInfo from "../../hook/userInfo/useUserInfo";
-import { PullRequestURL } from "../../util/types";
+import { PrUrl } from "../../util/types";
 import PullRequestHelpModal from "./PullRequestHelpModal/PullRequestHelpModal";
 import {
   AvatarContainer,
@@ -28,7 +28,7 @@ const Setting = () => {
   const user = useUserInfo();
   const modal = useModal();
   const [pullRequestFormData, setPullRequestFormData] = useState<
-    Pick<PullRequestURL, "nickname" | "url">
+    Pick<PrUrl, "nickname" | "url">
   >({
     nickname: "",
     url: "",
@@ -42,7 +42,7 @@ const Setting = () => {
     return null;
   }
 
-  const handleChangeInput = (key: keyof PullRequestURL) => (
+  const handleChangeInput = (key: keyof PrUrl) => (
     event: ChangeEvent<HTMLInputElement>
   ) => {
     setPullRequestFormData({
@@ -112,9 +112,9 @@ const Setting = () => {
                 <Input
                   value={pullRequestFormData.nickname}
                   onChange={handleChangeInput("nickname")}
-                  maxLength={PULL_REQUEST_URL.MAX_NICKNAME_LENGTH}
+                  maxLength={PR_URL.MAX_NICKNAME_LENGTH}
                   required
-                  placeholder={`PR 별칭(${PULL_REQUEST_URL.MAX_NICKNAME_LENGTH}자 이내)`}
+                  placeholder={`PR 별칭(${PR_URL.MAX_NICKNAME_LENGTH}자 이내)`}
                 />
               ),
               content: (

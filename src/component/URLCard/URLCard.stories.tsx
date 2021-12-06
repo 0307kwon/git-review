@@ -1,6 +1,6 @@
 import React from "react";
 import { myFirebase } from "../../util/firebase";
-import { PullRequestURL } from "../../util/types";
+import { PrUrl } from "../../util/types";
 import URLCard from "./URLCard";
 
 export default {
@@ -8,7 +8,7 @@ export default {
   title: "Components/URLCard",
 };
 
-const pullRequestURL: PullRequestURL = {
+const pullRequestURL: PrUrl = {
   isFailedURL: false,
   nickname: "하하",
   url: "naver.com",

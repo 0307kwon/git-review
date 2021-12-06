@@ -1,8 +1,10 @@
+import { Map } from "immutable";
 import { LOCAL_STORAGE_KEY } from "../constant/common";
 import { ERROR_MSG } from "../constant/message";
+import store from "../redux/store";
 import { firestoreDB, myFirebase } from "../util/firebase";
 import { isProfileResponse } from "../util/typeGuard";
-import { Profile, PrUrl } from "../util/types";
+import { Profile, PrUrl, PrUrlMap } from "../util/types";
 
 interface GithubProfile {
   name: string;
@@ -64,23 +66,33 @@ const registerAdditionalUserInfo = (
   }
 };
 
-const requestUserPullRequestURLs = async (uid: string): Promise<PrUrl[]> => {
+const getUserPrUrlList = async (uid: string): Promise<PrUrlMap> => {
   const result = await firestoreDB(uid)["user/pullRequestURLs"].get();
 
   const pullRequestURLs = result.data();
 
   if (!pullRequestURLs) {
-    return [];
+    return Map({});
   }
 
-  return Object.values(pullRequestURLs);
+  return Map(pullRequestURLs);
+};
+
+const updatePrUrl = (uid: string, prUrl: PrUrl) => {
+  const prUrlList = store.getState().prUrlList;
+
+  const prUrlMap =
+    prUrlList.byUrl?.set(prUrl.url, prUrl) || Map({ [prUrl.url]: prUrl });
+
+  return firestoreDB(uid)["user/pullRequestURLs"].set(prUrlMap.toObject());
 };
 
 const firebaseAPI = {
   getLoginDataByPopup,
   getUserProfile,
   registerAdditionalUserInfo,
-  requestUserPullRequestURLs,
+  getUserPrUrlList,
+  updatePrUrl,
 };
 
 export default firebaseAPI;
@@ -95,18 +107,4 @@ export const requestUpdateUserProfile = async (profile: Profile) => {
   }
 
   return firestoreDB(uid)["user/profile"].update(profile);
-};
-
-export const requestUpdatePullRequestURLs = (pullRequestURLs: {
-  [url: string]: PrUrl;
-}) => {
-  const uid = localStorage.getItem(LOCAL_STORAGE_KEY.UID);
-
-  if (!uid) {
-    alert("로그인 정보가 만료되었습니다.");
-
-    return;
-  }
-
-  return firestoreDB(uid)["user/pullRequestURLs"].set(pullRequestURLs);
 };

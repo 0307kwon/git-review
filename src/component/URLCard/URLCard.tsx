@@ -2,10 +2,10 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { ModifyCodeReviewIDB } from "../../API/indexedDB";
 import { ReactComponent as DeleteIcon } from "../../asset/icon/cancel.svg";
 import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
-import { PULL_REQUEST_URL } from "../../constant/validation";
+import { PR_URL } from "../../constant/validation";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useSnackbar from "../../context/snackbar/useSnackbar";
-import { PullRequestURL } from "../../util/types";
+import { PrUrl } from "../../util/types";
 import { Anchor } from "../@common/Anchor/Anchor";
 import Button from "../@common/Button/Button";
 import IconButton from "../@common/IconButton/IconButton";
@@ -14,14 +14,14 @@ import URLCardTemplate from "../URLCardTemplate/URLCardTemplate";
 import { URLCardForm, URLParagraph } from "./URLCard.styles";
 
 interface Props {
-  pullRequestURL: PullRequestURL;
+  pullRequestURL: PrUrl;
 }
 
 const URLCard = ({ pullRequestURL }: Props) => {
   const { modifyURLs, deleteURL, refetchURLs } = usePullRequestURLs();
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [pullRequestFormData, setPullRequestFormData] = useState<
-    Pick<PullRequestURL, "nickname" | "url">
+    Pick<PrUrl, "nickname" | "url">
   >({
     nickname: pullRequestURL.nickname,
     url: pullRequestURL.url,
@@ -52,7 +52,7 @@ const URLCard = ({ pullRequestURL }: Props) => {
     setIsModifyMode(false);
   };
 
-  const handleChangeInput = (key: keyof PullRequestURL) => (
+  const handleChangeInput = (key: keyof PrUrl) => (
     event: ChangeEvent<HTMLInputElement>
   ) => {
     setPullRequestFormData({
@@ -71,7 +71,7 @@ const URLCard = ({ pullRequestURL }: Props) => {
                 <Input
                   value={pullRequestFormData.nickname}
                   onChange={handleChangeInput("nickname")}
-                  maxLength={PULL_REQUEST_URL.MAX_NICKNAME_LENGTH}
+                  maxLength={PR_URL.MAX_NICKNAME_LENGTH}
                   required
                   placeholder="PR 별칭"
                 />

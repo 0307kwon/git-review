@@ -21,38 +21,36 @@ function App() {
       <ErrorBoundary>
         <BrowserRouter>
           <SnackbarProvider>
-            <PullRequestURLProvider>
-              <CodeReviewProvider>
-                <ModalProvider>
-                  <Header>
-                    <div>
-                      <Link to="/">
-                        <FlexContainer alignItems="center" gap="0.5rem">
-                          <Logo />
-                          <h1 className="logo">GitReview</h1>
-                        </FlexContainer>
-                      </Link>
-                      <UserProfile />
-                    </div>
-                  </Header>
-                  <RootContainer>
-                    <Main>
-                      <Switch>
-                        <Route exact path="/">
-                          <SearchProvider>
-                            <Home />
-                          </SearchProvider>
-                        </Route>
-                        <Route path="/setting">
-                          <Setting />
-                        </Route>
-                      </Switch>
-                    </Main>
-                    <FloatingView />
-                  </RootContainer>
-                </ModalProvider>
-              </CodeReviewProvider>
-            </PullRequestURLProvider>
+            <CodeReviewProvider>
+              <ModalProvider>
+                <Header>
+                  <div>
+                    <Link to="/">
+                      <FlexContainer alignItems="center" gap="0.5rem">
+                        <Logo />
+                        <h1 className="logo">GitReview</h1>
+                      </FlexContainer>
+                    </Link>
+                    <UserProfile />
+                  </div>
+                </Header>
+                <RootContainer>
+                  <Main>
+                    <Switch>
+                      <Route exact path="/">
+                        <SearchProvider>
+                          <Home />
+                        </SearchProvider>
+                      </Route>
+                      <Route path="/setting">
+                        <Setting />
+                      </Route>
+                    </Switch>
+                  </Main>
+                  <FloatingView />
+                </RootContainer>
+              </ModalProvider>
+            </CodeReviewProvider>
           </SnackbarProvider>
         </BrowserRouter>
       </ErrorBoundary>
