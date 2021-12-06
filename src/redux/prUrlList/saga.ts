@@ -4,9 +4,12 @@ import { PrUrl, PrUrlMap } from "../../util/types";
 import {
   actionAddPrUrl,
   actionAddPrUrlSuccess,
+  actionDeletePrUrl,
+  actionDeletePrUrlSuccess,
   actionGetUrlList,
   actionGetUrlListSuccess,
   ADD_PR_URL,
+  DELETE_PR_URL,
   GET_PR_URL_LIST,
 } from "./action";
 
@@ -37,9 +40,22 @@ function* addPrUrl(action: ReturnType<typeof actionAddPrUrl>) {
   }
 }
 
+function* deletePrUrl(action: ReturnType<typeof actionDeletePrUrl>) {
+  try {
+    const { uid, prUrl } = action.payload;
+
+    yield call(firebaseAPI.deletePrUrl, uid, prUrl);
+
+    yield put(actionDeletePrUrlSuccess(prUrl));
+  } catch (error) {
+    alert(error);
+  }
+}
+
 function* prUrlListSaga() {
   yield takeLatest(GET_PR_URL_LIST, getPrUrlList);
   yield takeEvery(ADD_PR_URL, addPrUrl);
+  yield takeEvery(DELETE_PR_URL, deletePrUrl);
 }
 
 export default prUrlListSaga;

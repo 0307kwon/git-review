@@ -1,18 +1,19 @@
 import { Map } from "immutable";
 import { Reducer } from "redux";
-import { PrUrl, PrUrlMap } from "../../util/types";
+import { PrUrlMap } from "../../util/types";
 import {
   ADD_PR_URL_SUCCESS,
+  DELETE_PR_URL_SUCCESS,
   GET_PR_URL_LIST_SUCCESS,
   PrUrlListAction,
 } from "./action";
 
 interface PrUrlListState {
-  byUrl: PrUrlMap | null;
+  byUrl: PrUrlMap;
 }
 
 const initialState: PrUrlListState = {
-  byUrl: null,
+  byUrl: Map({}),
 };
 
 const PrUrlListReducer: Reducer<PrUrlListState, PrUrlListAction> = (
@@ -33,9 +34,15 @@ const PrUrlListReducer: Reducer<PrUrlListState, PrUrlListAction> = (
 
       return {
         ...state,
-        byUrl:
-          state.byUrl?.set(newPrUrl.url, newPrUrl) ||
-          Map({ [newPrUrl.url]: newPrUrl }),
+        byUrl: state.byUrl.set(newPrUrl.url, newPrUrl),
+      };
+    }
+    case DELETE_PR_URL_SUCCESS: {
+      const { prUrl } = action.payload;
+
+      return {
+        ...state,
+        byUrl: state.byUrl.delete(prUrl),
       };
     }
     default: {

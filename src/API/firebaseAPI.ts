@@ -87,12 +87,21 @@ const updatePrUrl = (uid: string, prUrl: PrUrl) => {
   return firestoreDB(uid)["user/pullRequestURLs"].set(prUrlMap.toObject());
 };
 
+const deletePrUrl = (uid: string, prUrl: string) => {
+  const prUrlList = store.getState().prUrlList;
+
+  const prUrlMap = prUrlList.byUrl?.delete(prUrl) || Map({});
+
+  return firestoreDB(uid)["user/pullRequestURLs"].set(prUrlMap.toObject());
+};
+
 const firebaseAPI = {
   getLoginDataByPopup,
   getUserProfile,
   registerAdditionalUserInfo,
   getUserPrUrlList,
   updatePrUrl,
+  deletePrUrl,
 };
 
 export default firebaseAPI;

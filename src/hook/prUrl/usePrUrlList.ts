@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { actionAddPrUrl, actionGetUrlList } from "../../redux/prUrlList/action";
+import {
+  actionAddPrUrl,
+  actionDeletePrUrl,
+  actionGetUrlList,
+} from "../../redux/prUrlList/action";
 import { useAppSelector } from "../../redux/util";
 import { myFirebase } from "../../util/firebase";
 import { PrUrl } from "../../util/types";
@@ -10,6 +14,14 @@ const usePrUrlList = () => {
   const prUrlMap = useAppSelector(({ prUrlList }) => prUrlList.byUrl);
   const profile = useAppSelector(({ loginInfo }) => loginInfo.data);
   const dispatch = useDispatch();
+
+  const deleteUrl = (url: string) => {
+    if (!profile) {
+      return;
+    }
+
+    dispatch(actionDeletePrUrl(profile.uid, url));
+  };
 
   const addUrl = (nickname: string, url: string) => {
     if (!profile) {
@@ -44,8 +56,9 @@ const usePrUrlList = () => {
 
   return {
     data: prUrlMap,
-    refetchUrls,
+    deleteUrl,
     addUrl,
+    refetchUrls,
   };
 };
 

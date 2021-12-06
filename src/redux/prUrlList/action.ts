@@ -57,4 +57,34 @@ type AddPrUrlAction =
       typeof actionAddPrUrlSuccess
     >;
 
-export type PrUrlListAction = GetPrUrlListAction | AddPrUrlAction;
+export const DELETE_PR_URL = "PR_URL_LIST/DELETE_URL";
+export const DELETE_PR_URL_SUCCESS = "PR_URL_LIST/DELETE_URL_SUCCESS";
+
+export const actionDeletePrUrl = (uid: string, prUrl: string) => {
+  return {
+    type: DELETE_PR_URL,
+    payload: {
+      uid,
+      prUrl,
+    },
+  };
+};
+
+export const actionDeletePrUrlSuccess = (prUrl: string) => {
+  return {
+    type: GET_PR_URL_LIST_SUCCESS,
+    payload: { prUrl },
+  };
+};
+
+type DeletePrUrlAction =
+  | ActionWithPayloadFromCreator<typeof DELETE_PR_URL, typeof actionDeletePrUrl>
+  | ActionWithPayloadFromCreator<
+      typeof DELETE_PR_URL_SUCCESS,
+      typeof actionDeletePrUrlSuccess
+    >;
+
+export type PrUrlListAction =
+  | GetPrUrlListAction
+  | AddPrUrlAction
+  | DeletePrUrlAction;
