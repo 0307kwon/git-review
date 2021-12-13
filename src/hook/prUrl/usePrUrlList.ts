@@ -12,7 +12,16 @@ import { PrUrl } from "../../util/types";
 
 const usePrUrlList = () => {
   // TODO: prUrl 수정 시간 내림차순으로 나열해야함
-  const prUrlMap = useAppSelector(({ prUrlList }) => prUrlList.byUrl);
+  const prUrls = useAppSelector(({ prUrlList }) =>
+    prUrlList.byUrl
+      .toList()
+      .toArray()
+      .sort(
+        (urlA, urlB) =>
+          urlB.modificationTime.toDate().getMilliseconds() -
+          urlA.modificationTime.toDate().getMilliseconds()
+      )
+  );
   const profile = useAppSelector(({ loginInfo }) => loginInfo.data);
   const dispatch = useDispatch();
 
@@ -55,6 +64,19 @@ const usePrUrlList = () => {
     dispatch(actionGetUrlList(profile.uid));
   };
 
+  const resetFailedUrls = () => {
+    if (!profile) {
+      return;
+    }
+
+    dispatch(
+      actionModifyPrUrlList(
+        profile.uid,
+        prUrls.map((url) => ({ ...url, isFailedURL: false }))
+      )
+    );
+  };
+
   useEffect(() => {
     if (!profile) {
       return;
@@ -64,10 +86,11 @@ const usePrUrlList = () => {
   }, [profile]);
 
   return {
-    data: prUrlMap,
+    data: prUrls,
     modifyUrlList,
-    deleteUrl,
+    resetFailedUrls,
     addUrl,
+    deleteUrl,
     refetchUrls,
   };
 };

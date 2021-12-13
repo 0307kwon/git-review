@@ -7,7 +7,6 @@ import FlexContainer from "./component/@common/FlexContainer/FlexContainer";
 import UserProfile from "./component/UserProfile/UserProfile";
 import CodeReviewProvider from "./context/CodeReviewProvider/CodeReviewProvider";
 import ModalProvider from "./context/modalProvider/ModalProvider";
-import PullRequestURLProvider from "./context/PullRequestURLProvider/PullRequestURLProvider";
 import SnackbarProvider from "./context/snackbar/SnackbarProvider";
 import FloatingView from "./FloatingView";
 import Home from "./page/Home/Home";
