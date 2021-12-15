@@ -1,4 +1,4 @@
-import { PrUrl, PrUrlMap } from "../../util/types";
+import { PrUrl, PrUrlMap } from "../../constant/types";
 import { ActionWithPayloadFromCreator } from "../type";
 
 export const GET_PR_URL_LIST = "PR_URL_LIST/GET";

@@ -1,6 +1,6 @@
 import React from "react";
 import { myFirebase } from "../../util/firebase";
-import { PrUrl } from "../../util/types";
+import { PrUrl } from "../../constant/types";
 import URLCard from "./URLCard";
 
 export default {

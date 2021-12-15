@@ -5,7 +5,7 @@ import Select from "../../../component/@common/Select/Select";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
 import useDebounce from "../../../hook/useDebounce";
-import { SearchFilter } from "../../../util/types";
+import { SearchFilter } from "../../../constant/types";
 import useSearch from "../SearchProvider/useSearch";
 import {
   SearchInput,

@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { Profile } from "../../util/types";
+import { Profile } from "../../constant/types";
 import { LoginInfoAction, LOGIN_SUCCESS, LOGOUT } from "./action";
 
 interface LoginInfoState {

@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import firebaseAPI from "../../API/firebaseAPI";
 import { LOCAL_STORAGE_KEY } from "../../constant/common";
-import { Profile, ProfileResponse } from "../../util/types";
+import { Profile, ProfileResponse } from "../../constant/types";
 import {
   actionLoginByUid,
   actionLoginSuccess,

@@ -1,6 +1,6 @@
 import React, { useState, VFC } from "react";
 import useIntersectionObserver from "../../hook/useIntersectionObserver";
-import { CodeReview } from "../../util/types";
+import { CodeReview } from "../../constant/types";
 import Avatar from "../@common/Avatar/Avatar";
 import MarkDown from "../@common/MarkDown/MarkDown";
 import {

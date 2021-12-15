@@ -8,7 +8,7 @@ import {
   actionLogout,
 } from "../../redux/loginInfo/action";
 import { useAppSelector } from "../../redux/util";
-import { Profile } from "../../util/types";
+import { Profile } from "../../constant/types";
 
 const useUserInfo = () => {
   const { data } = useAppSelector(({ loginInfo }) => loginInfo);

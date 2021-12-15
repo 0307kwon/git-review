@@ -2,7 +2,7 @@ import "firebase/analytics";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { Profile, ProfileResponse, PrUrl } from "./types";
+import { Profile, ProfileResponse, PrUrl } from "../constant/types";
 
 var firebaseConfig = {
   apiKey: "AIzaSyDTFo4T2WV0fTHj8CJnn25TGMcy1-mGZD8",

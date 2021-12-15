@@ -1,7 +1,7 @@
 import React, { ReactNode, useRef, useState } from "react";
 import { searchByInIDB } from "../../../API/indexedDB";
 import { REVIEW_COUNT_PER_PAGE } from "../../../constant/common";
-import { CodeReview, SearchFilter } from "../../../util/types";
+import { CodeReview, SearchFilter } from "../../../constant/types";
 
 interface ContextValue {
   searchedReviews: CodeReview[] | null;

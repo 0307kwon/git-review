@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { DUMMY_REVIEWS } from "../../constant/dummy";
 import useModal from "../../context/modalProvider/useModal";
-import { CodeReview } from "../../util/types";
+import { CodeReview } from "../../constant/types";
 import ReviewDetailModal from "./ReviewDetailModal";
 
 export default {

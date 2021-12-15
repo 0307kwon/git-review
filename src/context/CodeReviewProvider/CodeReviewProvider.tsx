@@ -12,7 +12,7 @@ import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequ
 import useSnackbar from "../../context/snackbar/useSnackbar";
 import useUserInfo from "../../hook/userInfo/useUserInfo";
 import { isSameURLPath } from "../../util/common";
-import { CodeReview } from "../../util/types";
+import { CodeReview } from "../../constant/types";
 
 interface Props {
   children: React.ReactNode;
@@ -44,9 +44,7 @@ const CodeReviewProvider = ({ children }: Props) => {
   const snackbar = useSnackbar();
 
   const onError = async (failedURLs: string[]) => {
-    alert(
-      "한 개 이상의 URL을 불러오는데 실패했습니다.\ngithub token이 등록되어있는지 확인해보세요!"
-    );
+    alert();
 
     await modifyURLs(
       failedURLs.map((url) => ({
@@ -214,10 +212,10 @@ const CodeReviewProvider = ({ children }: Props) => {
       value={{
         codeReviews,
         isLoading,
-        isPageEnded,
-        readAdditionalReviews,
         syncOnlyUpdatedCodeReviewsInIDB,
         forcedSyncAllCodeReviewInIDB,
+        isPageEnded,
+        readAdditionalReviews,
       }}
     >
       {children}

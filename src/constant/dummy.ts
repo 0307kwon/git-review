@@ -1,5 +1,5 @@
 import { genNewId } from "../util/common";
-import { Author, CodeReview } from "../util/types";
+import { Author, CodeReview } from "./types";
 
 const getNewId = genNewId();
 

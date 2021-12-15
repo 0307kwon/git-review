@@ -4,7 +4,7 @@ import { ERROR_MSG } from "../constant/message";
 import store from "../redux/store";
 import { firestoreDB, myFirebase } from "../util/firebase";
 import { isProfileResponse } from "../util/typeGuard";
-import { Profile, PrUrl, PrUrlMap } from "../util/types";
+import { Profile, PrUrl, PrUrlMap } from "../constant/types";
 
 interface GithubProfile {
   name: string;

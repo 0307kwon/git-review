@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { searchByInIDB } from "../API/indexedDB";
 import { REVIEW_COUNT_PER_PAGE } from "../constant/common";
-import { CodeReview } from "../util/types";
+import { CodeReview } from "../constant/types";
 
 const useReviewSearchEngine = () => {
   const [searchedReviews, setSearchedReviews] = useState<CodeReview[]>([]);

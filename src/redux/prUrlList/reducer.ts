@@ -1,6 +1,6 @@
 import { Map } from "immutable";
 import { Reducer } from "redux";
-import { PrUrlMap } from "../../util/types";
+import { PrUrlMap } from "../../constant/types";
 import {
   ADD_PR_URL_SUCCESS,
   DELETE_PR_URL_SUCCESS,

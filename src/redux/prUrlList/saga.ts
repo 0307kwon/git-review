@@ -1,7 +1,7 @@
 import { call, put, takeEvery, takeLatest } from "@redux-saga/core/effects";
 import { Map } from "immutable";
 import firebaseAPI from "../../API/firebaseAPI";
-import { PrUrlMap } from "../../util/types";
+import { PrUrlMap } from "../../constant/types";
 import {
   actionAddPrUrl,
   actionAddPrUrlSuccess,

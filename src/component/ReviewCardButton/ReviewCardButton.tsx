@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes } from "react";
-import { CodeReview } from "../../util/types";
+import { CodeReview } from "../../constant/types";
 import ReviewCard from "../ReviewCard/ReviewCard";
 import { RootDiv } from "./ReviewCardButton.styles";
 

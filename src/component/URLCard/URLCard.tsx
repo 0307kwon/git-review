@@ -5,7 +5,7 @@ import { ReactComponent as ModifyIcon } from "../../asset/icon/modify.svg";
 import { PR_URL } from "../../constant/validation";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useSnackbar from "../../context/snackbar/useSnackbar";
-import { PrUrl } from "../../util/types";
+import { PrUrl } from "../../constant/types";
 import { Anchor } from "../@common/Anchor/Anchor";
 import Button from "../@common/Button/Button";
 import IconButton from "../@common/IconButton/IconButton";

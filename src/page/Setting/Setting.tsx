@@ -11,7 +11,7 @@ import { PR_URL } from "../../constant/validation";
 import useModal from "../../context/modalProvider/useModal";
 import usePullRequestURLs from "../../context/PullRequestURLProvider/usePullRequestURLs";
 import useUserInfo from "../../hook/userInfo/useUserInfo";
-import { PrUrl } from "../../util/types";
+import { PrUrl } from "../../constant/types";
 import PullRequestHelpModal from "./PullRequestHelpModal/PullRequestHelpModal";
 import {
   AvatarContainer,

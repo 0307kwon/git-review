@@ -7,7 +7,7 @@ import {
   IssueResponse,
   PullRequest,
   PullRequestResponse,
-} from "../util/types";
+} from "../constant/types";
 
 type PullRequestInfo = (
   pullRequest: PullRequest

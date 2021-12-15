@@ -4,7 +4,7 @@ import {
   escapeRegExp,
   filterURLToPath,
 } from "../util/common";
-import { CodeReview, PrUrl } from "../util/types";
+import { CodeReview, PrUrl } from "../constant/types";
 
 interface CursorWithValue<T> extends IDBCursorWithValue {
   update: <T>(value: T) => IDBRequest<IDBValidKey>;

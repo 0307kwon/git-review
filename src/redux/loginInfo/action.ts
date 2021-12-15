@@ -1,4 +1,4 @@
-import { Profile } from "../../util/types";
+import { Profile } from "../../constant/types";
 import { Action, ActionWithPayloadFromCreator } from "../type";
 
 export const LOGIN_BY_POPUP = "LOGIN_INFO/LOGIN_BY_POPUP";

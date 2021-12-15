@@ -1,5 +1,5 @@
 import { Map } from "immutable";
-import { myFirebase } from "./firebase";
+import { myFirebase } from "../util/firebase";
 
 export interface PullRequest {
   owner: string;

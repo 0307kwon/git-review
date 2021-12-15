@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import ReviewDetailModal from "../../../component/ReviewDetailModal/ReviewDetailModal";
 import useCodeReviews from "../../../context/CodeReviewProvider/useCodeReviews";
 import useModal from "../../../context/modalProvider/useModal";
-import usePullRequestURLs from "../../../context/PullRequestURLProvider/usePullRequestURLs";
+import usePrUrlList from "../../../hook/prUrl/usePrUrlList";
 import useIntersectionObserver from "../../../hook/useIntersectionObserver";
 import { StyledReviewCardButton, SubTitleContainer } from "../Common.styles";
 import { ObservedElement } from "../Home.styles";
@@ -16,7 +16,7 @@ const RecentReviews = () => {
     isPageEnded,
     isLoading,
   } = useCodeReviews();
-  const { pullRequestURLs, resetFailedURLs } = usePullRequestURLs();
+  const { data:pullRequestURLs, resetFailedUrls } = usePrUrlList();
   const {
     observedElementRef: recommendedReviewInfinityScroll,
   } = useIntersectionObserver({
@@ -34,7 +34,7 @@ const RecentReviews = () => {
     );
 
     if (isFailedURLExist) {
-      resetFailedURLs().then(() => {
+      resetFailedUrls().then(() => {
         syncOnlyUpdatedCodeReviewsInIDB();
       });
 
