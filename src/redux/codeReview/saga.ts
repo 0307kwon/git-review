@@ -1,6 +1,11 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { requestCodeReview } from "../../API/githubAPI";
 import {
+  deleteCodeReviewIDB,
+  loadAllCodeReviewIDB,
+  storeCodeReviewIDB,
+} from "../../API/indexedDB";
+import {
   CodeReview,
   CodeReviewFromGithub,
   HttpResponse,
@@ -8,12 +13,24 @@ import {
 import { isSameURLPath } from "../../util/common";
 import {
   actionDeleteReviews,
+  actionDeleteReviewsSuccess,
+  actionGetReviews,
+  actionGetReviewsSuccess,
   actionUpdateReviews,
   actionUpdateReviewsError,
   actionUpdateReviewsSuccess,
   DELETE_REVIEWS,
+  GET_ALL_REVIEWS,
   UPDATE_REVIEWS,
 } from "./action";
+
+function* getAllReviews() {
+  try {
+    const codeReviews: CodeReview[] = yield call(loadAllCodeReviewIDB);
+
+    yield put(actionGetReviewsSuccess(codeReviews));
+  } catch (error) {}
+}
 
 function* updateReviews(action: ReturnType<typeof actionUpdateReviews>) {
   try {
@@ -63,6 +80,7 @@ function* updateReviews(action: ReturnType<typeof actionUpdateReviews>) {
       CodeReviewsToStore.push(...completedCodeReviews);
     });
 
+    yield call(storeCodeReviewIDB, CodeReviewsToStore);
     yield put(actionUpdateReviewsSuccess(CodeReviewsToStore));
 
     if (failedURLs.length > 0) {
@@ -87,15 +105,20 @@ function* updateReviews(action: ReturnType<typeof actionUpdateReviews>) {
   }
 }
 
-function* deleteReviews(action: ReturnType<typeof actionDeleteReviews>) {
-  const { reviewIds } = action.payload;
-}
+// function* deleteReviews(action: ReturnType<typeof actionDeleteReviews>) {
+//   const { prUrls } = action.payload;
 
-// 삭제, 추가
+//   yield call(
+//     Promise.all,
+//     prUrls.map((prUrl) => deleteCodeReviewIDB(prUrl.url))
+//   );
+//   yield put(actionDeleteReviewsSuccess(prUrls));
+// }
 
 function* codeReviewSaga() {
+  yield takeLatest(GET_ALL_REVIEWS, getAllReviews);
   yield takeLatest(UPDATE_REVIEWS, updateReviews);
-  yield takeEvery(DELETE_REVIEWS, deleteReviews);
+  // yield takeEvery(DELETE_REVIEWS, deleteReviews);
 }
 
 export default codeReviewSaga;

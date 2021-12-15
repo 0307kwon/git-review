@@ -3,6 +3,8 @@ import { Reducer } from "redux";
 import { CodeReview } from "../../constant/types";
 import {
   CodeReviewAction,
+  DELETE_REVIEWS_SUCCESS,
+  GET_ALL_REVIEWS_SUCCESS,
   UPDATE_REVIEWS_ERROR,
   UPDATE_REVIEWS_SUCCESS,
 } from "./action";
@@ -28,6 +30,14 @@ const codeReviewReducer: Reducer<CodeReviewState, CodeReviewAction> = (
   action
 ) => {
   switch (action.type) {
+    case GET_ALL_REVIEWS_SUCCESS: {
+      const { codeReviews } = action.payload;
+
+      return {
+        ...state,
+        byId: Map(codeReviews.map((review) => [review.id, review])),
+      };
+    }
     case UPDATE_REVIEWS_SUCCESS: {
       const { newCodeReviews } = action.payload;
 
@@ -55,6 +65,16 @@ const codeReviewReducer: Reducer<CodeReviewState, CodeReviewAction> = (
         },
       };
     }
+    // case DELETE_REVIEWS_SUCCESS: {
+    //   const { prUrls } = action.payload;
+
+    //   const deletingReviewIds = state.byId.toArray().find(([_,codeReview]) => )
+
+    //   return {
+    //     ...state,
+    //     byId: state.byId.deleteAll(reviewIds),
+    //   };
+    // }
     default: {
       return state;
     }

@@ -1,5 +1,28 @@
 import { CodeReview, PrUrl } from "../../constant/types";
-import { ActionWithPayloadFromCreator } from "../type";
+import { Action, ActionWithPayloadFromCreator } from "../type";
+
+export const GET_ALL_REVIEWS = "CODE_REVIEW/GET_ALL_REVIEWS";
+export const GET_ALL_REVIEWS_SUCCESS = "CODE_REVIEW/GET_ALL_REVIEWS_SUCCESS";
+
+export const actionGetReviews = () => {
+  return {
+    type: GET_ALL_REVIEWS,
+  };
+};
+
+export const actionGetReviewsSuccess = (codeReviews: CodeReview[]) => {
+  return {
+    type: GET_ALL_REVIEWS_SUCCESS,
+    payload: { codeReviews },
+  };
+};
+
+type GetReview =
+  | Action<typeof GET_ALL_REVIEWS>
+  | ActionWithPayloadFromCreator<
+      typeof GET_ALL_REVIEWS_SUCCESS,
+      typeof actionGetReviewsSuccess
+    >;
 
 export const UPDATE_REVIEWS = "CODE_REVIEW/UPDATE_REVIEWS";
 export const UPDATE_REVIEWS_SUCCESS = "CODE_REVIEW/UPDATE_REVIEWS_SUCCESS";
@@ -43,17 +66,17 @@ type UpdateReview =
 export const DELETE_REVIEWS = "CODE_REVIEW/DELETE_REVIEWS";
 export const DELETE_REVIEWS_SUCCESS = "CODE_REVIEW/DELETE_REVIEWS_SUCCESS";
 
-export const actionDeleteReviews = (reviewIds: string[]) => {
+export const actionDeleteReviews = (prUrls: PrUrl[]) => {
   return {
     type: DELETE_REVIEWS,
-    payload: { reviewIds },
+    payload: { prUrls },
   };
 };
 
-export const actionDeleteReviewsSuccess = (reviewIds: string[]) => {
+export const actionDeleteReviewsSuccess = (prUrls: PrUrl[]) => {
   return {
     type: DELETE_REVIEWS_SUCCESS,
-    payload: { reviewIds },
+    payload: { prUrls },
   };
 };
 
@@ -67,4 +90,4 @@ type DeleteReview =
       typeof actionDeleteReviewsSuccess
     >;
 
-export type CodeReviewAction = UpdateReview | DeleteReview;
+export type CodeReviewAction = GetReview | UpdateReview | DeleteReview;
